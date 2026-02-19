@@ -1,0 +1,10 @@
+{
+  "type": "relics_and_foes:relic_land_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "relics_and_foes:relic_land"
+    },
+    "settings": "relics_and_foes:relic_land"
+  }
+}
