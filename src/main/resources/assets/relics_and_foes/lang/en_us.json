@@ -1,0 +1,13 @@
+{
+  "itemGroup.relics_and_foes": "Example Mod Tab",
+  "block.relics_and_foes.example_block": "Example Block",
+  "item.relics_and_foes.example_item": "Example Item",
+
+  "relics_and_foes.configuration.title": "Relics And Foes Configs",
+  "relics_and_foes.configuration.section.relics_and_foes.common.toml": "Relics And Foes Configs",
+  "relics_and_foes.configuration.section.relics_and_foes.common.toml.title": "Relics And Foes Configs",
+  "relics_and_foes.configuration.items": "Item List",
+  "relics_and_foes.configuration.logDirtBlock": "Log Dirt Block",
+  "relics_and_foes.configuration.magicNumberIntroduction": "Magic Number Text",
+  "relics_and_foes.configuration.magicNumber": "Magic Number"
+}

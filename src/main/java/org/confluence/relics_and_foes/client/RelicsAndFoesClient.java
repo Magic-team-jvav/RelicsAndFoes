@@ -1,0 +1,15 @@
+package org.confluence.relics_and_foes.client;
+
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import org.confluence.relics_and_foes.RelicsAndFoes;
+
+@Mod(value = RelicsAndFoes.MODID, dist = Dist.CLIENT)
+public class RelicsAndFoesClient {
+    public RelicsAndFoesClient(ModContainer container) {
+        container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+    }
+}
