@@ -1,4 +1,4 @@
-package org.confluence.relics_and_foes;
+package org.magicteam.relicsandfoes;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
