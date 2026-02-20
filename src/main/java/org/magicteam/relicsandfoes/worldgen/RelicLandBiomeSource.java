@@ -4,10 +4,13 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.QuartPos;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.Climate;
+import net.minecraft.world.level.levelgen.DensityFunction;
 import org.magicteam.relicsandfoes.init.ModDimensions;
 
 import java.util.stream.Stream;
@@ -87,6 +90,39 @@ public class RelicLandBiomeSource extends BiomeSource {
 
     @Override
     public Holder<Biome> getNoiseBiome(int x, int y, int z, Climate.Sampler sampler) {
+        int i = QuartPos.toBlock(x);
+        int k = QuartPos.toBlock(z);
+        int middleX = (i + 1024) >> 11 << 11;
+        int middleZ = (k + 1024) >> 11 << 11;
+        if (Mth.square(middleX - i) + Mth.square(middleZ - k) > 800 * 800) {
+            int j = QuartPos.toBlock(y);
+            DensityFunction.SinglePointContext context = new DensityFunction.SinglePointContext(i, j, k);
+            double continentalness = sampler.continentalness().compute(context);
+            double temperature = sampler.temperature().compute(context);
+            double weirdness = sampler.weirdness().compute(context);
+            double erosion = sampler.erosion().compute(context);
+            if (erosion < 0.1) { // 起伏大
+                if (continentalness > -0.1) { // 大陆
+                    if (weirdness < 0) { // 奇异
+                        return thePeachBlossomVale;
+                    }
+                    if (continentalness > 0.15) { // 高山
+                        return theThornyDreadlands;
+                    }
+                    if (temperature < 0) { // 寒冷
+                        return theMistySnowyPeaks;
+                    } else if (temperature > 0.3) { // 炎热
+                        return theRustSilentCity;
+                    }
+                    return theForestOfDusk;
+                } else { // 海洋
+                    if (weirdness < 0) { // 奇异
+                        return theSeaOfFallingStars;
+                    }
+                    return theAzureSea;
+                }
+            }
+        }
         return theSunkenPlains;
     }
 }

@@ -17,15 +17,15 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.levelgen.NoiseRouterData;
-import net.minecraft.world.level.levelgen.NoiseSettings;
+import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
+import org.magicteam.relicsandfoes.worldgen.FlipLessThanY;
 import org.magicteam.relicsandfoes.worldgen.RelicLandBiomeSource;
 import org.magicteam.relicsandfoes.worldgen.RelicLandChunkGenerator;
 
@@ -35,12 +35,17 @@ import java.util.OptionalLong;
 public final class ModDimensions {
     public static final ResourceLocation ID = RelicsAndFoes.asResource("relic_land");
     public static final ResourceKey<Level> LEVEL = ResourceKey.create(Registries.DIMENSION, ID);
+    public static final int SEA_LEVEL = 63;
 
     private static final DeferredRegister<MapCodec<? extends BiomeSource>> BIOME_SOURCES = DeferredRegister.create(Registries.BIOME_SOURCE, RelicsAndFoes.MODID);
     public static final DeferredHolder<MapCodec<? extends BiomeSource>, MapCodec<RelicLandBiomeSource>> RELIC_LAND_BIOME_SOURCE = BIOME_SOURCES.register(ID.getPath(), () -> RelicLandBiomeSource.CODEC);
 
+    private static final DeferredRegister<MapCodec<? extends DensityFunction>> DENSITY_FUNCTION_TYPES = DeferredRegister.create(Registries.DENSITY_FUNCTION_TYPE, RelicsAndFoes.MODID);
+    public static final DeferredHolder<MapCodec<? extends DensityFunction>, MapCodec<FlipLessThanY>> FLIP_LESS_THAN_Y = DENSITY_FUNCTION_TYPES.register("flip_less_than_y", () -> FlipLessThanY.DATA_CODEC);
+
     public static void register(IEventBus eventBus) {
         BIOME_SOURCES.register(eventBus);
+        DENSITY_FUNCTION_TYPES.register(eventBus);
     }
 
     public static class LevelStems {
@@ -61,13 +66,59 @@ public final class ModDimensions {
         public static final ResourceKey<NoiseGeneratorSettings> KEY = ResourceKey.create(Registries.NOISE_SETTINGS, ID);
 
         public static void bootstrap(BootstrapContext<NoiseGeneratorSettings> context) {
+            HolderGetter<DensityFunction> densityFunctions = context.lookup(Registries.DENSITY_FUNCTION);
+            HolderGetter<NormalNoise.NoiseParameters> noises = context.lookup(Registries.NOISE);
+            DensityFunction shiftX = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.SHIFT_X);
+            DensityFunction shiftZ = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.SHIFT_Z);
+            DensityFunction temperature = DensityFunctions.shiftedNoise2d(shiftX, shiftZ, 0.25, noises.getOrThrow(Noises.TEMPERATURE));
+            DensityFunction vegetation = DensityFunctions.shiftedNoise2d(shiftX, shiftZ, 0.25, noises.getOrThrow(Noises.VEGETATION));
+            DensityFunction factor = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.FACTOR);
+            DensityFunction depth = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.DEPTH);
+            DensityFunction continents = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.CONTINENTS_LARGE);
+            DensityFunction erosion = DensityFunctions.flatCache(DensityFunctions.shiftedNoise2d(
+                    shiftX,
+                    shiftZ,
+                    0.25,
+                    noises.getOrThrow(Noisez.EROSION)
+            ));
+            DensityFunction ridges = DensityFunctions.flatCache(DensityFunctions.shiftedNoise2d(
+                    shiftX,
+                    shiftZ,
+                    0.25,
+                    noises.getOrThrow(Noisez.RIDGE)
+            ));
+            DensityFunction initialDensityWithoutJaggedness = slideRelicLand(DensityFunctions.add(NoiseRouterData.noiseGradientDensity(DensityFunctions.cache2d(factor), depth), DensityFunctions.constant(-0.703125)).clamp(-64.0, 64.0));
+            DensityFunction slopedCheese = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.SLOPED_CHEESE);
+            DensityFunction entrances = DensityFunctions.min(slopedCheese, DensityFunctions.mul(DensityFunctions.constant(5.0), NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.ENTRANCES)));
+            DensityFunction underground = DensityFunctions.rangeChoice(slopedCheese, -1000000.0, 1.5625, entrances, NoiseRouterData.underground(densityFunctions, noises, slopedCheese));
+            DensityFunction finalDensity = DensityFunctions.min(NoiseRouterData.postProcess(slideRelicLand(underground)), NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.NOODLE));
             context.register(KEY, new NoiseGeneratorSettings(
-                    NoiseSettings.create(0, 64, 2, 2),
+                    NoiseSettings.create(0, 256, 4, 1),
                     Blocks.STONE.defaultBlockState(),
                     Blocks.WATER.defaultBlockState(),
-                    NoiseRouterData.overworld(context.lookup(Registries.DENSITY_FUNCTION), context.lookup(Registries.NOISE), false, true),
+                    new NoiseRouter(
+                            DensityFunctions.zero(),
+                            DensityFunctions.zero(),
+                            DensityFunctions.zero(),
+                            DensityFunctions.zero(),
+                            temperature,
+                            vegetation,
+                            continents,
+                            erosion,
+                            DensityFunctions.zero(),
+                            ridges,
+                            initialDensityWithoutJaggedness,
+                            finalDensity,
+                            DensityFunctions.zero(),
+                            DensityFunctions.zero(),
+                            DensityFunctions.zero()
+                    ),
                     SurfaceRuleData.overworld(),
-                    List.of(), 32, false, false, false, true));
+                    List.of(), SEA_LEVEL, false, true, true, false));
+        }
+
+        private static DensityFunction slideRelicLand(DensityFunction densityFunction) {
+            return NoiseRouterData.slide(densityFunction, 0, 256, 16, 0, -0.078125, 0, 24, 0.4);
         }
     }
 
@@ -117,6 +168,16 @@ public final class ModDimensions {
             context.register(THE_PEACH_BLOSSOM_VALE, OverworldBiomes.meadowOrCherryGrove(placedFeatures, worldCarvers, true));
             context.register(THE_SEA_OF_FALLING_STARS, OverworldBiomes.lukeWarmOcean(placedFeatures, worldCarvers, false));
             context.register(THE_FOREST_OF_DUSK, OverworldBiomes.forest(placedFeatures, worldCarvers, false, false, false));
+        }
+    }
+
+    public static class Noisez {
+        public static final ResourceKey<NormalNoise.NoiseParameters> EROSION = ResourceKey.create(Registries.NOISE, RelicsAndFoes.asResource("erosion"));
+        public static final ResourceKey<NormalNoise.NoiseParameters> RIDGE = ResourceKey.create(Registries.NOISE, RelicsAndFoes.asResource("ridge"));
+
+        public static void bootstrap(BootstrapContext<NormalNoise.NoiseParameters> context) {
+            context.register(EROSION, new NormalNoise.NoiseParameters(-11, 0.1, 0.1, 0, 0.1, 0.1));
+            context.register(RIDGE, new NormalNoise.NoiseParameters(-9, 0.2, 0.4, 0.2, 0, 0, 0));
         }
     }
 }

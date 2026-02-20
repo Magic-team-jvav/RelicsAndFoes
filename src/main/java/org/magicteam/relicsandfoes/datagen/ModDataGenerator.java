@@ -22,7 +22,8 @@ public final class ModDataGenerator {
             .add(Registries.DIMENSION_TYPE, ModDimensions.DimensionTypez::bootstrap)
             .add(Registries.LEVEL_STEM, ModDimensions.LevelStems::bootstrap)
             .add(Registries.NOISE_SETTINGS, ModDimensions.NoiseGeneratorSettingz::bootstrap)
-            .add(Registries.BIOME, ModDimensions.Biomez::bootstrap);
+            .add(Registries.BIOME, ModDimensions.Biomez::bootstrap)
+            .add(Registries.NOISE, ModDimensions.Noisez::bootstrap);
 
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
