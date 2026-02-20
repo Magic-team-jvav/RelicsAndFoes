@@ -1,5 +1,6 @@
 package org.magicteam.relicsandfoes.init;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
@@ -13,6 +14,8 @@ import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.biome.Climate;
+import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
@@ -55,9 +58,86 @@ public final class ModDimensions {
             HolderGetter<DimensionType> dimensionTypes = context.lookup(Registries.DIMENSION_TYPE);
             HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);
             HolderGetter<NoiseGeneratorSettings> noiseGeneratorSettings = context.lookup(Registries.NOISE_SETTINGS);
+            Climate.Parameter fullRange = Climate.Parameter.span(-1, 1);
             context.register(KEY, new LevelStem(
                     dimensionTypes.getOrThrow(DimensionTypez.KEY),
-                    new RelicLandChunkGenerator(RelicLandBiomeSource.create(biomes), noiseGeneratorSettings.getOrThrow(NoiseGeneratorSettingz.KEY))
+                    new RelicLandChunkGenerator(
+                            MultiNoiseBiomeSource.createFromList(new Climate.ParameterList<>(List.of(
+                                    new Pair<>(Climate.parameters(
+                                            Climate.Parameter.span(-0.45F, -0.15F),
+                                            Climate.Parameter.span(-1, -0.1F),
+                                            Climate.Parameter.span(-0.19F, 1.0F),
+                                            Climate.Parameter.span(0.55F, 1.0F),
+                                            Climate.Parameter.span(-1, 1),
+                                            Climate.Parameter.span(-1, 1),
+                                            0
+                                    ), biomes.getOrThrow(ModDimensions.Biomez.THE_SUNKEN_EXPANSE)),
+                                    new Pair<>(Climate.parameters(
+                                            Climate.Parameter.span(-1.0F, -0.45F),
+                                            Climate.Parameter.span(-1.0F, -0.35F),
+                                            Climate.Parameter.span(-0.19F, 1.0F),
+                                            Climate.Parameter.span(-1.0F, -0.78F),
+                                            Climate.Parameter.span(-1, 1),
+                                            Climate.Parameter.span(-1, 1),
+                                            0
+                                    ), biomes.getOrThrow(ModDimensions.Biomez.THE_MISTY_SNOWY_PEAKS)),
+                                    new Pair<>(Climate.parameters(
+                                            Climate.Parameter.span(0.2F, 0.55F),
+                                            Climate.Parameter.span(-0.35F, -0.1F),
+                                            Climate.Parameter.span(-0.19F, 1.0F),
+                                            Climate.Parameter.span(0.45F, 0.55F),
+                                            Climate.Parameter.span(-1, 1),
+                                            Climate.Parameter.span(-1, 1),
+                                            0
+                                    ), biomes.getOrThrow(ModDimensions.Biomez.THE_RUST_SILENT_CITY)),
+                                    new Pair<>(Climate.parameters(
+                                            Climate.Parameter.span(-1, 1),
+                                            Climate.Parameter.span(-1, 1),
+                                            Climate.Parameter.span(-1.2F, -0.19F),
+                                            Climate.Parameter.span(-1, 1),
+                                            Climate.Parameter.span(-1, 1),
+                                            Climate.Parameter.span(-1, 0),
+                                            0
+                                    ), biomes.getOrThrow(ModDimensions.Biomez.THE_AZURE_SEA)),
+                                    new Pair<>(Climate.parameters(
+                                            Climate.Parameter.span(-0.45F, 0.2F),
+                                            Climate.Parameter.span(-0.35F, 0.1F),
+                                            Climate.Parameter.span(-0.19F, 1.0F),
+                                            Climate.Parameter.span(-1, -0.375F),
+                                            Climate.Parameter.span(-1, 1),
+                                            Climate.Parameter.span(-1, -0.5F),
+                                            0
+                                    ), biomes.getOrThrow(ModDimensions.Biomez.THE_THORNY_DREADLANDS)),
+                                    new Pair<>(Climate.parameters(
+                                            Climate.Parameter.span(-0.45F, 0.2F),
+                                            Climate.Parameter.span(-1, -0.1F),
+                                            Climate.Parameter.span(0.03F, 1.0F),
+                                            Climate.Parameter.span(-0.78F, -0.375F),
+                                            Climate.Parameter.span(-1, 1),
+                                            Climate.Parameter.span(0.5F, 1),
+                                            0
+                                    ), biomes.getOrThrow(ModDimensions.Biomez.THE_PEACH_BLOSSOM_VALE)),
+                                    new Pair<>(Climate.parameters(
+                                            Climate.Parameter.span(-1, 1),
+                                            Climate.Parameter.span(-1, 1),
+                                            Climate.Parameter.span(-1.2F, -0.19F),
+                                            Climate.Parameter.span(-1, 1),
+                                            Climate.Parameter.span(-1, 1),
+                                            Climate.Parameter.span(0, 1),
+                                            0
+                                    ), biomes.getOrThrow(ModDimensions.Biomez.THE_SEA_OF_FALLING_STARS)),
+                                    new Pair<>(Climate.parameters(
+                                            Climate.Parameter.span(-0.45F, 0.2F),
+                                            Climate.Parameter.span(-1, -0.1F),
+                                            Climate.Parameter.span(0.03F, 1.0F),
+                                            Climate.Parameter.span(-0.78F, -0.375F),
+                                            Climate.Parameter.span(-1, 1),
+                                            Climate.Parameter.span(-0.5F, 0.5F),
+                                            0
+                                    ), biomes.getOrThrow(ModDimensions.Biomez.THE_FOREST_OF_DUSK))
+                            ))),
+                            noiseGeneratorSettings.getOrThrow(NoiseGeneratorSettingz.KEY)
+                    )
             ));
         }
     }
@@ -74,19 +154,9 @@ public final class ModDimensions {
             DensityFunction vegetation = DensityFunctions.shiftedNoise2d(shiftX, shiftZ, 0.25, noises.getOrThrow(Noises.VEGETATION));
             DensityFunction factor = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.FACTOR);
             DensityFunction depth = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.DEPTH);
-            DensityFunction continents = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.CONTINENTS_LARGE);
-            DensityFunction erosion = DensityFunctions.flatCache(DensityFunctions.shiftedNoise2d(
-                    shiftX,
-                    shiftZ,
-                    0.25,
-                    noises.getOrThrow(Noisez.EROSION)
-            ));
-            DensityFunction ridges = DensityFunctions.flatCache(DensityFunctions.shiftedNoise2d(
-                    shiftX,
-                    shiftZ,
-                    0.25,
-                    noises.getOrThrow(Noisez.RIDGE)
-            ));
+            DensityFunction continents = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.CONTINENTS);
+            DensityFunction erosion = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.EROSION);
+            DensityFunction ridges = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.RIDGES);
             DensityFunction initialDensityWithoutJaggedness = slideRelicLand(DensityFunctions.add(NoiseRouterData.noiseGradientDensity(DensityFunctions.cache2d(factor), depth), DensityFunctions.constant(-0.703125)).clamp(-64.0, 64.0));
             DensityFunction slopedCheese = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.SLOPED_CHEESE);
             DensityFunction entrances = DensityFunctions.min(slopedCheese, DensityFunctions.mul(DensityFunctions.constant(5.0), NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.ENTRANCES)));
