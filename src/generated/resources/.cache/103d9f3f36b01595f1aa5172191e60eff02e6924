@@ -1,5 +1,5 @@
-// 1.21.1	2026-02-20T20:21:33.7366582	Registries
-c0349e2a5475b9fcd3c8be3f0f93a0397c76c744 data/relics_and_foes/dimension/relic_land.json
+// 1.21.1	2026-04-09T16:21:03.7956393	Registries
+16a4e9b691daa8c9237d1f96908b39449f68501c data/relics_and_foes/dimension/relic_land.json
 82cc84008b007b1905340603645c0dedabef0299 data/relics_and_foes/dimension_type/relic_land_type.json
 614e3904cbffad1595ec112d05db55fa9cfe6150 data/relics_and_foes/worldgen/biome/the_azure_sea.json
 faf85dc31776a082af670c85dea60f870d38477b data/relics_and_foes/worldgen/biome/the_forest_of_dusk.json
@@ -11,4 +11,4 @@ fd142cd1b2a0e6a55d520eca4ff13d9f9a781245 data/relics_and_foes/worldgen/biome/the
 d139d194f7318e01101fec26cc2c5ac38946bd1b data/relics_and_foes/worldgen/biome/the_thorny_dreadlands.json
 77f42ea4f152dfb34c91729342b35cde7f1ef060 data/relics_and_foes/worldgen/noise/erosion.json
 16b542bed7181a270c2b26602b5828726518998a data/relics_and_foes/worldgen/noise/ridge.json
-ea2d06749d187f25c9f85711fb83fb8baf0e6e71 data/relics_and_foes/worldgen/noise_settings/relic_land.json
+e8d4f7e4bfc5ad804afd221303586129a4edaf02 data/relics_and_foes/worldgen/noise_settings/relic_land.json

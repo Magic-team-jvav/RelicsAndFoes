@@ -99,7 +99,7 @@
           "biome": "relics_and_foes:the_azure_sea",
           "parameters": {
             "continentalness": [
-              -1.0,
+              -1.2,
               -0.19
             ],
             "depth": [
@@ -189,7 +189,7 @@
           "biome": "relics_and_foes:the_sea_of_falling_stars",
           "parameters": {
             "continentalness": [
-              -1.0,
+              -1.2,
               -0.19
             ],
             "depth": [

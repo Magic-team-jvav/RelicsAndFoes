@@ -10,6 +10,7 @@ import net.minecraft.data.worldgen.biome.OverworldBiomes;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -38,7 +39,7 @@ import java.util.OptionalLong;
 public final class ModDimensions {
     public static final ResourceLocation ID = RelicsAndFoes.asResource("relic_land");
     public static final ResourceKey<Level> LEVEL = ResourceKey.create(Registries.DIMENSION, ID);
-    public static final int SEA_LEVEL = 63;
+    public static final int SEA_LEVEL = 31;
 
     private static final DeferredRegister<MapCodec<? extends BiomeSource>> BIOME_SOURCES = DeferredRegister.create(Registries.BIOME_SOURCE, RelicsAndFoes.MODID);
     public static final DeferredHolder<MapCodec<? extends BiomeSource>, MapCodec<RelicLandBiomeSource>> RELIC_LAND_BIOME_SOURCE = BIOME_SOURCES.register(ID.getPath(), () -> RelicLandBiomeSource.CODEC);
@@ -49,6 +50,28 @@ public final class ModDimensions {
     public static void register(IEventBus eventBus) {
         BIOME_SOURCES.register(eventBus);
         DENSITY_FUNCTION_TYPES.register(eventBus);
+    }
+
+    public static NoiseChunk.BlockStateFiller filler(NormalNoise noise) {
+        return context -> {
+            int worldx = context.blockX();
+            int worldy = context.blockY();
+            int worldz = context.blockZ();
+            int middle_x = (worldx + 1024) / 2048 * 2048;
+            int middle_z = (worldz + 1024) / 2048 * 2048;
+            double jvli = Math.sqrt(Mth.square(middle_x - worldx) + Mth.square(middle_z - worldz));
+            double height_bili = Mth.clamp((220 - jvli) / 50, 0, 1);
+            double height_plain = 40 + (0.5 + noise.getValue(worldx, 0, worldz)) * 10;
+            int height = (int) (height_plain * (1 - height_bili) + height_bili * 52);
+            if (worldy > height) {
+                return null;
+            } else if (worldy > height - 1) {
+                return Blocks.GRASS_BLOCK.defaultBlockState();
+            } else if (worldy > height - 5) {
+                return Blocks.DIRT.defaultBlockState();
+            }
+            return Blocks.STONE.defaultBlockState();
+        };
     }
 
     public static class LevelStems {
@@ -146,24 +169,8 @@ public final class ModDimensions {
         public static final ResourceKey<NoiseGeneratorSettings> KEY = ResourceKey.create(Registries.NOISE_SETTINGS, ID);
 
         public static void bootstrap(BootstrapContext<NoiseGeneratorSettings> context) {
-            HolderGetter<DensityFunction> densityFunctions = context.lookup(Registries.DENSITY_FUNCTION);
-            HolderGetter<NormalNoise.NoiseParameters> noises = context.lookup(Registries.NOISE);
-            DensityFunction shiftX = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.SHIFT_X);
-            DensityFunction shiftZ = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.SHIFT_Z);
-            DensityFunction temperature = DensityFunctions.shiftedNoise2d(shiftX, shiftZ, 0.25, noises.getOrThrow(Noises.TEMPERATURE));
-            DensityFunction vegetation = DensityFunctions.shiftedNoise2d(shiftX, shiftZ, 0.25, noises.getOrThrow(Noises.VEGETATION));
-            DensityFunction factor = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.FACTOR);
-            DensityFunction depth = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.DEPTH);
-            DensityFunction continents = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.CONTINENTS);
-            DensityFunction erosion = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.EROSION);
-            DensityFunction ridges = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.RIDGES);
-            DensityFunction initialDensityWithoutJaggedness = slideRelicLand(DensityFunctions.add(NoiseRouterData.noiseGradientDensity(DensityFunctions.cache2d(factor), depth), DensityFunctions.constant(-0.703125)).clamp(-64.0, 64.0));
-            DensityFunction slopedCheese = NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.SLOPED_CHEESE);
-            DensityFunction entrances = DensityFunctions.min(slopedCheese, DensityFunctions.mul(DensityFunctions.constant(5.0), NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.ENTRANCES)));
-            DensityFunction underground = DensityFunctions.rangeChoice(slopedCheese, -1000000.0, 1.5625, entrances, NoiseRouterData.underground(densityFunctions, noises, slopedCheese));
-            DensityFunction finalDensity = DensityFunctions.min(NoiseRouterData.postProcess(slideRelicLand(underground)), NoiseRouterData.getFunction(densityFunctions, NoiseRouterData.NOODLE));
             context.register(KEY, new NoiseGeneratorSettings(
-                    NoiseSettings.create(0, 256, 4, 1),
+                    NoiseSettings.create(0, 256, 1, 1),
                     Blocks.STONE.defaultBlockState(),
                     Blocks.WATER.defaultBlockState(),
                     new NoiseRouter(
@@ -171,20 +178,20 @@ public final class ModDimensions {
                             DensityFunctions.zero(),
                             DensityFunctions.zero(),
                             DensityFunctions.zero(),
-                            temperature,
-                            vegetation,
-                            continents,
-                            erosion,
                             DensityFunctions.zero(),
-                            ridges,
-                            initialDensityWithoutJaggedness,
-                            finalDensity,
+                            DensityFunctions.zero(),
+                            DensityFunctions.zero(),
+                            DensityFunctions.zero(),
+                            DensityFunctions.zero(),
+                            DensityFunctions.zero(),
+                            DensityFunctions.zero(),
+                            DensityFunctions.zero(),
                             DensityFunctions.zero(),
                             DensityFunctions.zero(),
                             DensityFunctions.zero()
                     ),
                     SurfaceRuleData.overworld(),
-                    List.of(), SEA_LEVEL, false, true, true, false));
+                    List.of(), SEA_LEVEL, false, true, false, false));
         }
 
         private static DensityFunction slideRelicLand(DensityFunction densityFunction) {
