@@ -1,0 +1,47 @@
+{
+	"format_version": "1.10.0",
+	"particle_effect": {
+		"description": {
+			"identifier": "relics_and_foes:thunder_track2",
+			"basic_render_parameters": {
+				"material": "particles_blend",
+				"texture": "relics_and_foes:white"
+			}
+		},
+		"components": {
+			"minecraft:emitter_initialization": {
+				"creation_expression": "v.rot=0;v.rot_y=0;v.size=math.random(4,5.5);v.speed=math.random(2,2.5);v.pos1=math.random(-0.3,0.3);v.pos2=math.random(-0.3,0.3);v.pos3=math.random(-0.3,0.3);"
+			},
+			"minecraft:emitter_rate_instant": {
+				"num_particles": 1
+			},
+			"minecraft:emitter_lifetime_once": {
+				"active_time": 1
+			},
+			"minecraft:emitter_shape_point": {},
+			"minecraft:particle_lifetime_expression": {
+				"max_lifetime": "math.random(0.4,0.6)"
+			},
+			"minecraft:particle_motion_parametric": {
+				"relative_position": ["(v.particle_age / v.particle_lifetime)*math.cos(v.rot)*5*v.size*v.speed+v.pos1", "(v.particle_age / v.particle_lifetime)*math.sin(v.rot_y)*5*v.size*v.speed+v.pos2", "(v.particle_age / v.particle_lifetime)*math.sin(v.rot)*5*v.size*v.speed+v.pos3"]
+			},
+			"minecraft:particle_appearance_billboard": {
+				"size": ["math.sin((v.particle_age / v.particle_lifetime)*180)*2*v.size", 0.05],
+				"facing_camera_mode": "lookat_direction",
+				"direction": {
+					"mode": "custom",
+					"custom_direction": ["math.cos(v.rot)", "math.sin(v.rot_y)", "math.sin(v.rot)"]
+				},
+				"uv": {
+					"texture_width": 16,
+					"texture_height": 16,
+					"uv": [0, 0],
+					"uv_size": [16, 16]
+				}
+			},
+			"minecraft:particle_appearance_tinting": {
+				"color": [1, 0.98039, 0.52941, 1]
+			}
+		}
+	}
+}
