@@ -136,7 +136,11 @@ repositories {
 
 dependencies {
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
-    implementation "org.mesdag:ParticleStorm:${particle_storm_version}"
+    if (false) {
+        implementation "org.mesdag:ParticleStorm:${particle_storm_version}"
+    } else {
+        implementation files("libs/particlestorm-${particle_storm_version}.jar")
+    }
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
 
     compileOnly "curse.maven:jade-324717:6011258"

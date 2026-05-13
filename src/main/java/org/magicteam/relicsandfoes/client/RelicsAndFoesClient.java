@@ -8,7 +8,7 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
 
 @Mod(value = RelicsAndFoes.MODID, dist = Dist.CLIENT)
-public class RelicsAndFoesClient {
+public final class RelicsAndFoesClient {
     public RelicsAndFoesClient(ModContainer container) {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }

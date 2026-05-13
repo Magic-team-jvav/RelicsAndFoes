@@ -3,8 +3,11 @@
     "package": "org.magicteam.relicsandfoes.mixin",
     "compatibilityLevel": "JAVA_21",
     "mixins": [
-        "NoiseBasedChunkGeneratorMixin",
-        "NoiseChunkMixin"
+        "NoiseBasedChunkGeneratorMixin"
+    ],
+    "client": [
+        "ClientLevelMixin",
+        "FogRendererMixin"
     ],
     "injectors": {
         "defaultRequire": 1

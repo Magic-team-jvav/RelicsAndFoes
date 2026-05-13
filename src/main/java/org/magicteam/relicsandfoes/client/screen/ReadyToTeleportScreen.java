@@ -19,16 +19,18 @@ public class ReadyToTeleportScreen extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.fill(0, 0, width, height, FastColor.ARGB32.color((int) Mth.clamp(tickCount / 80.0, 0, 1) * 255, 0xFFFFFF));
+        guiGraphics.fill(0, 0, width, height, FastColor.ARGB32.color((int) (Mth.clamp(tickCount / 80.0, 0, 1) * 255), 0xFFFFFF));
     }
 
     @Override
     public void tick() {
-        if (hasSend) return;
         ++tickCount;
-        if (tickCount > 100) {
+        if (!hasSend && tickCount > 100) {
             hasSend = true;
             PacketDistributor.sendToServer(new TeleportStatePacket(TeleportStatePacket.END));
+        }
+        if (tickCount > 200 && Minecraft.getInstance().screen == this) {
+            onClose();
         }
     }
 

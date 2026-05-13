@@ -13,7 +13,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
 import org.magicteam.relicsandfoes.client.screen.ReadyToTeleportScreen;
-import org.magicteam.relicsandfoes.init.ModDimensions;
+import org.magicteam.relicsandfoes.init.RAFDimensions;
 import org.mesdag.particlestorm.data.molang.MolangExp;
 import org.mesdag.particlestorm.network.EmitterCreationPacketS2C;
 
@@ -45,11 +45,11 @@ public record TeleportStatePacket(byte state) implements CustomPacketPayload {
                 ReadyToTeleportScreen.setScreen();
             } else if (state == END && context.player() instanceof ServerPlayer player) {
                 if (player.level().dimension() == Level.OVERWORLD) {
-                    ServerLevel level = player.server.getLevel(ModDimensions.LEVEL);
+                    ServerLevel level = player.server.getLevel(RAFDimensions.LEVEL);
                     if (level != null) {
-                        player.changeDimension(new DimensionTransition(level, new Vec3(0, 63, 0), Vec3.ZERO, 0, 0, false, BURST_PARTICLE));
+                        player.changeDimension(new DimensionTransition(level, new Vec3(0.5, 64, 0.5), Vec3.ZERO, 0, 0, false, BURST_PARTICLE));
                     }
-                } else if (player.level().dimension() == ModDimensions.LEVEL) {
+                } else if (player.level().dimension() == RAFDimensions.LEVEL) {
                     player.changeDimension(player.findRespawnPositionAndUseSpawnBlock(true, BURST_PARTICLE));
                 }
             }

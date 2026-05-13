@@ -1,0 +1,11 @@
+{
+  "placement": {
+    "type": "relics_and_foes:simple"
+  },
+  "structures": [
+    {
+      "structure": "relics_and_foes:ruin_city",
+      "weight": 1
+    }
+  ]
+}
