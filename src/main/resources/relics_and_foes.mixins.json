@@ -3,11 +3,12 @@
     "package": "org.magicteam.relicsandfoes.mixin",
     "compatibilityLevel": "JAVA_21",
     "mixins": [
-        "NoiseBasedChunkGeneratorMixin"
+        "net.minecraft.world.level.levelgen.NoiseBasedChunkGeneratorMixin"
     ],
     "client": [
-        "ClientLevelMixin",
-        "FogRendererMixin"
+        "net.minecraft.client.multiplayer.ClientLevelMixin",
+        "net.minecraft.client.multiplayer.LevelLoadStatusManagerMixin",
+        "net.minecraft.client.renderer.FogRendererMixin"
     ],
     "injectors": {
         "defaultRequire": 1

@@ -33,11 +33,11 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
-import org.magicteam.relicsandfoes.levelgen.RelicLandBiomeSource;
-import org.magicteam.relicsandfoes.levelgen.RelicLandChunkGenerator;
-import org.magicteam.relicsandfoes.levelgen.structure.RuinCityStructure;
-import org.magicteam.relicsandfoes.levelgen.structure.SuperTemplateStructurePiece;
-import org.magicteam.relicsandfoes.levelgen.structure.placement.SimpleStructurePlacement;
+import org.magicteam.relicsandfoes.world.level.biome.RelicLandBiomeSource;
+import org.magicteam.relicsandfoes.world.level.levelgen.RelicLandChunkGenerator;
+import org.magicteam.relicsandfoes.world.level.levelgen.structure.RuinCityStructure;
+import org.magicteam.relicsandfoes.world.level.levelgen.structure.SuperTemplateStructurePiece;
+import org.magicteam.relicsandfoes.world.level.levelgen.structure.placement.SimpleStructurePlacement;
 
 import java.util.List;
 import java.util.OptionalLong;

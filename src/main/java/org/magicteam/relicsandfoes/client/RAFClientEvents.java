@@ -19,11 +19,11 @@ import net.neoforged.neoforge.client.event.*;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
-import org.magicteam.relicsandfoes.block.AncientPortalBlock;
 import org.magicteam.relicsandfoes.client.screen.AfterTeleportScreen;
 import org.magicteam.relicsandfoes.init.RAFBlocks;
 import org.magicteam.relicsandfoes.init.RAFDimensions;
 import org.magicteam.relicsandfoes.init.RAFMusics;
+import org.magicteam.relicsandfoes.world.block.crossrealmancientruins.AncientRelicTeleporterBlock;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 @EventBusSubscriber(modid = RelicsAndFoes.MODID, value = Dist.CLIENT)
@@ -36,9 +36,9 @@ public final class RAFClientEvents {
 
     @SubscribeEvent
     public static void entityRenderers$RegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(RAFBlocks.ANCIENT_PORTAL_ENTITY.get(), context -> new GeoBlockRenderer<>(RAFBlocks.ANCIENT_PORTAL_ENTITY.get()) {
+        event.registerBlockEntityRenderer(RAFBlocks.ANCIENT_RELIC_TELEPORTER_ENTITY.get(), context -> new GeoBlockRenderer<>(RAFBlocks.ANCIENT_RELIC_TELEPORTER_ENTITY.get()) {
             @Override
-            public RenderType getRenderType(AncientPortalBlock.BEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+            public RenderType getRenderType(AncientRelicTeleporterBlock.BEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
                 return RenderType.entityTranslucent(texture);
             }
         });
@@ -54,18 +54,20 @@ public final class RAFClientEvents {
     }
 
     @SubscribeEvent
+    public static void clientPlayerNetwork$LoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
+        inRelicLand = false;
+        biome = null;
+        inTheSunkenExpanse = false;
+    }
+
+    @SubscribeEvent
     public static void clientTick$Pre(ClientTickEvent.Pre event) {
         player = Minecraft.getInstance().player;
-        if (player == null) {
-            inRelicLand = false;
-            biome = null;
-            inTheSunkenExpanse = false;
-        } else {
-            ClientLevel level = player.clientLevel;
-            inRelicLand = level.dimension() == RAFDimensions.LEVEL;
-            biome = level.getBiome(player.blockPosition());
-            inTheSunkenExpanse = biome.is(RAFDimensions.Biomez.THE_SUNKEN_EXPANSE);
-        }
+        if (player == null) return;
+        ClientLevel level = player.clientLevel;
+        inRelicLand = level.dimension() == RAFDimensions.LEVEL;
+        biome = level.getBiome(player.blockPosition());
+        inTheSunkenExpanse = biome.is(RAFDimensions.Biomez.THE_SUNKEN_EXPANSE);
     }
 
     @SubscribeEvent

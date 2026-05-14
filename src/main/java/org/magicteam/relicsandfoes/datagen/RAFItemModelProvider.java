@@ -18,7 +18,7 @@ public class RAFItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        builtinEntity(RAFBlocks.ANCIENT_PORTAL.asItem());
+        builtinEntity(RAFBlocks.ANCIENT_RELIC_TELEPORTER.asItem());
     }
 
     private ItemModelBuilder builtinEntity(Item item) {
