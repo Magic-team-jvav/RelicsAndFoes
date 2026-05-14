@@ -44,14 +44,10 @@ public final class RAFClientEvents {
         });
     }
 
-    private static LocalPlayer player;
-    private static boolean inRelicLand;
-    private static Holder<Biome> biome;
-    private static boolean inTheSunkenExpanse;
-
-    public static float timeOfDayLow(float original) {
-        return inRelicLand ? 0.3F : original;
-    }
+    static LocalPlayer player;
+    static boolean inRelicLand;
+    static Holder<Biome> biome;
+    static boolean inTheSunkenExpanse;
 
     @SubscribeEvent
     public static void clientPlayerNetwork$LoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
@@ -68,6 +64,9 @@ public final class RAFClientEvents {
         inRelicLand = level.dimension() == RAFDimensions.LEVEL;
         biome = level.getBiome(player.blockPosition());
         inTheSunkenExpanse = biome.is(RAFDimensions.Biomez.THE_SUNKEN_EXPANSE);
+        if (RAFClientConfigs.biomeParticles) {
+            RelicsAndFoesClient.biomeParticles();
+        }
     }
 
     @SubscribeEvent
