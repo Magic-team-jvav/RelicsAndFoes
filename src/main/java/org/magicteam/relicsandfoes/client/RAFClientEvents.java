@@ -64,9 +64,7 @@ public final class RAFClientEvents {
         inRelicLand = level.dimension() == RAFDimensions.LEVEL;
         biome = level.getBiome(player.blockPosition());
         inTheSunkenExpanse = biome.is(RAFDimensions.Biomez.THE_SUNKEN_EXPANSE);
-        if (RAFClientConfigs.biomeParticles) {
-            RelicsAndFoesClient.biomeParticles();
-        }
+        RelicsAndFoesClient.biomeParticles();
     }
 
     @SubscribeEvent

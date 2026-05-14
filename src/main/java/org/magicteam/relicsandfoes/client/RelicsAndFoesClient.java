@@ -1,5 +1,7 @@
 package org.magicteam.relicsandfoes.client;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -28,12 +30,12 @@ public final class RelicsAndFoesClient {
     public static void biomeParticles() {
         Level level = player.level();
         long gameTime = level.getGameTime();
-        if (gameTime % 20 == 0) {
-            Vec3 pos = player.position();
-            RandomSource random = player.getRandom();
+        if (RAFClientConfigs.biomeParticles && gameTime % 20 == 0) {
             if (biome.is(RAFDimensions.Biomez.THE_SEA_OF_FALLING_STARS)) {
 
             } else if (inTheSunkenExpanse) {
+                Vec3 pos = player.position();
+                RandomSource random = player.getRandom();
                 for (int i = 0; i < 5; i++) {
                     PSGameClient.LOADER.addEmitter(new ParticleEmitter(
                             level,
@@ -63,7 +65,33 @@ public final class RelicsAndFoesClient {
             }
         }
         if (gameTime % 60 == 0) {
+            if (inTheSunkenExpanse && (RAFClientConfigs.mistParticles || RAFClientConfigs.animalParticles)) {
+                Vec3 pos = player.position();
+                RandomSource random = player.getRandom();
+                if (pos.y > 35) {
+                    int px = Mth.floor(pos.x) >> 3 << 3;
+                    int pz = Mth.floor(pos.z) >> 3 << 3;
+                    BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+                    for (int x = -56; x < 64; x += 8) {
+                        for (int z = -56; z < 64; z += 8) {
+                            if (RAFClientConfigs.animalParticles && pos.y < 75 && random.nextInt(10) == 0) {
+                                int bx = px + x;
+                                int bz = pz + z;
+                                mutable.setX(bx).setZ(bz);
+                                for (int y = Mth.floor(player.getY()) + 16; y > level.getMinBuildHeight(); y--) {
+                                    if (level.getBlockState(mutable.setY(y)).canOcclude()) {
+                                        if (Mth.lengthSquared(x, y - pos.y, z) < 40 * 40) {
+                                            PSGameClient.LOADER.addEmitter(new ParticleEmitter(level, new Vec3(bx, y + 2, bz), RelicsAndFoes.asResource("butterfly_yellow")), false);
+                                        }
+                                        break;
+                                    }
+                                }
 
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
