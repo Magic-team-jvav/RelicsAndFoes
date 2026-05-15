@@ -20,11 +20,13 @@ import java.util.concurrent.CompletableFuture;
 public final class RAFDataGenerator {
     private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
             .add(Registries.DIMENSION_TYPE, RAFDimensions.DimensionTypez::bootstrap)
-            .add(Registries.LEVEL_STEM, RAFDimensions.LevelStems::bootstrap)
+            .add(Registries.LEVEL_STEM, RAFDimensions.LevelStemz::bootstrap)
             .add(Registries.NOISE_SETTINGS, RAFDimensions.NoiseGeneratorSettingz::bootstrap)
             .add(Registries.BIOME, RAFDimensions.Biomez::bootstrap)
             .add(Registries.STRUCTURE, RAFDimensions.Structurez::bootstrap)
-            .add(Registries.STRUCTURE_SET, RAFDimensions.StructureSetz::bootstrap);
+            .add(Registries.STRUCTURE_SET, RAFDimensions.StructureSetz::bootstrap)
+            .add(Registries.CONFIGURED_FEATURE, RAFDimensions.ConfiguredFeaturez::bootstrap)
+            .add(Registries.PLACED_FEATURE, RAFDimensions.PlacedFeaturez::bootstrap);
 
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
@@ -34,6 +36,7 @@ public final class RAFDataGenerator {
         CompletableFuture<HolderLookup.Provider> lookup = event.getLookupProvider();
 
         boolean client = event.includeClient();
+        generator.addProvider(client, new RAFBlockStateProvider(output, helper));
         generator.addProvider(client, new RAFItemModelProvider(output, helper));
         generator.addProvider(client, new RAFSoundDefinitionsProvider(output, helper));
 

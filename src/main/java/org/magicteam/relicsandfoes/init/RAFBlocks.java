@@ -17,11 +17,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
-import org.magicteam.relicsandfoes.world.block.crossrealmancientruins.AncientRelicTeleporterBlock;
-import org.magicteam.relicsandfoes.world.block.thesunkenexpanse.HangingVineBodyBlock;
-import org.magicteam.relicsandfoes.world.block.thesunkenexpanse.HangingVineHeadBlock;
-import org.magicteam.relicsandfoes.world.block.thesunkenexpanse.WildfieldCornBlock;
-import org.magicteam.relicsandfoes.world.block.thesunkenexpanse.WildfieldCornStalkBlock;
+import org.magicteam.relicsandfoes.world.block.*;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -32,8 +28,11 @@ public final class RAFBlocks {
 
     // region 古迹大陆 Relic Land
 
-    public static final DeferredBlock<TallGrassBlock> ANCIENT_WILDGRASS = BLOCKS.register("ancient_wildgrass", () -> new TallGrassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SHORT_GRASS))); // 古迹野草
-    public static final DeferredBlock<DoublePlantBlock> ANCIENT_TALL_WILDGRASS = BLOCKS.register("ancient_tall_wildgrass", () -> new DoublePlantBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.TALL_GRASS))); // 古迹野草高变种
+    public static final DeferredBlock<TallGrassBlock> ANCIENT_WILDGRASS = registerWithItem("ancient_wildgrass", () -> new TallGrassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SHORT_GRASS))); // 古迹野草
+    public static final DeferredBlock<DoublePlantBlock> ANCIENT_TALL_WILDGRASS = registerWithItem("ancient_tall_wildgrass", () -> new DoublePlantBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.TALL_GRASS))); // 古迹野草高变种
+    public static final DeferredBlock<AbandonedStaffBlock> ABANDONED_TABLET = registerWithItem("abandoned_tablet", () -> new AbandonedStaffBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.POLISHED_BLACKSTONE), Block.box(1, 0, 1, 15, 16, 15)));
+    public static final DeferredBlock<AbandonedStaffBlock> ABANDONED_PLANKS = registerWithItem("abandoned_planks", () -> new AbandonedStaffBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BIRCH_PLANKS), Block.box(1, 0, 1, 15, 4, 15)));
+    public static final DeferredBlock<AbandonedStaffBlock> ABANDONED_SIGN = registerWithItem("abandoned_sign", () -> new AbandonedStaffBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BIRCH_SIGN), Block.box(5, 0, 5, 11, 16, 11)));
 
     // endregion
 
@@ -52,7 +51,7 @@ public final class RAFBlocks {
     public static final DeferredBlock<TallGrassBlock> WILDFIELD_WEEDS = registerWithItem("wildfield_weeds", () -> new TallGrassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SHORT_GRASS))); // 原野杂草
     public static final DeferredBlock<TallGrassBlock> FALLEN_LAVENDER = registerWithItem("fallen_lavender", () -> new TallGrassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SHORT_GRASS))); // 沉沦薰衣草
     public static final DeferredBlock<Block> FALLEN_COFFER = registerWithItem("fallen_coffer", () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL))); // 沉沦宝匣
-    public static final DeferredBlock<TallGrassBlock> AGAVE = registerWithItem("agave", () -> new TallGrassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SHORT_GRASS))); // 龙舌兰
+    public static final DeferredBlock<TallGrassBlock> TEQUILA = registerWithItem("tequila", () -> new TallGrassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SHORT_GRASS))); // 龙舌兰
     public static final DeferredBlock<HangingVineHeadBlock> HANGING_VINE_HEAD = registerWithItem("hanging_vine_head", () -> new HangingVineHeadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).randomTicks().noCollission().instabreak().sound(SoundType.VINE).pushReaction(PushReaction.DESTROY))); // 垂挂树藤头
     public static final DeferredBlock<HangingVineBodyBlock> HANGING_VINE_BODY = registerWithItem("hanging_vine_body", () -> new HangingVineBodyBlock(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).randomTicks().noCollission().instabreak().sound(SoundType.VINE).pushReaction(PushReaction.DESTROY))); // 垂挂树藤体
 
@@ -71,6 +70,7 @@ public final class RAFBlocks {
     public static final DeferredBlock<Block> CONDUCTOR_CHEST = registerWithItem("conductor_chest", () -> new Block(BlockBehaviour.Properties.of()));
     public static final DeferredBlock<Block> KYLIN_CHEST = registerWithItem("kylin_chest", () -> new Block(BlockBehaviour.Properties.of()));
     public static final DeferredBlock<Block> ANGEL_CHEST = registerWithItem("angel_chest", () -> new Block(BlockBehaviour.Properties.of()));
+    public static final DeferredBlock<Block> ENERGY_TABLE = registerWithItem("energy_table", () -> new Block(BlockBehaviour.Properties.of()));
 
     // endregion
 
@@ -105,6 +105,7 @@ public final class RAFBlocks {
             addBlockAlias("cataclysm:conductor_chest", CONDUCTOR_CHEST.getId());
             addBlockAlias("cataclysm:kylin_chest", KYLIN_CHEST.getId());
             addBlockAlias("cataclysm:angel_chest", ANGEL_CHEST.getId());
+            addBlockAlias("cataclysm:energy_table", ENERGY_TABLE.getId());
         }
     }
 

@@ -3,12 +3,37 @@
   "downfall": 0.4,
   "effects": {
     "fog_color": 15986620,
+    "foliage_color": 7380249,
+    "grass_color": 8828976,
     "sky_color": 8831428,
     "water_color": 3572389,
     "water_fog_color": 3572389
   },
-  "features": [],
-  "has_precipitation": false,
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "relics_and_foes:wildfield_corn",
+      "relics_and_foes:ancient_wildgrass",
+      "relics_and_foes:fallen_lavender",
+      "relics_and_foes:tequila",
+      "relics_and_foes:wildfield_weeds",
+      "relics_and_foes:ancient_tall_wildgrass"
+    ],
+    [
+      "relics_and_foes:abandoned_tablet",
+      "relics_and_foes:abandoned_planks",
+      "relics_and_foes:abandoned_sign"
+    ]
+  ],
+  "has_precipitation": true,
   "spawn_costs": {},
   "spawners": {
     "ambient": [],

@@ -1,4 +1,4 @@
-package org.magicteam.relicsandfoes.world.block.crossrealmancientruins;
+package org.magicteam.relicsandfoes.world.block;
 
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;

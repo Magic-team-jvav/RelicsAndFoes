@@ -7,6 +7,7 @@
     ],
     "client": [
         "net.minecraft.client.multiplayer.ClientLevelMixin",
+        "net.minecraft.client.multiplayer.ClientLevelMixin$ClientLevelDataMixin",
         "net.minecraft.client.multiplayer.LevelLoadStatusManagerMixin",
         "net.minecraft.client.renderer.FogRendererMixin"
     ],
@@ -15,5 +16,5 @@
     },
     "overwrites": {
         "requireAnnotations": true
-  }
+    }
 }

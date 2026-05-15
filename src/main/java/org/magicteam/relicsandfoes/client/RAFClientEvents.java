@@ -1,16 +1,16 @@
 package org.magicteam.relicsandfoes.client;
 
 import com.mojang.blaze3d.shaders.FogShape;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.GrassColor;
+import net.minecraft.world.level.block.DoublePlantBlock;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.material.FogType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -23,8 +23,10 @@ import org.magicteam.relicsandfoes.client.screen.AfterTeleportScreen;
 import org.magicteam.relicsandfoes.init.RAFBlocks;
 import org.magicteam.relicsandfoes.init.RAFDimensions;
 import org.magicteam.relicsandfoes.init.RAFMusics;
-import org.magicteam.relicsandfoes.world.block.crossrealmancientruins.AncientRelicTeleporterBlock;
+import org.magicteam.relicsandfoes.world.block.AncientRelicTeleporterBlock;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
+
+import static org.magicteam.relicsandfoes.client.RAFSharedValues.*;
 
 @EventBusSubscriber(modid = RelicsAndFoes.MODID, value = Dist.CLIENT)
 public final class RAFClientEvents {
@@ -44,27 +46,27 @@ public final class RAFClientEvents {
         });
     }
 
-    static LocalPlayer player;
-    static boolean inRelicLand;
-    static Holder<Biome> biome;
-    static boolean inTheSunkenExpanse;
+    @SubscribeEvent
+    public static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
+        event.register((state, getter, pos, index) -> getter != null && pos != null ? BiomeColors.getAverageGrassColor(getter, state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos) : GrassColor.getDefaultColor(),
+                RAFBlocks.ANCIENT_TALL_WILDGRASS.get()
+        );
+        event.register((state, getter, pos, index) -> getter != null && pos != null ? BiomeColors.getAverageGrassColor(getter, pos) : GrassColor.getDefaultColor(),
+                RAFBlocks.ANCIENT_WILDGRASS.get()
+        );
+    }
 
     @SubscribeEvent
     public static void clientPlayerNetwork$LoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
-        inRelicLand = false;
-        biome = null;
-        inTheSunkenExpanse = false;
+        RAFSharedValues.reset();
     }
 
     @SubscribeEvent
     public static void clientTick$Pre(ClientTickEvent.Pre event) {
-        player = Minecraft.getInstance().player;
-        if (player == null) return;
-        ClientLevel level = player.clientLevel;
-        inRelicLand = level.dimension() == RAFDimensions.LEVEL;
-        biome = level.getBiome(player.blockPosition());
-        inTheSunkenExpanse = biome.is(RAFDimensions.Biomez.THE_SUNKEN_EXPANSE);
-        RelicsAndFoesClient.biomeParticles();
+        RAFSharedValues.update();
+        if (available) {
+            RelicsAndFoesClient.biomeParticles();
+        }
     }
 
     @SubscribeEvent
@@ -106,7 +108,6 @@ public final class RAFClientEvents {
             if (type == FogType.NONE) {
                 event.setFogShape(FogShape.SPHERE);
                 event.setNearPlaneDistance(0);
-                event.setFarPlaneDistance(168);
                 event.setCanceled(true);
             } else if (type == FogType.WATER) {
                 event.setFogShape(FogShape.SPHERE);
@@ -125,7 +126,11 @@ public final class RAFClientEvents {
     @SubscribeEvent
     public static void selectMusic(SelectMusicEvent event) {
         if (inTheSunkenExpanse) {
-            event.overrideMusic(RAFMusics.THE_SUNKEN_EXPANSE);
+            if (inCrossRealmAncientRuins && !isPrototypeDefeated) {
+                event.overrideMusic(RAFMusics.RUIN_CITY_BEFORE_BOSS_PROTOTYPE);
+            } else {
+                event.overrideMusic(RAFMusics.THE_SUNKEN_EXPANSE);
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package org.magicteam.relicsandfoes.world.block.crossrealmancientruins;
+package org.magicteam.relicsandfoes.world.level.levelgen.feature.stateproviders;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

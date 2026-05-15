@@ -9,6 +9,10 @@
 			}
 		},
 		"components": {
+            "minecraft:emitter_local_space": {
+                "position": true,
+                "rotation": false
+            },
 			"minecraft:emitter_initialization": {
 				"creation_expression": "v.texture=math.random_integer(0,2);"
 			},

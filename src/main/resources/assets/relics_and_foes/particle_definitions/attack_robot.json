@@ -1,0 +1,52 @@
+{
+	"format_version": "1.10.0",
+	"particle_effect": {
+		"description": {
+			"identifier": "relics_and_foes:attack_robot",
+			"basic_render_parameters": {
+				"material": "particles_blend",
+				"texture": "relics_and_foes:light_particle"
+			}
+		},
+		"components": {
+			"minecraft:emitter_initialization": {
+				"creation_expression": "v.face_rot=0;v.rot_y=math.random(-20,20);v.cha_x=math.random(-0.25,0.25);v.cha_y=math.random(-0.25,0.25);v.cha_z=math.random(-0.25,0.25);v.rot=math.random(-23,23);"
+			},
+			"minecraft:emitter_rate_instant": {
+				"num_particles": 1
+			},
+			"minecraft:emitter_lifetime_once": {
+				"active_time": 1.25
+			},
+			"minecraft:emitter_shape_sphere": {
+				"offset": ["v.cha_x", "v.cha_y", "v.cha_z"],
+				"radius": 0.2,
+				"direction": ["math.sin(v.rot+v.face_rot)", "math.sin(v.rot_y)", "math.cos(v.rot+v.face_rot)"]
+			},
+			"minecraft:particle_lifetime_expression": {
+				"max_lifetime": "math.random(1,1.5)"
+			},
+			"minecraft:particle_initial_speed": 7,
+			"minecraft:particle_motion_dynamic": {},
+			"minecraft:particle_appearance_billboard": {
+				"size": [0.22, 0.22],
+				"facing_camera_mode": "rotate_xyz",
+				"uv": {
+					"texture_width": 16,
+					"texture_height": 16,
+					"uv": [0, 0],
+					"uv_size": [16, 16]
+				}
+			},
+			"minecraft:particle_appearance_tinting": {
+				"color": {
+					"interpolant": "v.particle_age / v.particle_lifetime",
+					"gradient": {
+						"0.0": "#FFFFFBC8",
+						"1.0": "#00FFFBC8"
+					}
+				}
+			}
+		}
+	}
+}
