@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "relics_and_foes:block/abandoned_tablet",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "relics_and_foes:block/abandoned_tablet"
+    },
+    "facing=south": {
+      "model": "relics_and_foes:block/abandoned_tablet",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "relics_and_foes:block/abandoned_tablet",
+      "y": 270
+    }
+  }
+}

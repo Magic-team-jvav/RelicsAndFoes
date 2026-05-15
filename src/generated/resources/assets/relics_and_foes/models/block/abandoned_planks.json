@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/block",
+  "automatic_culling": false,
+  "flip_v": true,
+  "loader": "neoforge:obj",
+  "model": "relics_and_foes:models/abandoned_planks.obj",
+  "mtl_override": "relics_and_foes:models/abandoned_planks.mtl",
+  "textures": {
+    "particle": "relics_and_foes:block/abandoned_planks"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/block",
+  "automatic_culling": false,
+  "flip_v": true,
+  "loader": "neoforge:obj",
+  "model": "relics_and_foes:models/wildfield_weeds.obj",
+  "mtl_override": "relics_and_foes:models/wildfield_weeds.mtl",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "relics_and_foes:block/wildfield_weeds"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "feature": "relics_and_foes:ancient_wildgrass",
+  "placement": [
+    {
+      "type": "minecraft:biome"
+    },
+    {
+      "type": "relics_and_foes:exclude_regions"
+    },
+    {
+      "type": "minecraft:noise_threshold_count",
+      "above_noise": 12,
+      "below_noise": 6,
+      "noise_level": -0.8
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "WORLD_SURFACE_WG"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/tinted_cross",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "cross": "relics_and_foes:block/ancient_tall_wildgrass_bottom"
+  }
+}

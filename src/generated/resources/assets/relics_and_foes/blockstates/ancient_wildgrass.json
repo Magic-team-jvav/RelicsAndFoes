@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "relics_and_foes:block/ancient_wildgrass0"
+      },
+      {
+        "model": "relics_and_foes:block/ancient_wildgrass1"
+      },
+      {
+        "model": "relics_and_foes:block/ancient_wildgrass2"
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "relics_and_foes:block/ancient_tall_wildgrass_bottom"
+    },
+    "half=upper": {
+      "model": "relics_and_foes:block/ancient_tall_wildgrass_top"
+    }
+  }
+}

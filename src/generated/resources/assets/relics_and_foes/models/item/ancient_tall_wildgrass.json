@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "relics_and_foes:item/ancient_tall_wildgrass"
+  }
+}

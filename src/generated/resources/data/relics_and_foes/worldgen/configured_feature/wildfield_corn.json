@@ -1,0 +1,7 @@
+{
+  "type": "relics_and_foes:wildfield_corn",
+  "config": {
+    "max_height": 5,
+    "min_height": 2
+  }
+}
