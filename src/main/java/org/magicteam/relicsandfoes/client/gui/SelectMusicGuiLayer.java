@@ -10,6 +10,7 @@ import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.Music;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
@@ -42,6 +43,7 @@ public class SelectMusicGuiLayer implements LayeredDraw.Layer {
             LostSoloMelodyComponent component = player.getUseItem().get(RAFDataComponents.LOST_SOLO_MELODY);
             if (component == null) return;
             int selected = component.limit(component.selected() + scrolled);
+            scrolled = selected - component.selected();
             List<Music> musics = component.musics();
             Font font = Minecraft.getInstance().font;
             PoseStack poseStack = guiGraphics.pose();
@@ -75,7 +77,8 @@ public class SelectMusicGuiLayer implements LayeredDraw.Layer {
                 currentScale[i + 1] += (targetScale - currentScale[i + 1]) * 0.1F;
                 float scale = currentScale[i + 1];
 
-                RenderSystem.setShaderColor(1, 1, 1, Mth.clamp(1 - offset * 0.3F, 0, 1));
+                float alpha = Mth.clamp(1 - offset * 0.3F, 0, 1);
+                RenderSystem.setShaderColor(1, 1, 1, alpha);
                 RenderSystem.enableBlend();
                 poseStack.pushPose();
                 poseStack.translate(centerX - width * scale * 0.5F, centerY - height * 0.5F + offsetY, 0);
@@ -84,7 +87,7 @@ public class SelectMusicGuiLayer implements LayeredDraw.Layer {
                 poseStack.popPose();
                 poseStack.pushPose();
                 poseStack.translate(centerX, centerY + offsetY, 0);
-                guiGraphics.drawCenteredString(font, text, 0, 0, 0xFFFFFFFF);
+                guiGraphics.drawCenteredString(font, text, 0, 0, FastColor.ARGB32.color((int) (alpha * 0xFF), 0xFFFFFF));
                 poseStack.popPose();
                 RenderSystem.disableBlend();
                 RenderSystem.setShaderColor(1, 1, 1, 1);

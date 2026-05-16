@@ -1,10 +1,18 @@
 {
+  "biome.relics_and_foes.the_azure_sea": "蔚蓝海",
+  "biome.relics_and_foes.the_forest_of_dusk": "落日之森",
+  "biome.relics_and_foes.the_misty_snowy_peaks": "迷雾雪峰",
+  "biome.relics_and_foes.the_peach_blossom_vale": "桃源谷",
+  "biome.relics_and_foes.the_rust_silent_city": "锈寂城",
+  "biome.relics_and_foes.the_sea_of_falling_stars": "飞星幻海",
+  "biome.relics_and_foes.the_sunken_expanse": "沉沦原野",
+  "biome.relics_and_foes.the_thorny_dreadlands": "棘悚之地",
   "dimension.relics_and_foes.relic_land": "古迹大陆",
-  "item.relics_and_foes.lost_solo_melody_angel": "失落的自奏曲-诡像之乐章",
-  "item.relics_and_foes.lost_solo_melody_conductor": "失落的自奏曲-魔女之乐章",
-  "item.relics_and_foes.lost_solo_melody_kylin": "失落的自奏曲-麟兽之乐章",
-  "item.relics_and_foes.lost_solo_melody_mechanical": "失落的自奏曲-钢龙之乐章",
-  "item.relics_and_foes.lost_solo_melody_prototype": "失落的自奏曲-源械之乐章",
+  "item.relics_and_foes.lost_solo_melody_angel_movement": "失落的自奏曲-诡像之乐章",
+  "item.relics_and_foes.lost_solo_melody_conductor_movement": "失落的自奏曲-魔女之乐章",
+  "item.relics_and_foes.lost_solo_melody_kylin_movement": "失落的自奏曲-麟兽之乐章",
+  "item.relics_and_foes.lost_solo_melody_mechanical_movement": "失落的自奏曲-钢龙之乐章",
+  "item.relics_and_foes.lost_solo_melody_prototype_movement": "失落的自奏曲-源械之乐章",
   "item.relics_and_foes.portable_ancient_relic_teleporter": "便携式古迹传送台",
   "music.relics_and_foes.biome_angel": "血玫蔓天 - Beilutal",
   "music.relics_and_foes.biome_conductor": "彩汐幻梦 - FRC",
@@ -22,6 +30,7 @@
   "tooltip.item.relics_and_foes.portable_ancient_relic_teleporter.0": "长按使用即可往返于古迹大陆与主世界",
   "tooltip.lost_solo_melody.0": "一摞神奇的乐谱，有着自动演奏的能力。",
   "tooltip.lost_solo_melody.1": "当前选中：",
-  "tooltip.lost_solo_melody.2": "自奏取单：",
-  "tooltip.lost_solo_melody.3": "蓄力使用并滑动鼠标滚轮以选择乐曲"
+  "tooltip.lost_solo_melody.2": "自奏曲单：",
+  "tooltip.lost_solo_melody.3": "长按使用并滚动鼠标滚轮以选择乐曲",
+  "tooltip.lost_solo_melody.none": "无"
 }

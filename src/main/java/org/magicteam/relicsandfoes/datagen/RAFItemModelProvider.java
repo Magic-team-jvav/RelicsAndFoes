@@ -21,11 +21,11 @@ public class RAFItemModelProvider extends ItemModelProvider {
     protected void registerModels() {
         builtinEntity(RAFBlocks.ANCIENT_RELIC_TELEPORTER);
         basicItem(RAFItems.PORTABLE_ANCIENT_RELIC_TELEPORTER.get());
-        basicItem(RAFItems.LOST_SOLO_MELODY_ANGEL.get());
-        basicItem(RAFItems.LOST_SOLO_MELODY_CONDUCTOR.get());
-        basicItem(RAFItems.LOST_SOLO_MELODY_KYLIN.get());
-        basicItem(RAFItems.LOST_SOLO_MELODY_MECHANICAL.get());
-        basicItem(RAFItems.LOST_SOLO_MELODY_PROTOTYPE.get());
+        basicItem(RAFItems.LOST_SOLO_MELODY_ANGEL_MOVEMENT.get());
+        basicItem(RAFItems.LOST_SOLO_MELODY_CONDUCTOR_MOVEMENT.get());
+        basicItem(RAFItems.LOST_SOLO_MELODY_KYLIN_MOVEMENT.get());
+        basicItem(RAFItems.LOST_SOLO_MELODY_MECHANICAL_MOVEMENT.get());
+        basicItem(RAFItems.LOST_SOLO_MELODY_PROTOTYPE_MOVEMENT.get());
     }
 
     protected ItemModelBuilder builtinEntity(ItemLike itemLike) {

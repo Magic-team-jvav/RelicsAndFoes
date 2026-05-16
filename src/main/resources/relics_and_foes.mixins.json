@@ -3,6 +3,7 @@
     "package": "org.magicteam.relicsandfoes.mixin",
     "compatibilityLevel": "JAVA_21",
     "mixins": [
+        "LanguageProviderAccessor",
         "net.minecraft.world.level.levelgen.NoiseBasedChunkGeneratorMixin"
     ],
     "client": [
