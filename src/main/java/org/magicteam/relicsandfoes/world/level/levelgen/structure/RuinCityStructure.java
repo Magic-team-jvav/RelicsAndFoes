@@ -21,14 +21,16 @@ public class RuinCityStructure extends Structure {
     @Override
     protected Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
         ChunkPos pos = context.chunkPos();
-        if (pos.x == 0 && pos.z == 0) {
-            int height = context.chunkGenerator().getFirstOccupiedHeight(0, 0, Heightmap.Types.WORLD_SURFACE_WG, context.heightAccessor(), context.randomState());
-            return Optional.of(new GenerationStub(new BlockPos(0, height, 0), builder -> {
+        if (pos.x % 128 == 0 && pos.z % 128 == 0) {
+            int minBlockX = pos.getMinBlockX();
+            int minBlockZ = pos.getMinBlockZ();
+            int height = context.chunkGenerator().getFirstOccupiedHeight(minBlockX, minBlockZ, Heightmap.Types.WORLD_SURFACE_WG, context.heightAccessor(), context.randomState());
+            return Optional.of(new GenerationStub(new BlockPos(minBlockX, height, minBlockZ), builder -> {
                 StructureTemplateManager manager = context.structureTemplateManager();
                 int h = height - 5;
                 for (int x = 0; x < 5; x++) {
                     for (int z = 0; z < 5; z++) {
-                        builder.addPiece(new SuperTemplateStructurePiece(manager, "cross_realm_ancient_ruins" + x + z, new BlockPos((x - 2) * 48 - 22, h, (z - 2) * 48 - 47)));
+                        builder.addPiece(new SimpleTemplateStructurePiece(manager, "cross_realm_ancient_ruins" + x + z, new BlockPos(minBlockX + (x - 2) * 48 - 22, h, minBlockZ + (z - 2) * 48 - 47)));
                     }
                 }
             }));

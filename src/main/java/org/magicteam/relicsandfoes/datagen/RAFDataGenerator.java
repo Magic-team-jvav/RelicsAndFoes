@@ -39,6 +39,9 @@ public final class RAFDataGenerator {
         generator.addProvider(client, new RAFBlockStateProvider(output, helper));
         generator.addProvider(client, new RAFItemModelProvider(output, helper));
         generator.addProvider(client, new RAFSoundDefinitionsProvider(output, helper));
+        generator.addProvider(client, new RAFLanguageProvider(output, true, "en_us"));
+        generator.addProvider(client, new RAFLanguageProvider(output, false, "zh_cn"));
+        generator.addProvider(client, new RAFEnUdProvider(output));
 
         DatapackBuiltinEntriesProvider provider = generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(output, lookup, BUILDER, Collections.singleton(RelicsAndFoes.MODID)));
     }

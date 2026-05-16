@@ -14,13 +14,13 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import org.magicteam.relicsandfoes.RelicsAndFoes;
 import org.magicteam.relicsandfoes.init.RAFDimensions;
 
-public class SuperTemplateStructurePiece extends TemplateStructurePiece {
-    public SuperTemplateStructurePiece(StructureTemplateManager manager, String name, BlockPos startPos) {
-        super(RAFDimensions.SUPER_TEMPLATE_STRUCTURE_PIECE.get(), 0, manager, RelicsAndFoes.asResource(name), name, makeSettings(), startPos);
+public class SimpleTemplateStructurePiece extends TemplateStructurePiece {
+    public SimpleTemplateStructurePiece(StructureTemplateManager manager, String name, BlockPos startPos) {
+        super(RAFDimensions.SIMPLE_TEMPLATE_STRUCTURE_PIECE.get(), 0, manager, RelicsAndFoes.asResource(name), name, makeSettings(), startPos);
     }
 
-    public SuperTemplateStructurePiece(StructureTemplateManager manager, CompoundTag tag) {
-        super(RAFDimensions.SUPER_TEMPLATE_STRUCTURE_PIECE.get(), tag, manager, id -> makeSettings());
+    public SimpleTemplateStructurePiece(StructureTemplateManager manager, CompoundTag tag) {
+        super(RAFDimensions.SIMPLE_TEMPLATE_STRUCTURE_PIECE.get(), tag, manager, id -> makeSettings());
     }
 
     private static StructurePlaceSettings makeSettings() {

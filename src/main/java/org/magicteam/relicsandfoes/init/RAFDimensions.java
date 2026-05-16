@@ -37,6 +37,7 @@ import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacementType;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
@@ -46,10 +47,12 @@ import org.magicteam.relicsandfoes.world.level.levelgen.feature.WildfieldCornFea
 import org.magicteam.relicsandfoes.world.level.levelgen.feature.stateproviders.HorizontalDirectionalStateProvider;
 import org.magicteam.relicsandfoes.world.level.levelgen.placement.ExcludeRegionsPlacement;
 import org.magicteam.relicsandfoes.world.level.levelgen.structure.RuinCityStructure;
-import org.magicteam.relicsandfoes.world.level.levelgen.structure.SuperTemplateStructurePiece;
+import org.magicteam.relicsandfoes.world.level.levelgen.structure.SimpleTemplateStructurePiece;
 import org.magicteam.relicsandfoes.world.level.levelgen.structure.placement.SimpleStructurePlacement;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.OptionalLong;
 import java.util.function.Consumer;
 
@@ -70,7 +73,7 @@ public final class RAFDimensions {
     public static final DeferredHolder<StructurePlacementType<?>, StructurePlacementType<SimpleStructurePlacement>> SIMPLE_STRUCTURE_PLACEMENT = STRUCTURE_PLACEMENT_TYPES.register("simple", () -> () -> SimpleStructurePlacement.CODEC);
 
     private static final DeferredRegister<StructurePieceType> STRUCTURE_PIECES = DeferredRegister.create(Registries.STRUCTURE_PIECE, RelicsAndFoes.MODID);
-    public static final DeferredHolder<StructurePieceType, StructurePieceType.StructureTemplateType> SUPER_TEMPLATE_STRUCTURE_PIECE = STRUCTURE_PIECES.register("super_template", () -> SuperTemplateStructurePiece::new);
+    public static final DeferredHolder<StructurePieceType, StructurePieceType.StructureTemplateType> SIMPLE_TEMPLATE_STRUCTURE_PIECE = STRUCTURE_PIECES.register("simple", () -> SimpleTemplateStructurePiece::new);
 
     private static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(Registries.FEATURE, RelicsAndFoes.MODID);
     public static final DeferredHolder<Feature<?>, WildfieldCornFeature> WILDFIELD_CORN_FEATURE = FEATURES.register("wildfield_corn", () -> new WildfieldCornFeature(WildfieldCornFeature.Config.CODEC));
@@ -134,7 +137,7 @@ public final class RAFDimensions {
                             DensityFunctions.zero(),
                             DensityFunctions.zero()
                     ),
-                    SurfaceRuleData.overworld(),
+                    SurfaceRules.ifTrue(SurfaceRules.verticalGradient("bedrock_floor", VerticalAnchor.bottom(), VerticalAnchor.aboveBottom(5)), SurfaceRuleData.BEDROCK),
                     List.of(), 0, false, true, false, false));
         }
     }
@@ -164,6 +167,8 @@ public final class RAFDimensions {
     }
 
     public static class Biomez {
+        private static List<ResourceKey<Biome>> allBiomes;
+
         public static final ResourceKey<Biome> THE_SUNKEN_EXPANSE = key("the_sunken_expanse"); // 沉沦原野
         public static final ResourceKey<Biome> THE_MISTY_SNOWY_PEAKS = key("the_misty_snowy_peaks"); // 迷雾雪峰
         public static final ResourceKey<Biome> THE_RUST_SILENT_CITY = key("the_rust_silent_city"); // 锈寂城
@@ -173,8 +178,22 @@ public final class RAFDimensions {
         public static final ResourceKey<Biome> THE_SEA_OF_FALLING_STARS = key("the_sea_of_falling_stars"); // 飞星幻海
         public static final ResourceKey<Biome> THE_FOREST_OF_DUSK = key("the_forest_of_dusk"); // 落日之森
 
+        public static List<ResourceKey<Biome>> getAllBiomesForDataGen() {
+            if (DatagenModLoader.isRunningDataGen()) {
+                return Objects.requireNonNullElseGet(allBiomes, List::of);
+            }
+            throw new UnsupportedOperationException("Can not get all biomes");
+        }
+
         private static ResourceKey<Biome> key(String path) {
-            return ResourceKey.create(Registries.BIOME, RelicsAndFoes.asResource(path));
+            ResourceKey<Biome> key = ResourceKey.create(Registries.BIOME, RelicsAndFoes.asResource(path));
+            if (DatagenModLoader.isRunningDataGen()) {
+                if (allBiomes == null) {
+                    allBiomes = new ArrayList<>();
+                }
+                allBiomes.add(key);
+            }
+            return key;
         }
 
         public static void bootstrap(BootstrapContext<Biome> context) {
@@ -307,11 +326,11 @@ public final class RAFDimensions {
             HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
 
             context.register(WILDFIELD_CORN, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.WILDFIELD_CORN), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, CountPlacement.of(UniformInt.of(1, 2)), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
-            context.register(ANCIENT_WILDGRASS, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ANCIENT_WILDGRASS), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, NoiseThresholdCountPlacement.of(-0.8, 6, 12), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
+            context.register(ANCIENT_WILDGRASS, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ANCIENT_WILDGRASS), List.of(BiomeFilter.biome(), NoiseThresholdCountPlacement.of(-0.8, 6, 12), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
             context.register(FALLEN_LAVENDER, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.FALLEN_LAVENDER), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, NoiseThresholdCountPlacement.of(-0.75, 5, 10), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
             context.register(TEQUILA, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.TEQUILA), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, NoiseThresholdCountPlacement.of(-0.7, 4, 8), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
-            context.register(WILDFIELD_WEEDS, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.WILDFIELD_WEEDS), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, NoiseThresholdCountPlacement.of(-0.65, 3, 6), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
-            context.register(ANCIENT_TALL_WILDGRASS, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ANCIENT_TALL_WILDGRASS), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, NoiseThresholdCountPlacement.of(-0.6, 3, 6), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
+            context.register(WILDFIELD_WEEDS, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.WILDFIELD_WEEDS), List.of(BiomeFilter.biome(), NoiseThresholdCountPlacement.of(-0.65, 3, 6), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
+            context.register(ANCIENT_TALL_WILDGRASS, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ANCIENT_TALL_WILDGRASS), List.of(BiomeFilter.biome(), NoiseThresholdCountPlacement.of(-0.6, 3, 6), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
             context.register(ABANDONED_TABLET, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ABANDONED_TABLET), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, CountPlacement.of(UniformInt.of(1, 2)), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
             context.register(ABANDONED_PLANKS, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ABANDONED_PLANKS), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
             context.register(ABANDONED_SIGN, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ABANDONED_SIGN), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));

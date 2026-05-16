@@ -2,7 +2,6 @@ package org.magicteam.relicsandfoes.client;
 
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
@@ -10,6 +9,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import org.magicteam.relicsandfoes.init.RAFDimensions;
 
 public class RAFSharedValues {
@@ -48,8 +48,8 @@ public class RAFSharedValues {
         prototype.clear();
     }
 
-    public static void update() {
-        player = Minecraft.getInstance().player;
+    public static void update(@Nullable LocalPlayer localPlayer, boolean immediate) {
+        player = localPlayer;
         if (player == null) {
             available = false;
             return;
@@ -61,7 +61,7 @@ public class RAFSharedValues {
         inRelicLand = level.dimension() == RAFDimensions.LEVEL;
         biome = level.getBiome(player.blockPosition());
         inTheSunkenExpanse = biome.is(RAFDimensions.Biomez.THE_SUNKEN_EXPANSE);
-        if (gameTime % 20 == 0) {
+        if (immediate || gameTime % 20 == 0) {
             middleX = (Mth.floor(position.x) + 1024) >> 11 << 11;
             middleZ = (Mth.floor(position.z) + 1024) >> 11 << 11;
             inCrossRealmAncientRuins = inTheSunkenExpanse && Mth.lengthSquared(middleX - position.x, middleZ - position.z) <= 160 * 160;

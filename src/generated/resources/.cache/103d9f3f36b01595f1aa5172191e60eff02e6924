@@ -1,4 +1,4 @@
-// 1.21.1	2026-05-15T22:05:44.1311739	Registries
+// 1.21.1	2026-05-16T11:35:43.9071282	Registries
 6a3a572ee0f0fff09bf611c49ed772ac1f231451 data/relics_and_foes/dimension/relic_land.json
 41b5493a552ebab3280b1204da493a8b5c886b63 data/relics_and_foes/dimension_type/relic_land_type.json
 614e3904cbffad1595ec112d05db55fa9cfe6150 data/relics_and_foes/worldgen/biome/the_azure_sea.json
@@ -18,7 +18,7 @@ fd5b2c048183aa80c8110f2c04e2bb875275158b data/relics_and_foes/worldgen/configure
 7b5bdaee7017a81cba82efbce571030a867bb192 data/relics_and_foes/worldgen/configured_feature/tequila.json
 6fb9ee5cc2bebb3396a13ad0e36aac45f5dab00f data/relics_and_foes/worldgen/configured_feature/wildfield_corn.json
 4e7b898f303dcbbe9d0ab4edf391d5e85567fce6 data/relics_and_foes/worldgen/configured_feature/wildfield_weeds.json
-b25c9c104b44d26919098c2734abdd7ae7598cc1 data/relics_and_foes/worldgen/noise_settings/relic_land.json
+446dde48303e2399d390580f7f6e9e1bcef1a926 data/relics_and_foes/worldgen/noise_settings/relic_land.json
 2ce1feb976b5c1d66e4413c1bb85b1ad038c9748 data/relics_and_foes/worldgen/placed_feature/abandoned_planks.json
 8e70fd5e241e05d947ec3856ec815036d9cb4fd0 data/relics_and_foes/worldgen/placed_feature/abandoned_sign.json
 f260913e6d00fc6ffb27ab0865d1320779620135 data/relics_and_foes/worldgen/placed_feature/abandoned_tablet.json

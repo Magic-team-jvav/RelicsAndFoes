@@ -29,41 +29,48 @@ public final class RelicsAndFoesClient {
     private static final RandomSource random = RandomSource.create();
 
     public static void biomeParticles() {
-        if (RAFClientConfigs.biomeParticles && gameTime % 20 == 0) {
-            if (biome.is(RAFDimensions.Biomez.THE_SEA_OF_FALLING_STARS)) {
-
-            } else if (inTheSunkenExpanse) {
-                RandomSource random = player.getRandom();
-                if (inCrossRealmAncientRuins && !isPrototypeDefeated) {
-                    addEmitter(
-                            position.x + nextBetweenInclusive(random, -18, 8),
-                            position.y + nextBetweenInclusive(random, -5, 8),
-                            position.z + nextBetweenInclusive(random, -18, 8),
-                            "city_wind"
-                    );
-                    addEmitter(position, "city_petal_atlas");
-                } else {
-                    for (int i = 0; i < 5; i++) {
+        if (RAFClientConfigs.biomeParticles) {
+            if (gameTime % 2 == 0) {
+                if (inTheSunkenExpanse) {
+                    if (inCrossRealmAncientRuins && !isPrototypeDefeated) {
                         addEmitter(
-                                position.x + nextScale(random, 20),
-                                position.y + nextScale(random, 7),
-                                position.z + nextScale(random, 20),
-                                "the_sunken_expanse_light_circle"
+                                position.x + nextBetweenInclusive(random, -18, 8),
+                                position.y + nextBetweenInclusive(random, -5, 8),
+                                position.z + nextBetweenInclusive(random, -18, 8),
+                                "city_wind"
                         );
+                        addEmitter(position, "city_petal_atlas");
                     }
-                    if (position.y <= 75) {
+                }
+            }
+            if (gameTime % 20 == 0) {
+                if (biome.is(RAFDimensions.Biomez.THE_SEA_OF_FALLING_STARS)) {
+
+                } else if (inTheSunkenExpanse) {
+                    RandomSource random = player.getRandom();
+                    if (!inCrossRealmAncientRuins || isPrototypeDefeated) {
                         for (int i = 0; i < 5; i++) {
                             addEmitter(
                                     position.x + nextScale(random, 20),
                                     position.y + nextScale(random, 7),
                                     position.z + nextScale(random, 20),
-                                    "the_sunken_expanse_fallen_leaves"
+                                    "the_sunken_expanse_light_circle"
                             );
                         }
+                        if (position.y <= 75) {
+                            for (int i = 0; i < 5; i++) {
+                                addEmitter(
+                                        position.x + nextScale(random, 20),
+                                        position.y + nextScale(random, 7),
+                                        position.z + nextScale(random, 20),
+                                        "the_sunken_expanse_fallen_leaves"
+                                );
+                            }
+                        }
                     }
-                }
-            } else if (biome.is(RAFDimensions.Biomez.THE_PEACH_BLOSSOM_VALE)) {
+                } else if (biome.is(RAFDimensions.Biomez.THE_PEACH_BLOSSOM_VALE)) {
 
+                }
             }
         }
         if (gameTime % 60 == 0) {
@@ -119,11 +126,11 @@ public final class RelicsAndFoesClient {
     }
 
     public static void addEmitter(double x, double y, double z, String path) {
-        PSGameClient.LOADER.addEmitter(new ParticleEmitter(level, new Vec3(x, y, z), RelicsAndFoes.asResource(path)), false);
+        PSGameClient.LOADER.addEmitter(new ParticleEmitter(level, new Vec3(x, y, z), RelicsAndFoes.asResource(path)));
     }
 
     public static void addEmitter(Vec3 pos, String path) {
-        PSGameClient.LOADER.addEmitter(new ParticleEmitter(level, pos, RelicsAndFoes.asResource(path)), false);
+        PSGameClient.LOADER.addEmitter(new ParticleEmitter(level, pos, RelicsAndFoes.asResource(path)));
     }
 
     public static int getHeight(BlockPos.MutableBlockPos mutable, int bx, int bz) {

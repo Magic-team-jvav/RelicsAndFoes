@@ -46,7 +46,7 @@ public class AncientRelicTeleporterBlock extends Block implements EntityBlock {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.isClientSide) {
-            PSGameClient.LOADER.addEmitter(new ParticleEmitter(level, pos.getCenter(), RelicsAndFoes.asResource("portal_mist_start")), false);
+            PSGameClient.LOADER.addEmitter(new ParticleEmitter(level, pos.getCenter(), RelicsAndFoes.asResource("portal_mist_start")));
         } else {
             PacketDistributor.sendToPlayer((ServerPlayer) player, new TeleportStatePacket(TeleportStatePacket.START));
         }

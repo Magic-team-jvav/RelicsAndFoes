@@ -1,6 +1,7 @@
 package org.magicteam.relicsandfoes.client;
 
 import com.mojang.blaze3d.shaders.FogShape;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
@@ -57,13 +58,18 @@ public final class RAFClientEvents {
     }
 
     @SubscribeEvent
+    public static void clientPlayerNetwork$LoggingIn(ClientPlayerNetworkEvent.LoggingIn event) {
+        RAFSharedValues.update(event.getPlayer(), true);
+    }
+
+    @SubscribeEvent
     public static void clientPlayerNetwork$LoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
         RAFSharedValues.reset();
     }
 
     @SubscribeEvent
     public static void clientTick$Pre(ClientTickEvent.Pre event) {
-        RAFSharedValues.update();
+        RAFSharedValues.update(Minecraft.getInstance().player, false);
         if (available) {
             RelicsAndFoesClient.biomeParticles();
         }
