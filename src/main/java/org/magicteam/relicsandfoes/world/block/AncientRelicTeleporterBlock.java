@@ -20,7 +20,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
 import org.magicteam.relicsandfoes.init.RAFBlocks;
-import org.magicteam.relicsandfoes.network.TeleportStatePacket;
+import org.magicteam.relicsandfoes.network.PlayerActionPacket;
 import org.mesdag.particlestorm.PSGameClient;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
@@ -48,7 +48,7 @@ public class AncientRelicTeleporterBlock extends Block implements EntityBlock {
         if (level.isClientSide) {
             PSGameClient.LOADER.addEmitter(new ParticleEmitter(level, pos.getCenter(), RelicsAndFoes.asResource("portal_mist_start")));
         } else {
-            PacketDistributor.sendToPlayer((ServerPlayer) player, new TeleportStatePacket(TeleportStatePacket.START));
+            PacketDistributor.sendToPlayer((ServerPlayer) player, new PlayerActionPacket(PlayerActionPacket.TELEPORT_START));
         }
         return InteractionResult.SUCCESS;
     }

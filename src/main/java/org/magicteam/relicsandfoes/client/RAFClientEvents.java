@@ -17,9 +17,11 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
+import org.magicteam.relicsandfoes.client.gui.SelectMusicGuiLayer;
 import org.magicteam.relicsandfoes.client.screen.AfterTeleportScreen;
 import org.magicteam.relicsandfoes.init.RAFBlocks;
 import org.magicteam.relicsandfoes.init.RAFDimensions;
@@ -55,6 +57,18 @@ public final class RAFClientEvents {
         event.register((state, getter, pos, index) -> getter != null && pos != null ? BiomeColors.getAverageGrassColor(getter, pos) : GrassColor.getDefaultColor(),
                 RAFBlocks.ANCIENT_WILDGRASS.get()
         );
+    }
+
+    @SubscribeEvent
+    public static void registerGuiLayers(RegisterGuiLayersEvent event) {
+        event.registerAbove(VanillaGuiLayers.CROSSHAIR, SelectMusicGuiLayer.ID, new SelectMusicGuiLayer());
+    }
+
+    @SubscribeEvent
+    public static void renderGuiLayer$Pre(RenderGuiLayerEvent.Pre event) {
+        if (SelectMusicGuiLayer.selecting && VanillaGuiLayers.CROSSHAIR.equals(event.getName())) {
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
@@ -125,18 +139,31 @@ public final class RAFClientEvents {
     }
 
     @SubscribeEvent
-    public static void viewport$ComputeFogColor(ViewportEvent.ComputeFogColor event) {
-
+    public static void selectMusic(SelectMusicEvent event) {
+        if (SelectMusicGuiLayer.selectedMusic != null) {
+            event.overrideMusic(SelectMusicGuiLayer.selectedMusic);
+        } else if (available) {
+            if (inTheSunkenExpanse) {
+                if (inCrossRealmAncientRuins && !isPrototypeDefeated) {
+                    event.overrideMusic(RAFMusics.BIOME_PROTOTYPE_WIND);
+                } else {
+                    event.overrideMusic(RAFMusics.BIOME_PROTOTYPE);
+                }
+            } else if (biome.is(RAFDimensions.Biomez.THE_THORNY_DREADLANDS)) {
+                event.overrideMusic(RAFMusics.BIOME_ANGEL);
+            } else if (biome.is(RAFDimensions.Biomez.THE_SEA_OF_FALLING_STARS)) {
+                event.overrideMusic(RAFMusics.BIOME_CONDUCTOR);
+            } else if (biome.is(RAFDimensions.Biomez.THE_PEACH_BLOSSOM_VALE)) {
+                event.overrideMusic(RAFMusics.BIOME_KYLIN);
+            }
+        }
     }
 
     @SubscribeEvent
-    public static void selectMusic(SelectMusicEvent event) {
-        if (inTheSunkenExpanse) {
-            if (inCrossRealmAncientRuins && !isPrototypeDefeated) {
-                event.overrideMusic(RAFMusics.RUIN_CITY_BEFORE_BOSS_PROTOTYPE);
-            } else {
-                event.overrideMusic(RAFMusics.THE_SUNKEN_EXPANSE);
-            }
+    public static void input$MouseScrolling(InputEvent.MouseScrollingEvent event) {
+        if (SelectMusicGuiLayer.selecting) {
+            SelectMusicGuiLayer.scrolled -= Mth.sign(event.getScrollDeltaY());
+            event.setCanceled(true);
         }
     }
 }

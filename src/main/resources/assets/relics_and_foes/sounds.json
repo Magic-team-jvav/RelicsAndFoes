@@ -1,0 +1,1028 @@
+{
+  "message.boss": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:message/boss5/boss"
+      }
+    ]
+  },
+  "message.defend_start": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:message/boss5/defend_start"
+      }
+    ]
+  },
+  "message.defend_win": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:message/boss5/defend_win"
+      }
+    ]
+  },
+  "message.detected": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:message/boss5/detected"
+      }
+    ]
+  },
+  "message.final": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:message/boss5/final"
+      }
+    ]
+  },
+  "message.overload": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:message/boss5/overload"
+      }
+    ]
+  },
+  "message.protect": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:message/boss5/protect"
+      }
+    ]
+  },
+  "message.runaway_start": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:message/boss5/runaway_start"
+      }
+    ]
+  },
+  "mob.angel_hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/angel_hurt"
+      }
+    ]
+  },
+  "mob.attack_swing": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/attack_swing"
+      }
+    ]
+  },
+  "mob.axe_swing": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/axe_swing1"
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/axe_swing2"
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/axe_swing3"
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/axe_swing4"
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/axe_swing5"
+      }
+    ]
+  },
+  "mob.ball_hit": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/ball_hit"
+      }
+    ]
+  },
+  "mob.believer_hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/believer_hurt"
+      }
+    ]
+  },
+  "mob.big_land": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/big_land"
+      }
+    ]
+  },
+  "mob.big_rain": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/big_rain"
+      }
+    ]
+  },
+  "mob.big_wave": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/big_wave"
+      }
+    ]
+  },
+  "mob.big_wave_long": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/big_wave_long"
+      }
+    ]
+  },
+  "mob.boss5_chainsaw": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/chainsaw"
+      }
+    ]
+  },
+  "mob.boss5_cogs": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/cogs"
+      }
+    ]
+  },
+  "mob.boss5_gate_open": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/gate_open"
+      }
+    ]
+  },
+  "mob.boss5_gate_shut": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/gate_shut"
+      }
+    ]
+  },
+  "mob.boss5_hit": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/hit1"
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/hit2"
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/hit3"
+      }
+    ]
+  },
+  "mob.boss5_mech_death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/mech_death"
+      }
+    ]
+  },
+  "mob.boss5_mech_death_explode": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/mech_death_explode"
+      }
+    ]
+  },
+  "mob.boss5_msl_explode": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/msl_explode"
+      }
+    ]
+  },
+  "mob.boss5_msl_flyby": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/msl_flyby"
+      }
+    ]
+  },
+  "mob.boss5_msl_ir_seek": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/msl_ir_seek"
+      }
+    ]
+  },
+  "mob.boss5_msl_launch": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/msl_launch"
+      }
+    ]
+  },
+  "mob.boss5_msl_loop": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/msl_loop"
+      }
+    ]
+  },
+  "mob.boss5_rwr_msl": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/rwr_msl"
+      }
+    ]
+  },
+  "mob.boss5_steam": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/steam"
+      }
+    ]
+  },
+  "mob.boss5_thunder": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/thunder1"
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/thunder2"
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/thunder3"
+      }
+    ]
+  },
+  "mob.boss5_wind": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/wind"
+      }
+    ]
+  },
+  "mob.boss5_windup": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/windup"
+      }
+    ]
+  },
+  "mob.boss5_wyvern_scream": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/boss5/wyvern_scream"
+      }
+    ]
+  },
+  "mob.chest_open": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/chest_open"
+      }
+    ]
+  },
+  "mob.chest_open_crack": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/chest_open_crack"
+      }
+    ]
+  },
+  "mob.chicken_hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/chicken_hurt"
+      }
+    ]
+  },
+  "mob.city_wind": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/city_wind"
+      }
+    ]
+  },
+  "mob.clock": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/clock"
+      }
+    ]
+  },
+  "mob.cloth_attack": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/cloth_attack"
+      }
+    ]
+  },
+  "mob.cloth_attack2": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/cloth_attack2"
+      }
+    ]
+  },
+  "mob.cloth_hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/cloth_hurt"
+      }
+    ]
+  },
+  "mob.cloth_land": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/cloth_land"
+      }
+    ]
+  },
+  "mob.conductor_hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/conductor_hurt"
+      }
+    ]
+  },
+  "mob.cow_dead": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/cow_dead"
+      }
+    ]
+  },
+  "mob.cow_hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/cow_hurt"
+      }
+    ]
+  },
+  "mob.cow_jiao": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/cow_jiao"
+      }
+    ]
+  },
+  "mob.desert_wind": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/desert_wind"
+      }
+    ]
+  },
+  "mob.discover": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/discover"
+      }
+    ]
+  },
+  "mob.fal_star_2": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/fal_star_2"
+      }
+    ]
+  },
+  "mob.fall_star": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/fall_star"
+      }
+    ]
+  },
+  "mob.fire_ball1": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/fire_ball1"
+      }
+    ]
+  },
+  "mob.fire_ball2": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/fire_ball2"
+      }
+    ]
+  },
+  "mob.fly_wind": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/fly_wind"
+      }
+    ]
+  },
+  "mob.gift_boom": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/gift_boom"
+      }
+    ]
+  },
+  "mob.glide": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/glide"
+      }
+    ]
+  },
+  "mob.god_hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/god_hurt"
+      }
+    ]
+  },
+  "mob.huangchong": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/huangchong"
+      }
+    ]
+  },
+  "mob.iron_hit": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/iron_hit"
+      }
+    ]
+  },
+  "mob.iron_hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/iron_hurt"
+      }
+    ]
+  },
+  "mob.iron_hurt2": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/iron_hurt2"
+      }
+    ]
+  },
+  "mob.iron_wind": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/iron_wind"
+      }
+    ]
+  },
+  "mob.kylin_bellow": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/kylin_bellow"
+      }
+    ]
+  },
+  "mob.kylin_hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/kylin_hurt"
+      }
+    ]
+  },
+  "mob.land": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/land"
+      }
+    ]
+  },
+  "mob.laser_close": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/laser_close"
+      }
+    ]
+  },
+  "mob.laser_open": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/laser_open"
+      }
+    ]
+  },
+  "mob.lifting_platform": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/lifting_platform"
+      }
+    ]
+  },
+  "mob.magic_big_shoot": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/magic_big_shoot"
+      }
+    ]
+  },
+  "mob.magic_bomb": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/magic_bomb"
+      }
+    ]
+  },
+  "mob.magic_shoot": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/magic_shoot"
+      }
+    ]
+  },
+  "mob.magic_tp": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/magic_tp"
+      }
+    ]
+  },
+  "mob.magic_wave": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/magic_wave"
+      }
+    ]
+  },
+  "mob.many_bullet": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/many_bullet"
+      }
+    ]
+  },
+  "mob.missionary_hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/missionary_hurt"
+      }
+    ]
+  },
+  "mob.priest_smoke": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/priest_smoke"
+      }
+    ]
+  },
+  "mob.rockfall": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/rockfall"
+      }
+    ]
+  },
+  "mob.snack_hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/snack_hurt"
+      }
+    ]
+  },
+  "mob.snack_jiao": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/snack_jiao"
+      }
+    ]
+  },
+  "mob.strongattack_swing": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/strongattack_swing"
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/strongattack_swing2"
+      }
+    ]
+  },
+  "mob.swing": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing"
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing",
+        "pitch": 1.1
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing",
+        "pitch": 1.2
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing",
+        "pitch": 1.3
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing",
+        "pitch": 1.4
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing",
+        "pitch": 0.9
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing",
+        "pitch": 0.8
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing",
+        "pitch": 0.7
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing",
+        "pitch": 0.6
+      }
+    ]
+  },
+  "mob.swing_big": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing_big"
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing_big",
+        "pitch": 1.1
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing_big",
+        "pitch": 1.2
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing_big",
+        "pitch": 1.3
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing_big",
+        "pitch": 1.4
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing_big",
+        "pitch": 0.9
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing_big",
+        "pitch": 0.8
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing_big",
+        "pitch": 0.7
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/swing_big",
+        "pitch": 0.6
+      }
+    ]
+  },
+  "mob.sword": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/sword"
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/sword",
+        "pitch": 1.1
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/sword",
+        "pitch": 1.2
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/sword",
+        "pitch": 1.3
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/sword",
+        "pitch": 1.4
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/sword",
+        "pitch": 0.9
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/sword",
+        "pitch": 0.8
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/sword",
+        "pitch": 0.7
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/sword",
+        "pitch": 0.6
+      }
+    ]
+  },
+  "mob.thunder": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/thunder"
+      }
+    ]
+  },
+  "mob.water_blade": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/water_blade"
+      }
+    ]
+  },
+  "mob.water_column": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/water_column"
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/water_column",
+        "pitch": 1.1
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/water_column",
+        "pitch": 1.2
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/water_column",
+        "pitch": 0.9
+      },
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/water_column",
+        "pitch": 0.8
+      }
+    ]
+  },
+  "mob.wave": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/wave"
+      }
+    ]
+  },
+  "mob.wolf_hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/wolf_hurt"
+      }
+    ]
+  },
+  "mob.wood_hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "relics_and_foes:mob/wood_hurt"
+      }
+    ]
+  },
+  "music.biome_angel": {
+    "sounds": [
+      {
+        "name": "relics_and_foes:music/biome_angel",
+        "preload": true,
+        "stream": true,
+        "volume": 0.15
+      }
+    ]
+  },
+  "music.biome_conductor": {
+    "sounds": [
+      {
+        "name": "relics_and_foes:music/biome_conductor",
+        "preload": true,
+        "stream": true,
+        "volume": 2.0
+      }
+    ]
+  },
+  "music.biome_kylin": {
+    "sounds": [
+      {
+        "name": "relics_and_foes:music/biome_kylin",
+        "preload": true,
+        "stream": true,
+        "volume": 0.1
+      }
+    ]
+  },
+  "music.biome_mechanical": {
+    "sounds": [
+      {
+        "name": "relics_and_foes:music/biome_mechanical",
+        "preload": true,
+        "stream": true,
+        "volume": 0.4
+      }
+    ]
+  },
+  "music.biome_prototype": {
+    "sounds": [
+      {
+        "name": "relics_and_foes:music/biome_prototype",
+        "preload": true,
+        "stream": true,
+        "volume": 0.4
+      }
+    ]
+  },
+  "music.biome_prototype_wind": {
+    "sounds": [
+      {
+        "name": "relics_and_foes:music/biome_prototype_wind",
+        "preload": true,
+        "stream": true,
+        "volume": 1.5
+      }
+    ]
+  },
+  "music.boss_angel": {
+    "sounds": [
+      {
+        "name": "relics_and_foes:music/boss_angel",
+        "preload": true,
+        "stream": true,
+        "volume": 0.5
+      }
+    ]
+  },
+  "music.boss_conductor": {
+    "sounds": [
+      {
+        "name": "relics_and_foes:music/boss_conductor",
+        "preload": true,
+        "stream": true,
+        "volume": 0.3
+      }
+    ]
+  },
+  "music.boss_kylin": {
+    "sounds": [
+      {
+        "name": "relics_and_foes:music/boss_kylin",
+        "preload": true,
+        "stream": true,
+        "volume": 0.6
+      }
+    ]
+  },
+  "music.boss_mechanical_0": {
+    "sounds": [
+      {
+        "name": "relics_and_foes:music/boss_mechanical_0",
+        "preload": true,
+        "stream": true,
+        "volume": 0.4
+      }
+    ]
+  },
+  "music.boss_mechanical_1": {
+    "sounds": [
+      {
+        "name": "relics_and_foes:music/boss_mechanical_1",
+        "preload": true,
+        "stream": true,
+        "volume": 0.4
+      }
+    ]
+  },
+  "music.boss_prototype_1": {
+    "sounds": [
+      {
+        "name": "relics_and_foes:music/boss_prototype_1",
+        "preload": true,
+        "stream": true,
+        "volume": 0.4
+      }
+    ]
+  },
+  "music.boss_prototype_4": {
+    "sounds": [
+      {
+        "name": "relics_and_foes:music/boss_prototype_2",
+        "preload": true,
+        "stream": true,
+        "volume": 0.4
+      }
+    ]
+  }
+}

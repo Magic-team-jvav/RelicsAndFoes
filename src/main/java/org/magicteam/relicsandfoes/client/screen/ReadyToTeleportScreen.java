@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.magicteam.relicsandfoes.network.TeleportStatePacket;
+import org.magicteam.relicsandfoes.network.PlayerActionPacket;
 
 public class ReadyToTeleportScreen extends Screen {
     private int tickCount;
@@ -27,7 +27,7 @@ public class ReadyToTeleportScreen extends Screen {
         ++tickCount;
         if (!hasSend && tickCount > 100) {
             hasSend = true;
-            PacketDistributor.sendToServer(new TeleportStatePacket(TeleportStatePacket.END));
+            PacketDistributor.sendToServer(new PlayerActionPacket(PlayerActionPacket.TELEPORT_END));
         }
         if (tickCount > 200 && Minecraft.getInstance().screen == this) {
             onClose();

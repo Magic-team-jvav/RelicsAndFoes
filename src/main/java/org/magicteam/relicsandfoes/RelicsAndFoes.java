@@ -4,10 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import org.magicteam.relicsandfoes.init.RAFBlocks;
-import org.magicteam.relicsandfoes.init.RAFDimensions;
-import org.magicteam.relicsandfoes.init.RAFItems;
-import org.magicteam.relicsandfoes.init.RAFSounds;
+import org.magicteam.relicsandfoes.init.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +18,7 @@ public final class RelicsAndFoes {
         RAFItems.register(eventBus);
         RAFDimensions.register(eventBus);
         RAFSounds.SOUND_EVENTS.register(eventBus);
+        RAFDataComponents.TYPES.register(eventBus);
     }
 
     public static ResourceLocation asResource(String path) {
