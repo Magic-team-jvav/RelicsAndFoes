@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.resources.ResourceLocation;
+import org.magicteam.relicsandfoes.RelicsAndFoes;
 import org.magicteam.relicsandfoes.world.item.RAFCreativeModeTab;
 
 import java.util.List;
@@ -31,16 +32,15 @@ public interface RAFCreativeModeInventoryScreen {
     }
 
     class SideTabButton extends ImageButton {
+        private static final WidgetSprites SPRITES = new WidgetSprites(
+                RelicsAndFoes.asResource("side_tab"),
+                RelicsAndFoes.asResource("side_tab_highlighted")
+        );
         protected boolean clicked;
         public final RAFCreativeModeTab.SideTab tab;
 
         public SideTabButton(RAFCreativeModeInventoryScreen screen, RAFCreativeModeTab.SideTab tab) {
-            super(0, 0, 16, 16, new WidgetSprites(
-                    ResourceLocation.withDefaultNamespace("notification/1"),
-                    ResourceLocation.withDefaultNamespace("notification/2"),
-                    ResourceLocation.withDefaultNamespace("notification/3"),
-                    ResourceLocation.withDefaultNamespace("notification/4")
-            ), button -> onPress((SideTabButton) button, screen, tab), tab.getTranslatedName());
+            super(0, 0, 16, 16, SPRITES, button -> onPress((SideTabButton) button, screen, tab), tab.getTranslatedName());
             this.tab = tab;
             if (Variables.selectedSideTab == tab) {
                 this.clicked = true;

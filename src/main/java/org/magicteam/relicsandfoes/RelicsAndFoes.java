@@ -1,7 +1,6 @@
 package org.magicteam.relicsandfoes;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -24,10 +23,5 @@ public final class RelicsAndFoes {
 
     public static ResourceLocation asResource(String path) {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
-    }
-
-    public static void generator(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        RAFItems.ITEMS.getEntries().forEach(holder -> output.accept(holder.get()));
-        RAFItems.BLOCK_ITEMS.getEntries().forEach(holder -> output.accept(holder.get()));
     }
 }

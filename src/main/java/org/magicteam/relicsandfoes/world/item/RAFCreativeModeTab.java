@@ -9,7 +9,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackLinkedSet;
 import net.neoforged.neoforge.common.TranslatableEnum;
 import org.jetbrains.annotations.Nullable;
-import org.magicteam.relicsandfoes.RelicsAndFoes;
 import org.magicteam.relicsandfoes.init.RAFBlocks;
 import org.magicteam.relicsandfoes.init.RAFItems;
 import org.magicteam.relicsandfoes.init.RAFTags;
@@ -30,7 +29,10 @@ public class RAFCreativeModeTab extends CreativeModeTab {
                 Type.CATEGORY,
                 Component.translatable("itemGroup.relics_and_foes"),
                 RAFItems.PORTABLE_ANCIENT_RELIC_TELEPORTER::toStack,
-                RelicsAndFoes::generator,
+                (parameters, output) -> {
+                    RAFItems.ITEMS.getEntries().forEach(holder -> output.accept(holder.get()));
+                    RAFItems.BLOCK_ITEMS.getEntries().forEach(holder -> output.accept(holder.get()));
+                },
                 null,
                 false,
                 89,
