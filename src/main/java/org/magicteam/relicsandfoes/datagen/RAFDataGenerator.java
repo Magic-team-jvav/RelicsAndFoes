@@ -43,6 +43,10 @@ public final class RAFDataGenerator {
         generator.addProvider(client, new RAFLanguageProvider(output, false, "zh_cn"));
         generator.addProvider(client, new RAFEnUdProvider(output));
 
-        DatapackBuiltinEntriesProvider provider = generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(output, lookup, BUILDER, Collections.singleton(RelicsAndFoes.MODID)));
+        boolean server = event.includeServer();
+        DatapackBuiltinEntriesProvider provider = generator.addProvider(server, new DatapackBuiltinEntriesProvider(output, lookup, BUILDER, Collections.singleton(RelicsAndFoes.MODID)));
+        lookup = provider.getRegistryProvider();
+        RAFBlockTagsProvider blockTagsProvider = generator.addProvider(server, new RAFBlockTagsProvider(output, lookup));
+        generator.addProvider(server, new RAFItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter()));
     }
 }

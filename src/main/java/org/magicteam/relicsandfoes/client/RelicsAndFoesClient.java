@@ -126,11 +126,13 @@ public final class RelicsAndFoesClient {
     }
 
     public static void addEmitter(double x, double y, double z, String path) {
-        PSGameClient.LOADER.addEmitter(new ParticleEmitter(level, new Vec3(x, y, z), RelicsAndFoes.asResource(path)));
+        addEmitter(new Vec3(x, y, z), path);
     }
 
     public static void addEmitter(Vec3 pos, String path) {
-        PSGameClient.LOADER.addEmitter(new ParticleEmitter(level, pos, RelicsAndFoes.asResource(path)));
+        ParticleEmitter emitter = new ParticleEmitter(level, pos, RelicsAndFoes.asResource(path));
+        emitter.hideOutline = true;
+        PSGameClient.LOADER.addEmitter(emitter);
     }
 
     public static int getHeight(BlockPos.MutableBlockPos mutable, int bx, int bz) {

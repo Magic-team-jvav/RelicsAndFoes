@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.Music;
 import net.minecraft.util.FastColor;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
@@ -28,18 +29,19 @@ import static org.magicteam.relicsandfoes.client.RAFSharedValues.player;
 
 public class SelectMusicGuiLayer implements LayeredDraw.Layer {
     public static final ResourceLocation ID = RelicsAndFoes.asResource("select_music");
-    private static final ResourceLocation SPRITE = ResourceLocation.withDefaultNamespace("advancements/title_box");
+    private static final ResourceLocation SPRITE = RelicsAndFoes.asResource("music_selection");
     public static boolean selecting;
     public static int scrolled;
     public static @Nullable Music selectedMusic;
 
+    private static boolean rendering;
     private static float currentOffsetY;
     private static float[] currentScale = new float[0];
 
     @Override
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
-        if (available && player.isUsingItem() && player.getUseItem().getItem() instanceof LostSoloMelodyItem) {
-            selecting = true;
+        if (selecting) {
+            rendering = true;
             LostSoloMelodyComponent component = player.getUseItem().get(RAFDataComponents.LOST_SOLO_MELODY);
             if (component == null) return;
             int selected = component.limit(component.selected() + scrolled);
@@ -67,7 +69,7 @@ public class SelectMusicGuiLayer implements LayeredDraw.Layer {
             for (int i = -1; i < musics.size(); i++) {
                 Component text;
                 if (i == -1) {
-                    text = Component.literal("停止播放");
+                    text = Component.translatable("gui.select_music.stop");
                 } else {
                     text = Component.translatable(LostSoloMelodyComponent.getDescriptionId(musics.get(i)));
                 }
@@ -83,18 +85,19 @@ public class SelectMusicGuiLayer implements LayeredDraw.Layer {
                 poseStack.pushPose();
                 poseStack.translate(centerX - width * scale * 0.5F, centerY - height * 0.5F + offsetY, 0);
                 poseStack.scale(scale, scale, 1);
-                guiGraphics.blitSprite(SPRITE, 0, 0, width, font.lineHeight + height);
+                guiGraphics.blitSprite(SPRITE, 0, 0, width, 25);
                 poseStack.popPose();
                 poseStack.pushPose();
-                poseStack.translate(centerX, centerY + offsetY, 0);
-                guiGraphics.drawCenteredString(font, text, 0, 0, FastColor.ARGB32.color((int) (alpha * 0xFF), 0xFFFFFF));
+                FormattedCharSequence sequence = text.getVisualOrderText();
+                poseStack.translate(centerX - font.width(sequence) * 0.5F, centerY + offsetY, 0);
+                guiGraphics.drawString(font, sequence, 0, 0, FastColor.ARGB32.color((int) (alpha * 0xFF), 0x36262B), false);
                 poseStack.popPose();
                 RenderSystem.disableBlend();
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 offsetY += stepOffsetY;
             }
-        } else if (selecting) {
-            selecting = false;
+        } else if (rendering) {
+            rendering = false;
             if (available && player.getMainHandItem().getItem() instanceof LostSoloMelodyItem) {
                 LostSoloMelodyComponent component = player.getMainHandItem().get(RAFDataComponents.LOST_SOLO_MELODY);
                 if (component != null) {

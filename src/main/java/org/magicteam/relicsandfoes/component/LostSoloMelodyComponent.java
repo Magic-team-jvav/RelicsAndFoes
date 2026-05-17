@@ -58,7 +58,7 @@ public record LostSoloMelodyComponent(List<Music> musics, int selected) {
         } else {
             current = Component.translatable(getDescriptionId(musics.get(selected)));
         }
-        tooltips.add(Component.translatable("tooltip.lost_solo_melody.1").append(current).withStyle(ChatFormatting.BLUE));
+        tooltips.add(Component.translatable("tooltip.lost_solo_melody.1", current).withStyle(ChatFormatting.BLUE));
         tooltips.add(Component.translatable("tooltip.lost_solo_melody.2").withStyle(ChatFormatting.GRAY));
         for (int i = 0; i < musics.size(); i++) {
             tooltips.add(Component.translatable(getDescriptionId(musics.get(i))).withColor(i % 2 == 0 ? 0xEFCE16 : 0xFFAA00));

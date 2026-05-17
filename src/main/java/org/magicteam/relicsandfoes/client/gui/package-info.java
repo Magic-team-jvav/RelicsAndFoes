@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package org.magicteam.relicsandfoes.mixin;
+package org.magicteam.relicsandfoes.client.gui;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

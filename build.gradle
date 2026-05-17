@@ -136,7 +136,7 @@ repositories {
 
 dependencies {
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
-    if (false) {
+    if (true) {
         implementation "org.mesdag:ParticleStorm:${particle_storm_version}"
     } else {
         implementation files("libs/particlestorm-${particle_storm_version}.jar")

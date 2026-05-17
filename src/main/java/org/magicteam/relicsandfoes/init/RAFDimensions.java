@@ -209,7 +209,7 @@ public final class RAFDimensions {
                             .waterFogColor(0x3682A5)
                             .fogColor(0xF3EFBC)
                             .skyColor(0x86C1C4)
-                            .grassColorOverride(0x86b830)
+                            .grassColorOverride(0x96b030)
                             .foliageColorOverride(0x709D19)
                             .backgroundMusic(null) // 代码控制
                             .build())

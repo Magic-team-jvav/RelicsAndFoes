@@ -1,4 +1,4 @@
-// 1.21.1	2026-05-16T16:41:38.1399057	Registries
+// 1.21.1	2026-05-17T18:10:29.4518058	Registries
 6a3a572ee0f0fff09bf611c49ed772ac1f231451 data/relics_and_foes/dimension/relic_land.json
 41b5493a552ebab3280b1204da493a8b5c886b63 data/relics_and_foes/dimension_type/relic_land_type.json
 614e3904cbffad1595ec112d05db55fa9cfe6150 data/relics_and_foes/worldgen/biome/the_azure_sea.json
@@ -7,7 +7,7 @@ b3d3718f2f93b59d96682db74842e427b23cf3ae data/relics_and_foes/worldgen/biome/the
 fd142cd1b2a0e6a55d520eca4ff13d9f9a781245 data/relics_and_foes/worldgen/biome/the_peach_blossom_vale.json
 1f04e3df3bfb3e2076cf55fe3f31b6e90db9d198 data/relics_and_foes/worldgen/biome/the_rust_silent_city.json
 1747b33d5e356ddb179c625cffa8b28bc56d9c7f data/relics_and_foes/worldgen/biome/the_sea_of_falling_stars.json
-caaa0fc3ac47871ca3d09f3dba509e3211502015 data/relics_and_foes/worldgen/biome/the_sunken_expanse.json
+7ba1d9eca96cd4426dc0920f9e7474d11b093a88 data/relics_and_foes/worldgen/biome/the_sunken_expanse.json
 d139d194f7318e01101fec26cc2c5ac38946bd1b data/relics_and_foes/worldgen/biome/the_thorny_dreadlands.json
 f2679aca30646a0a3acc4f25369244e090ab5a11 data/relics_and_foes/worldgen/configured_feature/abandoned_planks.json
 fd5b2c048183aa80c8110f2c04e2bb875275158b data/relics_and_foes/worldgen/configured_feature/abandoned_sign.json

@@ -36,6 +36,8 @@ public final class RAFBlocks {
 
     // endregion
 
+    // region 沉沦原野 The Sunken Expanse
+
     // region 通界古墟 Cross-Realm Ancient Ruins
 
     public static final DeferredBlock<AncientRelicTeleporterBlock> ANCIENT_RELIC_TELEPORTER = registerWithItem("ancient_relic_teleporter", AncientRelicTeleporterBlock::new, AncientRelicTeleporterBlock.BItem::new); // 古迹传送台
@@ -43,8 +45,6 @@ public final class RAFBlocks {
     public static final DeferredBlock<Block> ANCIENT_RELIC_RESPAWN_PLATFORM = registerWithItem("ancient_relic_respawn_platform", () -> new Block(BlockBehaviour.Properties.of())); // 古迹重生台
 
     // endregion
-
-    // region 沉沦原野 The Sunken Expanse
 
     public static final DeferredBlock<WildfieldCornBlock> WILDFIELD_CORN = registerWithItem("wildfield_corn", () -> new WildfieldCornBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.TORCHFLOWER))); // 原野玉米
     public static final DeferredBlock<WildfieldCornStalkBlock> WILDFIELD_CORN_STALK = registerWithItem("wildfield_corn_stalk", () -> new WildfieldCornStalkBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.TORCHFLOWER))); // 原野玉米茎

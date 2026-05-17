@@ -7,6 +7,7 @@
         "net.minecraft.world.level.levelgen.NoiseBasedChunkGeneratorMixin"
     ],
     "client": [
+        "net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreenMixin",
         "net.minecraft.client.multiplayer.ClientLevelMixin",
         "net.minecraft.client.multiplayer.ClientLevelMixin$ClientLevelDataMixin",
         "net.minecraft.client.multiplayer.LevelLoadStatusManagerMixin",

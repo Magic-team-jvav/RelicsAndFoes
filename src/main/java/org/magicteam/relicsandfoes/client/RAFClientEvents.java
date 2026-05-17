@@ -27,6 +27,7 @@ import org.magicteam.relicsandfoes.init.RAFBlocks;
 import org.magicteam.relicsandfoes.init.RAFDimensions;
 import org.magicteam.relicsandfoes.init.RAFMusics;
 import org.magicteam.relicsandfoes.world.block.AncientRelicTeleporterBlock;
+import org.magicteam.relicsandfoes.world.item.LostSoloMelodyItem;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 import static org.magicteam.relicsandfoes.client.RAFSharedValues.*;
@@ -83,9 +84,13 @@ public final class RAFClientEvents {
 
     @SubscribeEvent
     public static void clientTick$Pre(ClientTickEvent.Pre event) {
-        RAFSharedValues.update(Minecraft.getInstance().player, false);
+        Minecraft minecraft = Minecraft.getInstance();
+        RAFSharedValues.update(minecraft.player, false);
         if (available) {
-            RelicsAndFoesClient.biomeParticles();
+            if (!minecraft.isPaused()) {
+                RelicsAndFoesClient.biomeParticles();
+            }
+            SelectMusicGuiLayer.selecting = player.isUsingItem() && player.getUseItem().getItem() instanceof LostSoloMelodyItem;
         }
     }
 
