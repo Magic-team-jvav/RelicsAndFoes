@@ -59,18 +59,23 @@ public final class RAFBlocks {
 
     // region 占位符
 
-    public static final DeferredBlock<Block> CRYSTAL_SKULL = registerWithItem("crystal_skull", () -> new Block(BlockBehaviour.Properties.of()));
-    public static final DeferredBlock<Block> SPAWN_ROBOT = registerWithItem("spawn_robot", () -> new Block(BlockBehaviour.Properties.of()));
-    public static final DeferredBlock<Block> SPAWN_ATTACK_ROBOT = registerWithItem("spawn_attack_robot", () -> new Block(BlockBehaviour.Properties.of()));
-    public static final DeferredBlock<Block> SPAWN_DEFENSE_TOWER = registerWithItem("spawn_defense_tower", () -> new Block(BlockBehaviour.Properties.of()));
-    public static final DeferredBlock<Block> SPAWN_AIRCRAFT = registerWithItem("spawn_aircraft", () -> new Block(BlockBehaviour.Properties.of()));
-    public static final DeferredBlock<Block> SPAWN_PRIEST = registerWithItem("spawn_priest", () -> new Block(BlockBehaviour.Properties.of()));
-    public static final DeferredBlock<Block> SPAWN_PROTOTYPE = registerWithItem("spawn_prototype", () -> new Block(BlockBehaviour.Properties.of()));
-    public static final DeferredBlock<Block> PROTOTYPE_CHEST = registerWithItem("prototype_chest", () -> new Block(BlockBehaviour.Properties.of()));
-    public static final DeferredBlock<Block> CONDUCTOR_CHEST = registerWithItem("conductor_chest", () -> new Block(BlockBehaviour.Properties.of()));
-    public static final DeferredBlock<Block> KYLIN_CHEST = registerWithItem("kylin_chest", () -> new Block(BlockBehaviour.Properties.of()));
-    public static final DeferredBlock<Block> ANGEL_CHEST = registerWithItem("angel_chest", () -> new Block(BlockBehaviour.Properties.of()));
-    public static final DeferredBlock<Block> ENERGY_TABLE = registerWithItem("energy_table", () -> new Block(BlockBehaviour.Properties.of()));
+    public static final DeferredBlock<Block> CRYSTAL_SKULL = registerHolder("crystal_skull");
+    public static final DeferredBlock<Block> SPAWN_ROBOT = registerHolder("spawn_robot");
+    public static final DeferredBlock<Block> SPAWN_ATTACK_ROBOT = registerHolder("spawn_attack_robot");
+    public static final DeferredBlock<Block> SPAWN_DEFENSE_TOWER = registerHolder("spawn_defense_tower");
+    public static final DeferredBlock<Block> SPAWN_AIRCRAFT = registerHolder("spawn_aircraft");
+    public static final DeferredBlock<Block> SPAWN_PRIEST = registerHolder("spawn_priest");
+    public static final DeferredBlock<Block> SPAWN_PROTOTYPE = registerHolder("spawn_prototype");
+    public static final DeferredBlock<Block> PROTOTYPE_CHEST = registerHolder("prototype_chest");
+    public static final DeferredBlock<Block> CONDUCTOR_CHEST = registerHolder("conductor_chest");
+    public static final DeferredBlock<Block> KYLIN_CHEST = registerHolder("kylin_chest");
+    public static final DeferredBlock<Block> ANGEL_CHEST = registerHolder("angel_chest");
+    public static final DeferredBlock<Block> ENERGY_TABLE = registerHolder("energy_table");
+    public static final DeferredBlock<Block> MOSSY_COBBLESTONE_BRICKS = registerHolder("mossy_cobblestone_bricks");
+    public static final DeferredBlock<Block> MOSSY_COBBLESTONE_TILES = registerHolder("mossy_cobblestone_tiles");
+    public static final DeferredBlock<Block> COBBLESTONE_BRICKS = registerHolder("cobblestone_bricks");
+    public static final DeferredBlock<Block> COBBLESTONE_TILES = registerHolder("cobblestone_tiles");
+    public static final DeferredBlock<Block> STONE_TILES = registerHolder("stone_tiles");
 
     // endregion
 
@@ -84,6 +89,12 @@ public final class RAFBlocks {
         return registerWithItem(name, block, b -> new BlockItem(b, new Item.Properties()));
     }
 
+    private static DeferredBlock<Block> registerHolder(String name) {
+        DeferredBlock<Block> block = registerWithItem(name, () -> new Block(BlockBehaviour.Properties.of()));
+        addBlockAlias("cataclysm:" + name, block.getId());
+        return block;
+    }
+
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);
         BLOCK_ENTITIES.register(eventBus);
@@ -94,18 +105,6 @@ public final class RAFBlocks {
             addBlockEntityAlias("relics_and_foes:ancient_portal", ANCIENT_RELIC_TELEPORTER_ENTITY.getId());
             addBlockAlias("cataclysm:ancient_spawner", ANCIENT_RELIC_RESPAWN_PLATFORM.getId());
             addBlockAlias("relics_and_foes:ancient_spawner", ANCIENT_RELIC_RESPAWN_PLATFORM.getId());
-            addBlockAlias("cataclysm:crystal_skull_block", CRYSTAL_SKULL.getId());
-            addBlockAlias("cataclysm:spawn_robot", SPAWN_ROBOT.getId());
-            addBlockAlias("cataclysm:spawn_attack_robot", SPAWN_ATTACK_ROBOT.getId());
-            addBlockAlias("cataclysm:spawn_defense_tower", SPAWN_DEFENSE_TOWER.getId());
-            addBlockAlias("cataclysm:spawn_aircraft", SPAWN_AIRCRAFT.getId());
-            addBlockAlias("cataclysm:spawn_priest", SPAWN_PRIEST.getId());
-            addBlockAlias("cataclysm:spawn_prototype", SPAWN_PROTOTYPE.getId());
-            addBlockAlias("cataclysm:prototype_chest", PROTOTYPE_CHEST.getId());
-            addBlockAlias("cataclysm:conductor_chest", CONDUCTOR_CHEST.getId());
-            addBlockAlias("cataclysm:kylin_chest", KYLIN_CHEST.getId());
-            addBlockAlias("cataclysm:angel_chest", ANGEL_CHEST.getId());
-            addBlockAlias("cataclysm:energy_table", ENERGY_TABLE.getId());
         }
     }
 

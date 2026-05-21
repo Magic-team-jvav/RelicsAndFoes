@@ -19,7 +19,11 @@ public class ReadyToTeleportScreen extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.fill(0, 0, width, height, FastColor.ARGB32.color((int) (Mth.clamp(tickCount / 80.0, 0, 1) * 255), 0xFFFFFF));
+        float alpha = Mth.clamp(tickCount / 80.0F, 0, 1);
+        if (alpha > 0) {
+            guiGraphics.fill(0, 0, width, height, FastColor.ARGB32.color((int) (alpha * 255), 0xFFFFFF));
+            AfterTeleportScreen.renderClouds(guiGraphics, tickCount + partialTick, alpha, width, height);
+        }
     }
 
     @Override

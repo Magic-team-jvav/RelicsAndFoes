@@ -23,6 +23,9 @@ public class RAFSharedValues {
     public static boolean inRelicLand;
     public static Holder<Biome> biome;
     public static boolean inTheSunkenExpanse;
+    public static boolean inTheSeaOfFallingStars;
+    public static boolean inThePeachOfBlossomVale;
+    public static boolean inTheThornyDreadlands;
     public static boolean inCrossRealmAncientRuins;
     public static boolean isPrototypeDefeated;
 
@@ -42,6 +45,9 @@ public class RAFSharedValues {
         inRelicLand = false;
         biome = null;
         inTheSunkenExpanse = false;
+        inTheSeaOfFallingStars = false;
+        inThePeachOfBlossomVale = false;
+        inTheThornyDreadlands = false;
         inCrossRealmAncientRuins = false;
         isPrototypeDefeated = false;
 
@@ -61,6 +67,9 @@ public class RAFSharedValues {
         inRelicLand = level.dimension() == RAFDimensions.LEVEL;
         biome = level.getBiome(player.blockPosition());
         inTheSunkenExpanse = biome.is(RAFDimensions.Biomez.THE_SUNKEN_EXPANSE);
+        inTheSeaOfFallingStars = biome.is(RAFDimensions.Biomez.THE_SEA_OF_FALLING_STARS);
+        inThePeachOfBlossomVale = biome.is(RAFDimensions.Biomez.THE_PEACH_BLOSSOM_VALE);
+        inTheThornyDreadlands = biome.is(RAFDimensions.Biomez.THE_THORNY_DREADLANDS);
         if (immediate || gameTime % 20 == 0) {
             middleX = (Mth.floor(position.x) + 1024) >> 11 << 11;
             middleZ = (Mth.floor(position.z) + 1024) >> 11 << 11;

@@ -10,7 +10,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
-import org.magicteam.relicsandfoes.init.RAFDimensions;
 import org.mesdag.particlestorm.PSGameClient;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
 
@@ -44,8 +43,61 @@ public final class RelicsAndFoesClient {
                 }
             }
             if (gameTime % 20 == 0) {
-                if (biome.is(RAFDimensions.Biomez.THE_SEA_OF_FALLING_STARS)) {
-
+                if (inTheSeaOfFallingStars) {
+                    if (position.y <= 80) {
+                        for (int i = 0; i < 5; i++) {
+                            addEmitter(
+                                    position.x + nextScale(random, 20),
+                                    position.y + nextScale(random, 7),
+                                    position.z + nextScale(random, 20),
+                                    "the_sea_of_falling_stars_fallen_leaves"
+                            );
+                        }
+                    }
+                    if (position.y <= 165) {
+                        addEmitter(
+                                position.x + nextBetweenInclusive(random, -128, 64),
+                                5,
+                                position.z + nextBetweenInclusive(random, -128, 64),
+                                "meteor"
+                        );
+                    }
+                } else if (inTheThornyDreadlands) {
+                    RandomSource random = player.getRandom();
+                    for (int i = 0; i < 3; i++) {
+                        addEmitter(
+                                position.x + nextScale(random, 20),
+                                position.y + nextScale(random, 7),
+                                position.z + nextScale(random, 20),
+                                "thorny_dreadlands_light_circle"
+                        );
+                    }
+                    for (int i = 0; i < 10; i++) {
+                        addEmitter(
+                                position.x + nextScale(random, 6),
+                                position.y + nextScale(random, 4),
+                                position.z + nextScale(random, 6),
+                                "thorny_dreadlands_birch_light_circle"
+                        );
+                    }
+                    for (int i = 0; i < 8; i++) {
+                        addEmitter(
+                                position.x + nextScale(random, 20),
+                                position.y + nextBetweenInclusive(random, -4, 2),
+                                position.z + nextScale(random, 20),
+                                "thorny_dreadlands_birch_light_circle2"
+                        );
+                    }
+                    if (position.y <= 110) {
+                        for (int i = 0; i < 5; i++) {
+                            addEmitter(
+                                    position.x + nextScale(random, 20),
+                                    position.y + nextScale(random, 7),
+                                    position.z + nextScale(random, 20),
+                                    "thorny_dreadlands_fallen_leaves"
+                            );
+                        }
+                    }
                 } else if (inTheSunkenExpanse) {
                     RandomSource random = player.getRandom();
                     if (!inCrossRealmAncientRuins || isPrototypeDefeated) {
@@ -68,14 +120,35 @@ public final class RelicsAndFoesClient {
                             }
                         }
                     }
-                } else if (biome.is(RAFDimensions.Biomez.THE_PEACH_BLOSSOM_VALE)) {
-
+                } else if (inThePeachOfBlossomVale) {
+                    RandomSource random = player.getRandom();
+                    for (int i = 0; i < 3; i++) {
+                        addEmitter(
+                                position.x + nextScale(random, 20),
+                                position.y + nextScale(random, 7),
+                                position.z + nextScale(random, 20),
+                                "peach_blossom_vale_light_circle"
+                        );
+                    }
+                    if (position.y <= 75) {
+                        for (int i = 0; i < 7; i++) {
+                            addEmitter(
+                                    position.x + nextScale(random, 20),
+                                    position.y + nextScale(random, 7),
+                                    position.z + nextScale(random, 20),
+                                    "peach_blossom_vale_fallen_leaves"
+                            );
+                        }
+                    }
                 }
             }
         }
         if (gameTime % 60 == 0) {
-            if (inTheSunkenExpanse && (!inCrossRealmAncientRuins || isPrototypeDefeated) && (RAFClientConfigs.mistParticles || RAFClientConfigs.animalParticles)) label0:{
-                if (position.y <= 35) break label0;
+            if (inTheSunkenExpanse &&
+                    (!inCrossRealmAncientRuins || isPrototypeDefeated) &&
+                    (RAFClientConfigs.mistParticles || RAFClientConfigs.animalParticles) &&
+                    position.y > 35
+            ) {
                 int px = Mth.floor(position.x) >> 3 << 3;
                 int pz = Mth.floor(position.z) >> 3 << 3;
                 BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
@@ -112,15 +185,105 @@ public final class RelicsAndFoesClient {
                     }
                 }
                 random.setSeed(0);
-            }
-            if (biome.is(RAFDimensions.Biomez.THE_THORNY_DREADLANDS)) {
-
-            }
-            if (biome.is(RAFDimensions.Biomez.THE_SEA_OF_FALLING_STARS)) {
-
-            }
-            if (biome.is(RAFDimensions.Biomez.THE_PEACH_BLOSSOM_VALE)) {
-
+            } else if (inTheThornyDreadlands && RAFClientConfigs.mistParticles && position.y > 35) {
+                int px = Mth.floor(position.x) >> 3 << 3;
+                int pz = Mth.floor(position.z) >> 3 << 3;
+                BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+                for (int x = -40; x < 48; x += 8) {
+                    for (int z = -40; z < 48; z += 8) {
+                        int bx = px + x;
+                        int bz = pz + z;
+                        random.setSeed(((long) position.x + bx) * 10000L + ((long) position.z + bz));
+                        if (withinExclusive(18 * 18, Mth.lengthSquared(x, z), 54 * 54) && chance(random, 3)) {
+                            if (position.y < 75) {
+                                int height = getHeight(mutable, bx, bz);
+                                if (height <= 60 && withinExclusive(18 * 18, Mth.lengthSquared(x, height - position.y, z), 54 * 54)) {
+                                    addEmitter(bx, height + 2.5, bz, "new_mist_moved");
+                                }
+                            }
+                        }
+                    }
+                }
+                random.setSeed(0);
+            } else if (inTheSeaOfFallingStars) {
+                if (RAFClientConfigs.mistParticles && position.y > 10) {
+                    int px = Mth.floor(position.x) >> 3 << 3;
+                    int pz = Mth.floor(position.z) >> 3 << 3;
+                    BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+                    for (int x = -40; x < 48; x += 8) {
+                        for (int z = -40; z < 48; z += 8) {
+                            int bx = px + x;
+                            int bz = pz + z;
+                            random.setSeed(((long) position.x + bx) * 10000L + ((long) position.z + bz));
+                            if (withinExclusive(24 * 24, Mth.lengthSquared(x, z), 54 * 54) && chance(random, 4)) {
+                                if (position.y < 90) {
+                                    int height = getHeight(mutable, bx, bz);
+                                    if (withinInclusive(30, height, 150) && withinExclusive(18 * 18, Mth.lengthSquared(x, height - position.y, z), 54 * 54)) {
+                                        addEmitter(bx, height + 1, bz, "new_mist_0");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    random.setSeed(0);
+                }
+                if (RAFClientConfigs.biomeParticles) {
+                    for (int i = 0; i < 3; i++) {
+                        addEmitter(
+                                position.x + nextScale(random, 80),
+                                16,
+                                position.z + nextScale(random, 80),
+                                "water_star"
+                        );
+                    }
+                }
+            } else if (inThePeachOfBlossomVale && (RAFClientConfigs.mistParticles || RAFClientConfigs.animalParticles) && position.y > 35) {
+                int px = Mth.floor(position.x) >> 3 << 3;
+                int pz = Mth.floor(position.z) >> 3 << 3;
+                BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+                for (int x = -56; x < 64; x += 8) {
+                    for (int z = -56; z < 64; z += 8) {
+                        int bx = px + x;
+                        int bz = pz + z;
+                        if (RAFClientConfigs.mistParticles) {
+                            if (withinExclusive(26 * 26, Mth.lengthSquared(x, z), 40 * 40)) {
+                                random.setSeed(((long) position.x + bx) * 10000L + ((long) position.z + bz));
+                                if (chance(random, 3) && position.y < 80) {
+                                    int height = getHeight(mutable, bx, bz);
+                                    if (height <= 72 && withinExclusive(26 * 26, Mth.lengthSquared(x, height - position.y, z), 54 * 54)) {
+                                        addEmitter(bx, height + 1, bz, "new_mist_0");
+                                    }
+                                }
+                            }
+                            if (withinExclusive(44 * 44, Mth.lengthSquared(x, z), 60 * 60)) {
+                                random.setSeed(((long) position.x + bx) * 10000L + ((long) position.z + bz));
+                                if (random.nextInt(10) >= 7) {
+                                    int height = getHeight(mutable, bx, bz);
+                                    if (height <= 80) {
+                                        addEmitter(bx, height + 3, bz, "new_mist_big_plains");
+                                    }
+                                }
+                            }
+                        }
+                        if (RAFClientConfigs.animalParticles && Mth.lengthSquared(x, z) < 40 * 40) {
+                            random.setSeed(((long) position.x + bx) * 10000L + ((long) position.z + bz));
+                            if (chance(random, 10) && position.y < 80) {
+                                int height = getHeight(mutable, bx, bz);
+                                if (height <= 68 && Mth.lengthSquared(x, height - position.y, z) < 40 * 40) {
+                                    for (int i = 0; i < 7; i++) {
+                                        addEmitter(
+                                                bx + nextScale(random, 3),
+                                                height + 1.5 + nextBetweenInclusive(random, 0, 6),
+                                                bz + nextScale(random, 3),
+                                                "butterfly_light_yellow"
+                                        );
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                random.setSeed(0);
             }
         }
     }

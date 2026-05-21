@@ -5,9 +5,6 @@
       "type": "minecraft:biome"
     },
     {
-      "type": "relics_and_foes:exclude_regions"
-    },
-    {
       "type": "minecraft:in_square"
     },
     {

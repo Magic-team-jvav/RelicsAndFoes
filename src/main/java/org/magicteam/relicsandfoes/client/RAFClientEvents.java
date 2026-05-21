@@ -73,7 +73,7 @@ public final class RAFClientEvents {
     }
 
     @SubscribeEvent
-    public static void clientPlayerNetwork$LoggingIn(ClientPlayerNetworkEvent.LoggingIn event) {
+    public static void clientPlayerNetwork$Clone(ClientPlayerNetworkEvent.Clone event) {
         RAFSharedValues.update(event.getPlayer(), true);
     }
 
@@ -154,11 +154,11 @@ public final class RAFClientEvents {
                 } else {
                     event.overrideMusic(RAFMusics.BIOME_PROTOTYPE);
                 }
-            } else if (biome.is(RAFDimensions.Biomez.THE_THORNY_DREADLANDS)) {
+            } else if (inTheThornyDreadlands) {
                 event.overrideMusic(RAFMusics.BIOME_ANGEL);
-            } else if (biome.is(RAFDimensions.Biomez.THE_SEA_OF_FALLING_STARS)) {
+            } else if (inTheSeaOfFallingStars) {
                 event.overrideMusic(RAFMusics.BIOME_CONDUCTOR);
-            } else if (biome.is(RAFDimensions.Biomez.THE_PEACH_BLOSSOM_VALE)) {
+            } else if (inThePeachOfBlossomVale) {
                 event.overrideMusic(RAFMusics.BIOME_KYLIN);
             }
         }

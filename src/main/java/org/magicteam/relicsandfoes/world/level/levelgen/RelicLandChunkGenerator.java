@@ -2,22 +2,26 @@ package org.magicteam.relicsandfoes.world.level.levelgen;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.random.SimpleWeightedRandomList;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
-import net.minecraft.world.level.levelgen.NoiseChunk;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import org.magicteam.relicsandfoes.RelicsAndFoes;
 
 public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
     public static final MapCodec<RelicLandChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -28,6 +32,16 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
     protected static final BlockState GRASS_BLOCK = Blocks.GRASS_BLOCK.defaultBlockState();
     protected static final BlockState DIRT = Blocks.DIRT.defaultBlockState();
     protected static final BlockState STONE = Blocks.STONE.defaultBlockState();
+    private static final SimpleWeightedRandomList<ResourceLocation> PILLAR_STRUCTURES = SimpleWeightedRandomList.<ResourceLocation>builder()
+            .add(RelicsAndFoes.asResource("pilgrimage_pillar_0"), 10)
+            .add(RelicsAndFoes.asResource("pilgrimage_pillar_1"), 10)
+            .add(RelicsAndFoes.asResource("pilgrimage_pillar_2"), 20)
+            .add(RelicsAndFoes.asResource("pilgrimage_pillar_3"), 20)
+            .add(RelicsAndFoes.asResource("pilgrimage_eye_chest"), 8)
+            .add(RelicsAndFoes.asResource("pilgrimage_item_chest"), 3)
+            .add(RelicsAndFoes.asResource("pilgrimage_spawn_point"), 5)
+            .add(RelicsAndFoes.asResource("pilgrimage_airport"), 8)
+            .build();
 
     protected NormalNoise noise;
 
@@ -77,5 +91,61 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
             }
             return STONE;
         };
+    }
+
+    @Override
+    public void buildSurface(WorldGenRegion level, StructureManager structureManager, RandomState random, ChunkAccess chunk) {
+        super.buildSurface(level, structureManager, random, chunk);
+
+        // 朝圣之路
+        ChunkPos pos = chunk.getPos();
+        int mx = pos.x % 128;
+        int regionX = mx < 0 ? mx + 128 : mx;
+        int mz = pos.z % 128;
+        int regionZ = mz < 0 ? mz + 128 : mz;
+        int sectionX = 0, sizeX;
+        int sectionZ = 0, sizeZ;
+        if ((regionX >= 7 && regionX <= 120) && (mz == 0 || mz == -1)) {
+            if (regionX == 7) {
+                sizeX = 8;
+            } else if (regionX == 120) {
+                sizeX = 11;
+            } else {
+                sizeX = 16;
+            }
+            sectionZ = mz == 0 ? 0 : 13;
+            sizeZ = mz == 0 ? 4 : 3;
+        } else if ((regionZ >= 6 && regionZ <= 119) && (mx == 0 || mx == -1)) {
+            sectionX = mx == 0 ? 0 : 13;
+            sizeX = mx == 0 ? 4 : 3;
+            sizeZ = regionZ == 119 ? 1 : 16;
+        } else {
+            return;
+        }
+        WorldgenRandom worldgenRandom = new WorldgenRandom(RandomSource.create(260520));
+        worldgenRandom.setLargeFeatureSeed(level.getSeed(), pos.x, pos.z);
+        BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
+        for (int x = 0; x < sizeX; x++) {
+            for (int z = 0; z < sizeZ; z++) {
+                int i = worldgenRandom.nextInt(4);
+                if (i == 0) continue;
+                int bx = pos.getBlockX(sectionX + x);
+                int bz = pos.getBlockZ(sectionZ + z);
+                blockPos.set(bx, level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, bx, bz) - 1, bz);
+                if (i == 1) {
+                    level.setBlock(blockPos, Blocks.TUFF_BRICKS.defaultBlockState(), Block.UPDATE_CLIENTS);
+                } else if (i == 2) {
+                    level.setBlock(blockPos, Blocks.POLISHED_TUFF.defaultBlockState(), Block.UPDATE_CLIENTS);
+                } else { // i == 3
+                    level.setBlock(blockPos, Blocks.TUFF.defaultBlockState(), Block.UPDATE_CLIENTS);
+                }
+            }
+        }
+
+//        StructureTemplateManager templateManager = level.getLevel().getServer().getStructureManager();
+//        Optional<ResourceLocation> randomPillar = PILLAR_STRUCTURES.getRandomValue(worldgenRandom);
+//        if (randomPillar.isEmpty()) return;
+//        StructureTemplate template = templateManager.getOrCreate(randomPillar.get());
+//        template.placeInWorld()
     }
 }

@@ -1,0 +1,9 @@
+{
+  "type": "relics_and_foes:ground_stone",
+  "biomes": "relics_and_foes:the_sunken_expanse",
+  "chance": 0.1,
+  "prefix": "plains_peristele_",
+  "spawn_overrides": {},
+  "step": "surface_structures",
+  "types": 5
+}

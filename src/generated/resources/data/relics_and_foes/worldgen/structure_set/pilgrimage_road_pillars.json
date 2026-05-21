@@ -1,0 +1,12 @@
+{
+  "placement": {
+    "type": "relics_and_foes:current_chunk",
+    "salt": 0
+  },
+  "structures": [
+    {
+      "structure": "relics_and_foes:pilgrimage_road_pillars",
+      "weight": 1
+    }
+  ]
+}

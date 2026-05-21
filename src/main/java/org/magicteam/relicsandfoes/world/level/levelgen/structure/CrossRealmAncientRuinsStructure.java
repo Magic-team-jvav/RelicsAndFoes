@@ -11,17 +11,17 @@ import org.magicteam.relicsandfoes.init.RAFDimensions;
 
 import java.util.Optional;
 
-public class RuinCityStructure extends Structure {
-    public static final MapCodec<RuinCityStructure> CODEC = simpleCodec(RuinCityStructure::new);
+public class CrossRealmAncientRuinsStructure extends Structure {
+    public static final MapCodec<CrossRealmAncientRuinsStructure> CODEC = simpleCodec(CrossRealmAncientRuinsStructure::new);
 
-    public RuinCityStructure(StructureSettings settings) {
+    public CrossRealmAncientRuinsStructure(StructureSettings settings) {
         super(settings);
     }
 
     @Override
     protected Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
         ChunkPos pos = context.chunkPos();
-        if (pos.x % 128 == 0 && pos.z % 128 == 0) {
+        if (pos.x % 128 == 0 && Math.floorMod(pos.z, 128) == 127) {
             int minBlockX = pos.getMinBlockX();
             int minBlockZ = pos.getMinBlockZ();
             int height = context.chunkGenerator().getFirstOccupiedHeight(minBlockX, minBlockZ, Heightmap.Types.WORLD_SURFACE_WG, context.heightAccessor(), context.randomState());
@@ -30,7 +30,8 @@ public class RuinCityStructure extends Structure {
                 int h = height - 5;
                 for (int x = 0; x < 5; x++) {
                     for (int z = 0; z < 5; z++) {
-                        builder.addPiece(new SimpleTemplateStructurePiece(manager, "cross_realm_ancient_ruins" + x + z, new BlockPos(minBlockX + (x - 2) * 48 - 22, h, minBlockZ + (z - 2) * 48 - 47)));
+                        BlockPos startPos = new BlockPos(minBlockX + (x - 2) * 48 - 22, h, minBlockZ + (z - 2) * 48 - 31);
+                        builder.addPiece(new SimpleTemplateStructurePiece(manager, "cross_realm_ancient_ruins" + x + z, startPos));
                     }
                 }
             }));
@@ -40,6 +41,6 @@ public class RuinCityStructure extends Structure {
 
     @Override
     public StructureType<?> type() {
-        return RAFDimensions.RUIN_CITY_STRUCTURE.get();
+        return RAFDimensions.CROSS_REALM_ANCIENT_RUINS.get();
     }
 }

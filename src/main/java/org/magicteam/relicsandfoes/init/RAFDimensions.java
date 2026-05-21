@@ -46,9 +46,8 @@ import org.magicteam.relicsandfoes.world.level.levelgen.RelicLandChunkGenerator;
 import org.magicteam.relicsandfoes.world.level.levelgen.feature.WildfieldCornFeature;
 import org.magicteam.relicsandfoes.world.level.levelgen.feature.stateproviders.HorizontalDirectionalStateProvider;
 import org.magicteam.relicsandfoes.world.level.levelgen.placement.ExcludeRegionsPlacement;
-import org.magicteam.relicsandfoes.world.level.levelgen.structure.RuinCityStructure;
-import org.magicteam.relicsandfoes.world.level.levelgen.structure.SimpleTemplateStructurePiece;
-import org.magicteam.relicsandfoes.world.level.levelgen.structure.placement.SimpleStructurePlacement;
+import org.magicteam.relicsandfoes.world.level.levelgen.structure.*;
+import org.magicteam.relicsandfoes.world.level.levelgen.structure.placement.CurrentChunkStructurePlacement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,10 +66,13 @@ public final class RAFDimensions {
     public static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<RelicLandChunkGenerator>> RELIC_LAND_CHUNK_GENERATOR = CHUNK_GENERATORS.register("relic_land", () -> RelicLandChunkGenerator.CODEC);
 
     private static final DeferredRegister<StructureType<?>> STRUCTURE_TYPES = DeferredRegister.create(Registries.STRUCTURE_TYPE, RelicsAndFoes.MODID);
-    public static final DeferredHolder<StructureType<?>, StructureType<RuinCityStructure>> RUIN_CITY_STRUCTURE = STRUCTURE_TYPES.register("ruin_city", () -> () -> RuinCityStructure.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<CrossRealmAncientRuinsStructure>> CROSS_REALM_ANCIENT_RUINS = STRUCTURE_TYPES.register("cross_realm_ancient_ruins", () -> () -> CrossRealmAncientRuinsStructure.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<PilgrimageRoadPillarsStructure>> PILGRIMAGE_ROAD_PILLARS = STRUCTURE_TYPES.register("pilgrimage_road_pillars", () -> () -> PilgrimageRoadPillarsStructure.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<SkyStoneStructure>> SKY_STONE = STRUCTURE_TYPES.register("sky_stone", () -> () -> SkyStoneStructure.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<GroundStoneStructure>> GROUND_STONE = STRUCTURE_TYPES.register("ground_stone", () -> () -> GroundStoneStructure.CODEC);
 
     private static final DeferredRegister<StructurePlacementType<?>> STRUCTURE_PLACEMENT_TYPES = DeferredRegister.create(Registries.STRUCTURE_PLACEMENT, RelicsAndFoes.MODID);
-    public static final DeferredHolder<StructurePlacementType<?>, StructurePlacementType<SimpleStructurePlacement>> SIMPLE_STRUCTURE_PLACEMENT = STRUCTURE_PLACEMENT_TYPES.register("simple", () -> () -> SimpleStructurePlacement.CODEC);
+    public static final DeferredHolder<StructurePlacementType<?>, StructurePlacementType<CurrentChunkStructurePlacement>> CURRENT_CHUNK_STRUCTURE_PLACEMENT = STRUCTURE_PLACEMENT_TYPES.register("current_chunk", () -> () -> CurrentChunkStructurePlacement.CODEC);
 
     private static final DeferredRegister<StructurePieceType> STRUCTURE_PIECES = DeferredRegister.create(Registries.STRUCTURE_PIECE, RelicsAndFoes.MODID);
     public static final DeferredHolder<StructurePieceType, StructurePieceType.StructureTemplateType> SIMPLE_TEMPLATE_STRUCTURE_PIECE = STRUCTURE_PIECES.register("simple", () -> SimpleTemplateStructurePiece::new);
@@ -244,7 +246,12 @@ public final class RAFDimensions {
     }
 
     public static class Structurez {
-        public static final ResourceKey<Structure> RUIN_CITY = key("ruin_city");
+        public static final ResourceKey<Structure> CROSS_REALM_ANCIENT_RUINS = key("cross_realm_ancient_ruins");
+        public static final ResourceKey<Structure> PILGRIMAGE_ROAD_PILLARS = key("pilgrimage_road_pillars");
+        public static final ResourceKey<Structure> SKY_STONE = key("sky_stone");
+        public static final ResourceKey<Structure> PLAINS_HILL_BIG = key("plains_hill_big");
+        public static final ResourceKey<Structure> PLAINS_HILL_SMALL = key("plains_hill_small");
+        public static final ResourceKey<Structure> PLAINS_PERISTELE = key("plains_peristele");
 
         private static ResourceKey<Structure> key(String path) {
             return ResourceKey.create(Registries.STRUCTURE, RelicsAndFoes.asResource(path));
@@ -254,12 +261,23 @@ public final class RAFDimensions {
             HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);
             Holder<Biome> theSunkenExpanse = biomes.getOrThrow(Biomez.THE_SUNKEN_EXPANSE);
 
-            context.register(RUIN_CITY, new RuinCityStructure(new Structure.StructureSettings(HolderSet.direct(theSunkenExpanse))));
+            Structure.StructureSettings theSunkenExpanseSettings = new Structure.StructureSettings(HolderSet.direct(theSunkenExpanse));
+            context.register(CROSS_REALM_ANCIENT_RUINS, new CrossRealmAncientRuinsStructure(theSunkenExpanseSettings));
+            context.register(PILGRIMAGE_ROAD_PILLARS, new PilgrimageRoadPillarsStructure(theSunkenExpanseSettings));
+            context.register(SKY_STONE, new SkyStoneStructure(theSunkenExpanseSettings));
+            context.register(PLAINS_HILL_BIG, new GroundStoneStructure(theSunkenExpanseSettings, "plains_hill_big_", 3, 0.03F));
+            context.register(PLAINS_HILL_SMALL, new GroundStoneStructure(theSunkenExpanseSettings, "plains_hill_small_", 4, 0.25F));
+            context.register(PLAINS_PERISTELE, new GroundStoneStructure(theSunkenExpanseSettings, "plains_peristele_", 5, 0.1F));
         }
     }
 
     public static class StructureSetz {
-        public static final ResourceKey<StructureSet> RUIN_CITY = key("ruin_city");
+        public static final ResourceKey<StructureSet> CROSS_REALM_ANCIENT_RUINS = key("cross_realm_ancient_ruins");
+        public static final ResourceKey<StructureSet> PILGRIMAGE_ROAD_PILLARS = key("pilgrimage_road_pillars");
+        public static final ResourceKey<StructureSet> SKY_STONE = key("sky_stone");
+        public static final ResourceKey<StructureSet> PLAINS_HILL_BIG = key("plains_hill_big");
+        public static final ResourceKey<StructureSet> PLAINS_HILL_SMALL = key("plains_hill_small");
+        public static final ResourceKey<StructureSet> PLAINS_PERISTELE = key("plains_peristele");
 
         private static ResourceKey<StructureSet> key(String path) {
             return ResourceKey.create(Registries.STRUCTURE_SET, RelicsAndFoes.asResource(path));
@@ -268,7 +286,13 @@ public final class RAFDimensions {
         public static void bootstrap(BootstrapContext<StructureSet> context) {
             HolderGetter<Structure> structures = context.lookup(Registries.STRUCTURE);
 
-            context.register(RUIN_CITY, new StructureSet(structures.getOrThrow(Structurez.RUIN_CITY), SimpleStructurePlacement.INSTANCE));
+            CurrentChunkStructurePlacement placement = new CurrentChunkStructurePlacement();
+            context.register(CROSS_REALM_ANCIENT_RUINS, new StructureSet(structures.getOrThrow(Structurez.CROSS_REALM_ANCIENT_RUINS), placement));
+            context.register(PILGRIMAGE_ROAD_PILLARS, new StructureSet(structures.getOrThrow(Structurez.PILGRIMAGE_ROAD_PILLARS), placement));
+            context.register(SKY_STONE, new StructureSet(structures.getOrThrow(Structurez.SKY_STONE), placement));
+            context.register(PLAINS_HILL_BIG, new StructureSet(structures.getOrThrow(Structurez.PLAINS_HILL_BIG), placement));
+            context.register(PLAINS_HILL_SMALL, new StructureSet(structures.getOrThrow(Structurez.PLAINS_HILL_SMALL), placement));
+            context.register(PLAINS_PERISTELE, new StructureSet(structures.getOrThrow(Structurez.PLAINS_PERISTELE), placement));
         }
     }
 
@@ -332,7 +356,7 @@ public final class RAFDimensions {
             context.register(WILDFIELD_WEEDS, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.WILDFIELD_WEEDS), List.of(BiomeFilter.biome(), NoiseThresholdCountPlacement.of(-0.65, 3, 6), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
             context.register(ANCIENT_TALL_WILDGRASS, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ANCIENT_TALL_WILDGRASS), List.of(BiomeFilter.biome(), NoiseThresholdCountPlacement.of(-0.6, 3, 6), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
             context.register(ABANDONED_TABLET, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ABANDONED_TABLET), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, CountPlacement.of(UniformInt.of(1, 2)), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
-            context.register(ABANDONED_PLANKS, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ABANDONED_PLANKS), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
+            context.register(ABANDONED_PLANKS, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ABANDONED_PLANKS), List.of(BiomeFilter.biome(), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
             context.register(ABANDONED_SIGN, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ABANDONED_SIGN), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
         }
     }

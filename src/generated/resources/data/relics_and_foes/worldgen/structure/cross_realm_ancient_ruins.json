@@ -1,0 +1,6 @@
+{
+  "type": "relics_and_foes:cross_realm_ancient_ruins",
+  "biomes": "relics_and_foes:the_sunken_expanse",
+  "spawn_overrides": {},
+  "step": "surface_structures"
+}
