@@ -1,0 +1,57 @@
+{
+  "type": "minecraft:random_patch",
+  "config": {
+    "feature": {
+      "feature": {
+        "type": "relics_and_foes:template_structure",
+        "config": {
+          "rotation_pivot": [
+            3,
+            0,
+            3
+          ],
+          "templates": [
+            {
+              "data": "relics_and_foes:7x_pine_tree_0",
+              "weight": 1
+            },
+            {
+              "data": "relics_and_foes:7x_pine_tree_1",
+              "weight": 1
+            },
+            {
+              "data": "relics_and_foes:7x_pine_tree_2",
+              "weight": 1
+            }
+          ]
+        }
+      },
+      "placement": [
+        {
+          "type": "minecraft:block_predicate_filter",
+          "predicate": {
+            "type": "minecraft:all_of",
+            "predicates": [
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:air"
+              },
+              {
+                "type": "minecraft:matching_block_tag",
+                "offset": [
+                  0,
+                  -1,
+                  0
+                ],
+                "tag": "minecraft:dirt"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "tries": 1,
+    "xz_spread": 0,
+    "y_spread": 4
+  }
+}

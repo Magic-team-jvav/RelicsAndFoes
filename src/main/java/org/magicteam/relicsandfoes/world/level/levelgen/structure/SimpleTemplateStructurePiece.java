@@ -2,6 +2,7 @@ package org.magicteam.relicsandfoes.world.level.levelgen.structure;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -17,8 +18,12 @@ import org.magicteam.relicsandfoes.RelicsAndFoes;
 import org.magicteam.relicsandfoes.init.RAFDimensions;
 
 public class SimpleTemplateStructurePiece extends TemplateStructurePiece {
+    public SimpleTemplateStructurePiece(StructureTemplateManager manager, String name, BlockPos startPos, boolean overwrite, boolean ignoreEntities, boolean appleWaterlogging, Rotation rotation, BlockPos rotationPivot) {
+        super(RAFDimensions.SIMPLE_TEMPLATE_STRUCTURE_PIECE.get(), 0, manager, RelicsAndFoes.asResource(name), name, makeSettings(overwrite, ignoreEntities, appleWaterlogging, rotation, rotationPivot), startPos);
+    }
+
     public SimpleTemplateStructurePiece(StructureTemplateManager manager, String name, BlockPos startPos, boolean overwrite, boolean ignoreEntities, boolean appleWaterlogging, Rotation rotation) {
-        super(RAFDimensions.SIMPLE_TEMPLATE_STRUCTURE_PIECE.get(), 0, manager, RelicsAndFoes.asResource(name), name, makeSettings(overwrite, ignoreEntities, appleWaterlogging, rotation), startPos);
+        this(manager, name, startPos, overwrite, ignoreEntities, appleWaterlogging, rotation, BlockPos.ZERO);
     }
 
     public SimpleTemplateStructurePiece(StructureTemplateManager manager, String name, BlockPos startPos) {
@@ -27,33 +32,37 @@ public class SimpleTemplateStructurePiece extends TemplateStructurePiece {
 
     public SimpleTemplateStructurePiece(StructureTemplateManager manager, CompoundTag tag) {
         super(RAFDimensions.SIMPLE_TEMPLATE_STRUCTURE_PIECE.get(), tag, manager, id -> makeSettings(
-                tag.getBoolean("OW"),
-                tag.getBoolean("IE"),
-                tag.getBoolean("AW"),
-                Rotation.valueOf(tag.getString("Rot"))
+                tag.getBoolean("Overwrite"),
+                tag.getBoolean("IgnoreEntities"),
+                tag.getBoolean("ApplyWaterlogging"),
+                Rotation.valueOf(tag.getString("Rotation")),
+                NbtUtils.readBlockPos(tag, "RotationPivot").orElse(BlockPos.ZERO)
         ));
     }
 
     private static StructurePlaceSettings makeSettings(
             boolean overwrite,
             boolean ignoreEntities,
-            boolean applyWaterLogging,
-            Rotation rotation
+            boolean applyWaterlogging,
+            Rotation rotation,
+            BlockPos rotationPivot
     ) {
         return new StructurePlaceSettings()
                 .addProcessor(overwrite ? BlockIgnoreProcessor.STRUCTURE_BLOCK : BlockIgnoreProcessor.STRUCTURE_AND_AIR)
                 .setIgnoreEntities(ignoreEntities)
-                .setLiquidSettings(applyWaterLogging ? LiquidSettings.APPLY_WATERLOGGING : LiquidSettings.IGNORE_WATERLOGGING)
-                .setRotation(rotation);
+                .setLiquidSettings(applyWaterlogging ? LiquidSettings.APPLY_WATERLOGGING : LiquidSettings.IGNORE_WATERLOGGING)
+                .setRotation(rotation)
+                .setRotationPivot(rotationPivot);
     }
 
     @Override
     protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag tag) {
         super.addAdditionalSaveData(context, tag);
-        tag.putBoolean("OW", placeSettings.getProcessors().getFirst() == BlockIgnoreProcessor.STRUCTURE_BLOCK);
-        tag.putBoolean("IE", placeSettings.isIgnoreEntities());
-        tag.putBoolean("AW", placeSettings.shouldApplyWaterlogging());
-        tag.putString("Rot", placeSettings.getRotation().name());
+        tag.putBoolean("Overwrite", placeSettings.getProcessors().getFirst() == BlockIgnoreProcessor.STRUCTURE_BLOCK);
+        tag.putBoolean("IgnoreEntities", placeSettings.isIgnoreEntities());
+        tag.putBoolean("ApplyWaterlogging", placeSettings.shouldApplyWaterlogging());
+        tag.putString("Rotation", placeSettings.getRotation().name());
+        tag.put("RotationPivot", NbtUtils.writeBlockPos(placeSettings.getRotationPivot()));
     }
 
     @Override

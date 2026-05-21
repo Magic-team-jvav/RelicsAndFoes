@@ -2,12 +2,6 @@
   "feature": "relics_and_foes:fallen_lavender",
   "placement": [
     {
-      "type": "minecraft:biome"
-    },
-    {
-      "type": "relics_and_foes:exclude_regions"
-    },
-    {
       "type": "minecraft:noise_threshold_count",
       "above_noise": 10,
       "below_noise": 5,
@@ -15,6 +9,12 @@
     },
     {
       "type": "minecraft:in_square"
+    },
+    {
+      "type": "relics_and_foes:exclude_regions"
+    },
+    {
+      "type": "minecraft:biome"
     },
     {
       "type": "minecraft:heightmap",

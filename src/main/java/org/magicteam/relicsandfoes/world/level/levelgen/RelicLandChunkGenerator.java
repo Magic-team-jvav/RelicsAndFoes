@@ -4,12 +4,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.BiomeSource;
@@ -21,7 +19,6 @@ import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
-import org.magicteam.relicsandfoes.RelicsAndFoes;
 
 public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
     public static final MapCodec<RelicLandChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -32,16 +29,6 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
     protected static final BlockState GRASS_BLOCK = Blocks.GRASS_BLOCK.defaultBlockState();
     protected static final BlockState DIRT = Blocks.DIRT.defaultBlockState();
     protected static final BlockState STONE = Blocks.STONE.defaultBlockState();
-    private static final SimpleWeightedRandomList<ResourceLocation> PILLAR_STRUCTURES = SimpleWeightedRandomList.<ResourceLocation>builder()
-            .add(RelicsAndFoes.asResource("pilgrimage_pillar_0"), 10)
-            .add(RelicsAndFoes.asResource("pilgrimage_pillar_1"), 10)
-            .add(RelicsAndFoes.asResource("pilgrimage_pillar_2"), 20)
-            .add(RelicsAndFoes.asResource("pilgrimage_pillar_3"), 20)
-            .add(RelicsAndFoes.asResource("pilgrimage_eye_chest"), 8)
-            .add(RelicsAndFoes.asResource("pilgrimage_item_chest"), 3)
-            .add(RelicsAndFoes.asResource("pilgrimage_spawn_point"), 5)
-            .add(RelicsAndFoes.asResource("pilgrimage_airport"), 8)
-            .build();
 
     protected NormalNoise noise;
 
@@ -62,15 +49,15 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
     }
 
     public void setupFiller(NoiseChunk noiseChunk) {
-        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        if (server == null) return;
         if (noise == null) {
-            RandomSource randomSource = RandomSource.create(server.getWorldData().worldGenOptions().seed());
-            double[] amplitudes = new double[randomSource.nextInt(3, 6)];
+            MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+            if (server == null) return;
+            RandomSource random = RandomSource.create(server.getWorldData().worldGenOptions().seed());
+            double[] amplitudes = new double[random.nextInt(3, 6)];
             for (int j = 0; j < amplitudes.length; j++) {
-                amplitudes[j] = randomSource.nextDouble();
+                amplitudes[j] = random.nextDouble();
             }
-            this.noise = NormalNoise.create(randomSource, -9, amplitudes);
+            this.noise = NormalNoise.create(random, -9, amplitudes);
         }
         noiseChunk.blockStateRule = context -> {
             int worldX = context.blockX();
@@ -78,7 +65,7 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
             int worldZ = context.blockZ();
             int middleX = (worldX + 1024) >> 11 << 11;
             int middleZ = (worldZ + 1024) >> 11 << 11;
-            double offset = Math.sqrt(Mth.square(middleX - worldX) + Mth.square(middleZ - worldZ));
+            double offset = Mth.length(middleX - worldX, middleZ - worldZ);
             double height_bili = Mth.clamp((220 - offset) / 50, 0, 1);
             double height_plain = 40 + (0.5 + noise.getValue(worldX, 0, worldZ)) * 10;
             int height = (int) (height_plain * (1 - height_bili) + height_bili * 52);
@@ -141,11 +128,5 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
                 }
             }
         }
-
-//        StructureTemplateManager templateManager = level.getLevel().getServer().getStructureManager();
-//        Optional<ResourceLocation> randomPillar = PILLAR_STRUCTURES.getRandomValue(worldgenRandom);
-//        if (randomPillar.isEmpty()) return;
-//        StructureTemplate template = templateManager.getOrCreate(randomPillar.get());
-//        template.placeInWorld()
     }
 }

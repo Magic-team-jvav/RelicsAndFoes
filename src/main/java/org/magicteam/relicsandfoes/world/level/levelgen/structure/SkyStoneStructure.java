@@ -14,6 +14,12 @@ import java.util.Optional;
 
 public class SkyStoneStructure extends Structure {
     public static final MapCodec<SkyStoneStructure> CODEC = simpleCodec(SkyStoneStructure::new);
+    private static final BlockPos[] PIVOTS = new BlockPos[]{
+            new BlockPos(5, 0, 22),
+            new BlockPos(3, 0, 20),
+            new BlockPos(5, 0, 5),
+            new BlockPos(3, 0, 12)
+    };
 
     public SkyStoneStructure(StructureSettings settings) {
         super(settings);
@@ -30,14 +36,16 @@ public class SkyStoneStructure extends Structure {
             BlockPos blockPos = new BlockPos(blockX, context.random().nextIntBetweenInclusive(65, 190), blockZ);
             return Optional.of(new GenerationStub(blockPos, builder -> {
                 StructureTemplateManager manager = context.structureTemplateManager();
+                int type = context.random().nextInt(4);
                 builder.addPiece(new SimpleTemplateStructurePiece(
                         manager,
-                        "sky_stone_" + context.random().nextInt(4),
+                        "sky_stone_" + type,
                         blockPos,
                         true,
                         true,
                         false,
-                        Rotation.getRandom(context.random())
+                        Rotation.getRandom(context.random()),
+                        PIVOTS[type]
                 ));
             }));
         }
@@ -46,6 +54,6 @@ public class SkyStoneStructure extends Structure {
 
     @Override
     public StructureType<?> type() {
-        return RAFDimensions.SKY_STONE.get();
+        return RAFDimensions.SKY_STONE_STRUCTURE.get();
     }
 }

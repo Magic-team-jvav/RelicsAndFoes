@@ -1,0 +1,77 @@
+{
+  "type": "minecraft:random_patch",
+  "config": {
+    "feature": {
+      "feature": {
+        "type": "relics_and_foes:template_structure",
+        "config": {
+          "rotation_pivot": [
+            2,
+            0,
+            2
+          ],
+          "templates": [
+            {
+              "data": "relics_and_foes:5x_pine_tree_0",
+              "weight": 1
+            },
+            {
+              "data": "relics_and_foes:5x_pine_tree_1",
+              "weight": 1
+            },
+            {
+              "data": "relics_and_foes:5x_pine_tree_2",
+              "weight": 1
+            },
+            {
+              "data": "relics_and_foes:5x_pine_tree_3",
+              "weight": 1
+            },
+            {
+              "data": "relics_and_foes:5x_pine_tree_4",
+              "weight": 1
+            },
+            {
+              "data": "relics_and_foes:5x_pine_tree_5",
+              "weight": 1
+            },
+            {
+              "data": "relics_and_foes:5x_pine_tree_6",
+              "weight": 1
+            },
+            {
+              "data": "relics_and_foes:5x_pine_tree_7",
+              "weight": 1
+            }
+          ]
+        }
+      },
+      "placement": [
+        {
+          "type": "minecraft:block_predicate_filter",
+          "predicate": {
+            "type": "minecraft:all_of",
+            "predicates": [
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:air"
+              },
+              {
+                "type": "minecraft:matching_block_tag",
+                "offset": [
+                  0,
+                  -1,
+                  0
+                ],
+                "tag": "minecraft:dirt"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "tries": 1,
+    "xz_spread": 0,
+    "y_spread": 4
+  }
+}

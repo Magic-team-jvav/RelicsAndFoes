@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
@@ -53,7 +54,16 @@ public class PilgrimageRoadPillarsStructure extends Structure {
                 } else {
                     offset = blockAt.offset(mx == 0 ? 4 : -2, -4, 0);
                 }
-                builder.addPiece(new SimpleTemplateStructurePiece(context.structureTemplateManager(), pillar.data(), offset));
+                builder.addPiece(new SimpleTemplateStructurePiece(
+                        context.structureTemplateManager(),
+                        pillar.data(),
+                        offset,
+                        true,
+                        false,
+                        false,
+                        Rotation.getRandom(context.random()),
+                        new BlockPos(7, 0, 7)
+                ));
             }));
         }
         return Optional.empty();
@@ -61,6 +71,6 @@ public class PilgrimageRoadPillarsStructure extends Structure {
 
     @Override
     public StructureType<?> type() {
-        return RAFDimensions.PILGRIMAGE_ROAD_PILLARS.get();
+        return RAFDimensions.PILGRIMAGE_ROAD_PILLARS_STRUCTURE.get();
     }
 }

@@ -20,12 +20,16 @@
     [],
     [],
     [
-      "relics_and_foes:wildfield_corn",
+      "relics_and_foes:big_pine_tree",
+      "relics_and_foes:jungle_tree",
+      "relics_and_foes:7x_pine_tree",
+      "relics_and_foes:5x_pine_tree",
       "relics_and_foes:ancient_wildgrass",
+      "relics_and_foes:ancient_tall_wildgrass",
+      "relics_and_foes:wildfield_corn",
       "relics_and_foes:fallen_lavender",
       "relics_and_foes:tequila",
-      "relics_and_foes:wildfield_weeds",
-      "relics_and_foes:ancient_tall_wildgrass"
+      "relics_and_foes:wildfield_weeds"
     ],
     [
       "relics_and_foes:abandoned_tablet",

@@ -2,9 +2,6 @@
   "feature": "relics_and_foes:ancient_tall_wildgrass",
   "placement": [
     {
-      "type": "minecraft:biome"
-    },
-    {
       "type": "minecraft:noise_threshold_count",
       "above_noise": 6,
       "below_noise": 3,
@@ -12,6 +9,9 @@
     },
     {
       "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:biome"
     },
     {
       "type": "minecraft:heightmap",

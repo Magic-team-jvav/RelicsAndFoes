@@ -1,10 +1,7 @@
 package org.magicteam.relicsandfoes.init;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderSet;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.SurfaceRuleData;
@@ -26,8 +23,10 @@ import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.SimpleRandomFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import net.minecraft.world.level.levelgen.placement.*;
@@ -43,16 +42,15 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
 import org.magicteam.relicsandfoes.world.level.biome.RelicLandBiomeSource;
 import org.magicteam.relicsandfoes.world.level.levelgen.RelicLandChunkGenerator;
+import org.magicteam.relicsandfoes.world.level.levelgen.feature.TemplateStructureFeature;
 import org.magicteam.relicsandfoes.world.level.levelgen.feature.WildfieldCornFeature;
 import org.magicteam.relicsandfoes.world.level.levelgen.feature.stateproviders.HorizontalDirectionalStateProvider;
 import org.magicteam.relicsandfoes.world.level.levelgen.placement.ExcludeRegionsPlacement;
+import org.magicteam.relicsandfoes.world.level.levelgen.placement.NoiseThresholdChancePlacement;
 import org.magicteam.relicsandfoes.world.level.levelgen.structure.*;
 import org.magicteam.relicsandfoes.world.level.levelgen.structure.placement.CurrentChunkStructurePlacement;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.OptionalLong;
+import java.util.*;
 import java.util.function.Consumer;
 
 public final class RAFDimensions {
@@ -66,10 +64,10 @@ public final class RAFDimensions {
     public static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<RelicLandChunkGenerator>> RELIC_LAND_CHUNK_GENERATOR = CHUNK_GENERATORS.register("relic_land", () -> RelicLandChunkGenerator.CODEC);
 
     private static final DeferredRegister<StructureType<?>> STRUCTURE_TYPES = DeferredRegister.create(Registries.STRUCTURE_TYPE, RelicsAndFoes.MODID);
-    public static final DeferredHolder<StructureType<?>, StructureType<CrossRealmAncientRuinsStructure>> CROSS_REALM_ANCIENT_RUINS = STRUCTURE_TYPES.register("cross_realm_ancient_ruins", () -> () -> CrossRealmAncientRuinsStructure.CODEC);
-    public static final DeferredHolder<StructureType<?>, StructureType<PilgrimageRoadPillarsStructure>> PILGRIMAGE_ROAD_PILLARS = STRUCTURE_TYPES.register("pilgrimage_road_pillars", () -> () -> PilgrimageRoadPillarsStructure.CODEC);
-    public static final DeferredHolder<StructureType<?>, StructureType<SkyStoneStructure>> SKY_STONE = STRUCTURE_TYPES.register("sky_stone", () -> () -> SkyStoneStructure.CODEC);
-    public static final DeferredHolder<StructureType<?>, StructureType<GroundStoneStructure>> GROUND_STONE = STRUCTURE_TYPES.register("ground_stone", () -> () -> GroundStoneStructure.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<CrossRealmAncientRuinsStructure>> CROSS_REALM_ANCIENT_RUINS_STRUCTURE = STRUCTURE_TYPES.register("cross_realm_ancient_ruins", () -> () -> CrossRealmAncientRuinsStructure.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<PilgrimageRoadPillarsStructure>> PILGRIMAGE_ROAD_PILLARS_STRUCTURE = STRUCTURE_TYPES.register("pilgrimage_road_pillars", () -> () -> PilgrimageRoadPillarsStructure.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<SkyStoneStructure>> SKY_STONE_STRUCTURE = STRUCTURE_TYPES.register("sky_stone", () -> () -> SkyStoneStructure.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<OnGroundStructure>> ON_GROUND_STRUCTURE = STRUCTURE_TYPES.register("on_ground", () -> () -> OnGroundStructure.CODEC);
 
     private static final DeferredRegister<StructurePlacementType<?>> STRUCTURE_PLACEMENT_TYPES = DeferredRegister.create(Registries.STRUCTURE_PLACEMENT, RelicsAndFoes.MODID);
     public static final DeferredHolder<StructurePlacementType<?>, StructurePlacementType<CurrentChunkStructurePlacement>> CURRENT_CHUNK_STRUCTURE_PLACEMENT = STRUCTURE_PLACEMENT_TYPES.register("current_chunk", () -> () -> CurrentChunkStructurePlacement.CODEC);
@@ -79,9 +77,11 @@ public final class RAFDimensions {
 
     private static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(Registries.FEATURE, RelicsAndFoes.MODID);
     public static final DeferredHolder<Feature<?>, WildfieldCornFeature> WILDFIELD_CORN_FEATURE = FEATURES.register("wildfield_corn", () -> new WildfieldCornFeature(WildfieldCornFeature.Config.CODEC));
+    public static final DeferredHolder<Feature<?>, TemplateStructureFeature> TEMPLATE_STRUCTURE_FEATURE = FEATURES.register("template_structure", () -> new TemplateStructureFeature(TemplateStructureFeature.Config.CODEC));
 
     private static final DeferredRegister<PlacementModifierType<?>> PLACEMENT_MODIFIER_TYPES = DeferredRegister.create(Registries.PLACEMENT_MODIFIER_TYPE, RelicsAndFoes.MODID);
     public static final DeferredHolder<PlacementModifierType<?>, PlacementModifierType<ExcludeRegionsPlacement>> EXCLUDE_REGIONS_PLACEMENT = PLACEMENT_MODIFIER_TYPES.register("exclude_regions", () -> () -> ExcludeRegionsPlacement.CODEC);
+    public static final DeferredHolder<PlacementModifierType<?>, PlacementModifierType<NoiseThresholdChancePlacement>> NOISE_THRESHOLD_CHANCE_PLACEMENT = PLACEMENT_MODIFIER_TYPES.register("noise_threshold_chance", () -> () -> NoiseThresholdChancePlacement.CODEC);
 
     private static final DeferredRegister<BlockStateProviderType<?>> BLOCK_STATE_PROVIDER_TYPES = DeferredRegister.create(Registries.BLOCK_STATE_PROVIDER_TYPE, RelicsAndFoes.MODID);
     public static final DeferredHolder<BlockStateProviderType<?>, BlockStateProviderType<HorizontalDirectionalStateProvider>> HORIZONTAL_DIRECTIONAL_STATE_PROVIDER = BLOCK_STATE_PROVIDER_TYPES.register("horizontal_directional", () -> new BlockStateProviderType<>(HorizontalDirectionalStateProvider.CODEC));
@@ -218,12 +218,16 @@ public final class RAFDimensions {
                     .mobSpawnSettings(new MobSpawnSettings.Builder()
                             .build())
                     .generationSettings(generation(placedFeatures, worldCarvers, builder -> builder
-                            .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeaturez.WILDFIELD_CORN)
+                            .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeaturez.BIG_PINE_TREE)
+                            .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeaturez.JUNGLE_TREE)
+                            .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeaturez.X7_PINE_TREE)
+                            .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeaturez.X5_PINE_TREE)
                             .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeaturez.ANCIENT_WILDGRASS)
+                            .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeaturez.ANCIENT_TALL_WILDGRASS)
+                            .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeaturez.WILDFIELD_CORN)
                             .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeaturez.FALLEN_LAVENDER)
                             .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeaturez.TEQUILA)
                             .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeaturez.WILDFIELD_WEEDS)
-                            .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeaturez.ANCIENT_TALL_WILDGRASS)
                             .addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION, PlacedFeaturez.ABANDONED_TABLET)
                             .addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION, PlacedFeaturez.ABANDONED_PLANKS)
                             .addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION, PlacedFeaturez.ABANDONED_SIGN)
@@ -265,9 +269,24 @@ public final class RAFDimensions {
             context.register(CROSS_REALM_ANCIENT_RUINS, new CrossRealmAncientRuinsStructure(theSunkenExpanseSettings));
             context.register(PILGRIMAGE_ROAD_PILLARS, new PilgrimageRoadPillarsStructure(theSunkenExpanseSettings));
             context.register(SKY_STONE, new SkyStoneStructure(theSunkenExpanseSettings));
-            context.register(PLAINS_HILL_BIG, new GroundStoneStructure(theSunkenExpanseSettings, "plains_hill_big_", 3, 0.03F));
-            context.register(PLAINS_HILL_SMALL, new GroundStoneStructure(theSunkenExpanseSettings, "plains_hill_small_", 4, 0.25F));
-            context.register(PLAINS_PERISTELE, new GroundStoneStructure(theSunkenExpanseSettings, "plains_peristele_", 5, 0.1F));
+            context.register(PLAINS_HILL_BIG, new OnGroundStructure(theSunkenExpanseSettings, "plains_hill_big_", 3, 0.03F, List.of(
+                    new BlockPos(24, 0, 24),
+                    new BlockPos(24, 0, 24),
+                    new BlockPos(24, 0, 24)
+            )));
+            context.register(PLAINS_HILL_SMALL, new OnGroundStructure(theSunkenExpanseSettings, "plains_hill_small_", 4, 0.25F, List.of(
+                    new BlockPos(8, 0, 5),
+                    new BlockPos(9, 0, 9),
+                    new BlockPos(9, 0, 4),
+                    new BlockPos(4, 0, 8)
+            )));
+            context.register(PLAINS_PERISTELE, new OnGroundStructure(theSunkenExpanseSettings, "plains_peristele_", 5, 0.1F, List.of(
+                    new BlockPos(2, 0, 1),
+                    new BlockPos(1, 0, 1),
+                    new BlockPos(4, 0, 3),
+                    new BlockPos(1, 0, 6),
+                    new BlockPos(1, 0, 5)
+            )));
         }
     }
 
@@ -306,27 +325,74 @@ public final class RAFDimensions {
         public static final ResourceKey<ConfiguredFeature<?, ?>> ABANDONED_TABLET = key("abandoned_tablet");
         public static final ResourceKey<ConfiguredFeature<?, ?>> ABANDONED_PLANKS = key("abandoned_planks");
         public static final ResourceKey<ConfiguredFeature<?, ?>> ABANDONED_SIGN = key("abandoned_sign");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> X5_PINE_TREE = key("5x_pine_tree");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> X7_PINE_TREE = key("7x_pine_tree");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> JUNGLE_TREE = key("jungle_tree");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> BIG_PINE_TREE = key("big_pine_tree");
 
         private static ResourceKey<ConfiguredFeature<?, ?>> key(String path) {
             return ResourceKey.create(Registries.CONFIGURED_FEATURE, RelicsAndFoes.asResource(path));
         }
 
         public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
-            context.register(WILDFIELD_CORN, new ConfiguredFeature<>(WILDFIELD_CORN_FEATURE.get(), new WildfieldCornFeature.Config(2, 5)));
-            context.register(ANCIENT_WILDGRASS, new ConfiguredFeature<>(Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.ANCIENT_WILDGRASS.get()), 24)));
-            context.register(FALLEN_LAVENDER, new ConfiguredFeature<>(Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.FALLEN_LAVENDER.get()), 18)));
-            context.register(TEQUILA, new ConfiguredFeature<>(Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.TEQUILA.get()), 12)));
-            context.register(WILDFIELD_WEEDS, new ConfiguredFeature<>(Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.WILDFIELD_WEEDS.get()), 6)));
-            context.register(ANCIENT_TALL_WILDGRASS, new ConfiguredFeature<>(Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.ANCIENT_TALL_WILDGRASS.get()), 6)));
-            context.register(ABANDONED_TABLET, new ConfiguredFeature<>(Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 7, 0, PlacementUtils.filtered(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(new HorizontalDirectionalStateProvider(RAFBlocks.ABANDONED_TABLET.get())), isAirAndBelowHasSturdyUPFace()))));
-            context.register(ABANDONED_PLANKS, new ConfiguredFeature<>(Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 7, 0, PlacementUtils.filtered(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(new HorizontalDirectionalStateProvider(RAFBlocks.ABANDONED_PLANKS.get())), isAirAndBelowHasSturdyUPFace()))));
-            context.register(ABANDONED_SIGN, new ConfiguredFeature<>(Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 7, 0, PlacementUtils.filtered(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(new HorizontalDirectionalStateProvider(RAFBlocks.ABANDONED_SIGN.get())), isAirAndBelowHasSturdyUPFace()))));
+            register(context, WILDFIELD_CORN, WILDFIELD_CORN_FEATURE.get(), new WildfieldCornFeature.Config(2, 5));
+            register(context, ANCIENT_WILDGRASS, Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.ANCIENT_WILDGRASS.get()), 24));
+            register(context, FALLEN_LAVENDER, Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.FALLEN_LAVENDER.get()), 18));
+            register(context, TEQUILA, Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.TEQUILA.get()), 12));
+            register(context, WILDFIELD_WEEDS, Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.WILDFIELD_WEEDS.get()), 6));
+            register(context, ANCIENT_TALL_WILDGRASS, Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.ANCIENT_TALL_WILDGRASS.get()), 6));
+            register(context, ABANDONED_TABLET, Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(new HorizontalDirectionalStateProvider(RAFBlocks.ABANDONED_TABLET.get())));
+            register(context, ABANDONED_PLANKS, Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(new HorizontalDirectionalStateProvider(RAFBlocks.ABANDONED_PLANKS.get())));
+            register(context, ABANDONED_SIGN, Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(new HorizontalDirectionalStateProvider(RAFBlocks.ABANDONED_SIGN.get())));
+            register(context, X5_PINE_TREE, Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 0, 4, PlacementUtils.filtered(
+                    TEMPLATE_STRUCTURE_FEATURE.get(),
+                    TemplateStructureFeature.Config.of("5x_pine_tree_", 8, 2, 2),
+                    isAirAndBelowIsDirt()
+            )));
+            register(context, X7_PINE_TREE, Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 0, 4, PlacementUtils.filtered(
+                    TEMPLATE_STRUCTURE_FEATURE.get(),
+                    TemplateStructureFeature.Config.of("7x_pine_tree_", 3, 3, 3),
+                    isAirAndBelowIsDirt()
+            )));
+            register(context, JUNGLE_TREE, Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 0, 4, PlacementUtils.filtered(
+                    TEMPLATE_STRUCTURE_FEATURE.get(),
+                    TemplateStructureFeature.Config.of("jungle_tree_", 3, 9, 9),
+                    isAirAndBelowIsDirt()
+            )));
+            register(context, BIG_PINE_TREE, Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 0, 4, PlacementUtils.filtered(
+                    Feature.SIMPLE_RANDOM_SELECTOR,
+                    new SimpleRandomFeatureConfiguration(HolderSet.direct(
+                            directPlacedFeature(TEMPLATE_STRUCTURE_FEATURE.get(), TemplateStructureFeature.Config.of("9x_pine_tree_", 3, 4, 4)),
+                            directPlacedFeature(TEMPLATE_STRUCTURE_FEATURE.get(), TemplateStructureFeature.Config.of("11x_pine_tree_", 3, 5, 5))
+                    )),
+                    isAirAndBelowIsDirt()
+            )));
         }
 
-        private static BlockPredicate isAirAndBelowHasSturdyUPFace() {
+        private static <FC extends FeatureConfiguration, F extends Feature<FC>> void register(
+                BootstrapContext<ConfiguredFeature<?, ?>> context,
+                ResourceKey<ConfiguredFeature<?, ?>> key,
+                F feature,
+                FC config
+        ) {
+            context.register(key, new ConfiguredFeature<>(feature, config));
+        }
+
+        private static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<PlacedFeature> directPlacedFeature(F feature, FC config) {
+            return Holder.direct(new PlacedFeature(Holder.direct(new ConfiguredFeature<>(feature, config)), List.of()));
+        }
+
+        private static BlockPredicate isAirAndBelowHasSturdyUpFace() {
             return BlockPredicate.allOf(
                     BlockPredicate.ONLY_IN_AIR_PREDICATE,
                     BlockPredicate.hasSturdyFace(Direction.DOWN.getNormal(), Direction.UP)
+            );
+        }
+
+        private static BlockPredicate isAirAndBelowIsDirt() {
+            return BlockPredicate.allOf(
+                    BlockPredicate.ONLY_IN_AIR_PREDICATE,
+                    BlockPredicate.matchesTag(Direction.DOWN.getNormal(), BlockTags.DIRT)
             );
         }
     }
@@ -341,6 +407,10 @@ public final class RAFDimensions {
         public static final ResourceKey<PlacedFeature> ABANDONED_TABLET = key("abandoned_tablet");
         public static final ResourceKey<PlacedFeature> ABANDONED_PLANKS = key("abandoned_planks");
         public static final ResourceKey<PlacedFeature> ABANDONED_SIGN = key("abandoned_sign");
+        public static final ResourceKey<PlacedFeature> X5_PINE_TREE = key("5x_pine_tree");
+        public static final ResourceKey<PlacedFeature> X7_PINE_TREE = key("7x_pine_tree");
+        public static final ResourceKey<PlacedFeature> JUNGLE_TREE = key("jungle_tree");
+        public static final ResourceKey<PlacedFeature> BIG_PINE_TREE = key("big_pine_tree");
 
         private static ResourceKey<PlacedFeature> key(String path) {
             return ResourceKey.create(Registries.PLACED_FEATURE, RelicsAndFoes.asResource(path));
@@ -349,15 +419,29 @@ public final class RAFDimensions {
         public static void bootstrap(BootstrapContext<PlacedFeature> context) {
             HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
 
-            context.register(WILDFIELD_CORN, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.WILDFIELD_CORN), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, CountPlacement.of(UniformInt.of(1, 2)), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
-            context.register(ANCIENT_WILDGRASS, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ANCIENT_WILDGRASS), List.of(BiomeFilter.biome(), NoiseThresholdCountPlacement.of(-0.8, 6, 12), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
-            context.register(FALLEN_LAVENDER, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.FALLEN_LAVENDER), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, NoiseThresholdCountPlacement.of(-0.75, 5, 10), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
-            context.register(TEQUILA, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.TEQUILA), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, NoiseThresholdCountPlacement.of(-0.7, 4, 8), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
-            context.register(WILDFIELD_WEEDS, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.WILDFIELD_WEEDS), List.of(BiomeFilter.biome(), NoiseThresholdCountPlacement.of(-0.65, 3, 6), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
-            context.register(ANCIENT_TALL_WILDGRASS, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ANCIENT_TALL_WILDGRASS), List.of(BiomeFilter.biome(), NoiseThresholdCountPlacement.of(-0.6, 3, 6), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
-            context.register(ABANDONED_TABLET, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ABANDONED_TABLET), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, CountPlacement.of(UniformInt.of(1, 2)), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
-            context.register(ABANDONED_PLANKS, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ABANDONED_PLANKS), List.of(BiomeFilter.biome(), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
-            context.register(ABANDONED_SIGN, new PlacedFeature(configuredFeatures.getOrThrow(ConfiguredFeaturez.ABANDONED_SIGN), List.of(BiomeFilter.biome(), ExcludeRegionsPlacement.INSTANCE, InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE)));
+            register(context, configuredFeatures, WILDFIELD_CORN, ConfiguredFeaturez.WILDFIELD_CORN, CountPlacement.of(UniformInt.of(1, 2)), InSquarePlacement.spread(), ExcludeRegionsPlacement.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(context, configuredFeatures, ANCIENT_WILDGRASS, ConfiguredFeaturez.ANCIENT_WILDGRASS, NoiseThresholdCountPlacement.of(-0.8, 6, 12), InSquarePlacement.spread(), BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(context, configuredFeatures, FALLEN_LAVENDER, ConfiguredFeaturez.FALLEN_LAVENDER, NoiseThresholdCountPlacement.of(-0.75, 5, 10), InSquarePlacement.spread(), ExcludeRegionsPlacement.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(context, configuredFeatures, TEQUILA, ConfiguredFeaturez.TEQUILA, NoiseThresholdCountPlacement.of(-0.7, 4, 8), InSquarePlacement.spread(), ExcludeRegionsPlacement.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(context, configuredFeatures, WILDFIELD_WEEDS, ConfiguredFeaturez.WILDFIELD_WEEDS, NoiseThresholdCountPlacement.of(-0.65, 3, 6), InSquarePlacement.spread(), BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(context, configuredFeatures, ANCIENT_TALL_WILDGRASS, ConfiguredFeaturez.ANCIENT_TALL_WILDGRASS, NoiseThresholdCountPlacement.of(-0.6, 3, 6), InSquarePlacement.spread(), BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(context, configuredFeatures, ABANDONED_TABLET, ConfiguredFeaturez.ABANDONED_TABLET, CountPlacement.of(UniformInt.of(1, 2)), InSquarePlacement.spread(), ExcludeRegionsPlacement.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BlockPredicateFilter.forPredicate(ConfiguredFeaturez.isAirAndBelowHasSturdyUpFace()));
+            register(context, configuredFeatures, ABANDONED_PLANKS, ConfiguredFeaturez.ABANDONED_PLANKS, InSquarePlacement.spread(), BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BlockPredicateFilter.forPredicate(ConfiguredFeaturez.isAirAndBelowHasSturdyUpFace()));
+            register(context, configuredFeatures, ABANDONED_SIGN, ConfiguredFeaturez.ABANDONED_SIGN, InSquarePlacement.spread(), ExcludeRegionsPlacement.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BlockPredicateFilter.forPredicate(ConfiguredFeaturez.isAirAndBelowHasSturdyUpFace()));
+            register(context, configuredFeatures, X5_PINE_TREE, ConfiguredFeaturez.X5_PINE_TREE, CountPlacement.of(9), InSquarePlacement.spread(), ExcludeRegionsPlacement.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(context, configuredFeatures, X7_PINE_TREE, ConfiguredFeaturez.X7_PINE_TREE, CountPlacement.of(2), InSquarePlacement.spread(), ExcludeRegionsPlacement.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(context, configuredFeatures, JUNGLE_TREE, ConfiguredFeaturez.JUNGLE_TREE, InSquarePlacement.spread(), ExcludeRegionsPlacement.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, new NoiseThresholdChancePlacement(0, 0.5F, 0.25F));
+            register(context, configuredFeatures, BIG_PINE_TREE, ConfiguredFeaturez.BIG_PINE_TREE, NoiseThresholdCountPlacement.of(-0.25, 10, 0), InSquarePlacement.spread(), ExcludeRegionsPlacement.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+        }
+
+        private static void register(
+                BootstrapContext<PlacedFeature> context,
+                HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures,
+                ResourceKey<PlacedFeature> placed,
+                ResourceKey<ConfiguredFeature<?, ?>> configured,
+                PlacementModifier... modifiers
+        ) {
+            context.register(placed, new PlacedFeature(configuredFeatures.getOrThrow(configured), Arrays.asList(modifiers)));
         }
     }
 }

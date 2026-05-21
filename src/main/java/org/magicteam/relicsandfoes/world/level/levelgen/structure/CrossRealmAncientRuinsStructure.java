@@ -41,6 +41,6 @@ public class CrossRealmAncientRuinsStructure extends Structure {
 
     @Override
     public StructureType<?> type() {
-        return RAFDimensions.CROSS_REALM_ANCIENT_RUINS.get();
+        return RAFDimensions.CROSS_REALM_ANCIENT_RUINS_STRUCTURE.get();
     }
 }

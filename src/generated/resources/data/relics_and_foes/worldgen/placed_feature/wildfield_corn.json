@@ -2,12 +2,6 @@
   "feature": "relics_and_foes:wildfield_corn",
   "placement": [
     {
-      "type": "minecraft:biome"
-    },
-    {
-      "type": "relics_and_foes:exclude_regions"
-    },
-    {
       "type": "minecraft:count",
       "count": {
         "type": "minecraft:uniform",
@@ -17,6 +11,12 @@
     },
     {
       "type": "minecraft:in_square"
+    },
+    {
+      "type": "relics_and_foes:exclude_regions"
+    },
+    {
+      "type": "minecraft:biome"
     },
     {
       "type": "minecraft:heightmap",

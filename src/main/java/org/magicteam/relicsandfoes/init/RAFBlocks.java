@@ -76,6 +76,7 @@ public final class RAFBlocks {
     public static final DeferredBlock<Block> COBBLESTONE_BRICKS = registerHolder("cobblestone_bricks");
     public static final DeferredBlock<Block> COBBLESTONE_TILES = registerHolder("cobblestone_tiles");
     public static final DeferredBlock<Block> STONE_TILES = registerHolder("stone_tiles");
+    public static final DeferredBlock<Block> FOREST_VINE = registerHolder("forest_vine");
 
     // endregion
 
