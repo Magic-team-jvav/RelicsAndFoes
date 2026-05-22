@@ -2,6 +2,7 @@ package org.magicteam.relicsandfoes.world.level.biome;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.QuartPos;
@@ -41,9 +42,9 @@ public class RelicLandBiomeSource extends BiomeSource {
     private final Holder<Biome> theForestOfDusk;
 
     private final SimpleWeightedRandomList<Holder<Biome>> otherBiomes;
+    private final Long2ObjectOpenHashMap<Holder<Biome>> biomeCache = new Long2ObjectOpenHashMap<>();
     private long worldSeed;
-    private long lastMiddle;
-    private Holder<Biome> lastBiome;
+    private boolean seedReady;
 
     public RelicLandBiomeSource(
             Holder<Biome> theSunkenPlains,
@@ -109,30 +110,45 @@ public class RelicLandBiomeSource extends BiomeSource {
 
     @Override
     public Holder<Biome> getNoiseBiome(int qx, int qy, int qz, Climate.Sampler sampler) {
-        int bx = QuartPos.toBlock(qx);
-        int bz = QuartPos.toBlock(qz);
-        int middleX = (bx >> 11 << 11) + 1024;
-        int middleZ = (bz >> 11 << 11) + 1024;
-        if (Mth.lengthSquared(middleX - bx, middleZ - bz) <= 800 * 800) {
-            return selectBiome(middleX, middleZ);
+        int worldX = QuartPos.toBlock(qx);
+        int worldZ = QuartPos.toBlock(qz);
+        int biomeX = (worldX >> 11 << 11) + 1024;
+        int biomeZ = (worldZ >> 11 << 11) + 1024;
+        return selectBiome(worldX, worldZ, biomeX, biomeZ);
+    }
+
+    private void ensureSeedReady() {
+        if (!seedReady) {
+            MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+            if (server != null) {
+                worldSeed = server.getWorldData().worldGenOptions().seed();
+                seedReady = true;
+            }
+        }
+    }
+
+    public Holder<Biome> selectBiome(int worldX, int worldZ, int biomeX, int biomeZ) {
+        if (Mth.lengthSquared(biomeX - worldX, biomeZ - worldZ) <= 800 * 800) {
+            return selectBiome(biomeX, biomeZ);
         }
         return theSunkenPlains;
     }
 
-    public Holder<Biome> selectBiome(int middleX, int middleZ) {
-        if (worldSeed == 0) {
-            MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-            if (server != null) {
-                this.worldSeed = server.getWorldData().worldGenOptions().seed();
-            }
+    public Holder<Biome> selectBiome(int biomeX, int biomeZ) {
+        long key = ChunkPos.asLong(biomeX, biomeZ);
+        Holder<Biome> biome = biomeCache.get(key);
+        if (biome != null) {
+            return biome;
         }
-        long middle = ChunkPos.asLong(middleX, middleZ);
-        if (lastBiome == null || lastMiddle != middle) {
-            long l = middleX * 341873128712L + middleZ * 132897987541L + worldSeed + 9872349113L;
-            RandomSource random = RandomSource.create(l * l * 4234567891L + l);
-            this.lastBiome = otherBiomes.getRandomValue(random).orElse(theSunkenPlains);
-            this.lastMiddle = middle;
-        }
-        return lastBiome;
+        ensureSeedReady();
+        long l = biomeX * 341873128712L + biomeZ * 132897987541L + worldSeed + 9872349113L;
+        RandomSource random = RandomSource.create(l * l * 4234567891L + l);
+        biome = otherBiomes.getRandomValue(random).orElse(theSunkenPlains);
+        biomeCache.put(key, biome);
+        return biome;
+    }
+
+    public Holder<Biome> getDefaultBiome() {
+        return theSunkenPlains;
     }
 }

@@ -1,0 +1,50 @@
+{
+	"format_version": "1.10.0",
+	"particle_effect": {
+		"description": {
+			"identifier": "relics_and_foes:rose_core1",
+			"basic_render_parameters": {
+				"material": "particles_blend",
+				"texture": "relics_and_foes:light_particle"
+			}
+		},
+		"components": {
+			"minecraft:emitter_rate_steady": {
+				"spawn_rate": 10,
+				"max_particles": 100
+			},
+			"minecraft:emitter_lifetime_once": {
+				"active_time": 0.5
+			},
+			"minecraft:emitter_shape_sphere": {
+				"radius": 1.7,
+				"surface_only": true,
+				"direction": "inwards"
+			},
+			"minecraft:particle_lifetime_expression": {
+				"max_lifetime": "math.random(0.4,0.55)"
+			},
+			"minecraft:particle_initial_speed": 4,
+			"minecraft:particle_motion_dynamic": {},
+			"minecraft:particle_appearance_billboard": {
+				"size": [0.16, 0.16],
+				"facing_camera_mode": "rotate_xyz",
+				"uv": {
+					"texture_width": 16,
+					"texture_height": 16,
+					"uv": [0, 0],
+					"uv_size": [16, 16]
+				}
+			},
+			"minecraft:particle_appearance_tinting": {
+				"color": {
+					"interpolant": "v.particle_age / v.particle_lifetime",
+					"gradient": {
+						"0.0": "#FFFF6969",
+						"1.0": "#00FF6969"
+					}
+				}
+			}
+		}
+	}
+}

@@ -5,7 +5,7 @@
 			"identifier": "relics_and_foes:thunder_energy",
 			"basic_render_parameters": {
 				"material": "particles_alpha",
-				"texture": "textures/particle/particles"
+				"texture": "relics_and_foes:particles"
 			}
 		},
 		"components": {

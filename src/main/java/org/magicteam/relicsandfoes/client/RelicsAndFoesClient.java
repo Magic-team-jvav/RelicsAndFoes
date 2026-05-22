@@ -28,29 +28,31 @@ public final class RelicsAndFoesClient {
     private static final RandomSource random = RandomSource.create();
 
     public static void biomeParticles() {
-        if (RAFClientConfigs.biomeParticles) {
-            if (gameTime % 2 == 0) {
-                if (inTheSunkenExpanse) {
-                    if (inCrossRealmAncientRuins && !isPrototypeDefeated) {
-                        addEmitter(
-                                position.x + nextBetweenInclusive(random, -18, 8),
-                                position.y + nextBetweenInclusive(random, -5, 8),
-                                position.z + nextBetweenInclusive(random, -18, 8),
-                                "city_wind"
-                        );
-                        addEmitter(position, "city_petal_atlas");
-                    }
+        if (gameTime % 2 == 0) {
+            if (inTheSunkenExpanse) {
+                if (RAFClientConfigs.biomeParticles && inCrossRealmAncientRuins && !isPrototypeDefeated) {
+                    RandomSource random = player.getRandom();
+                    addEmitter(
+                            position.x + nextBetweenInclusive(random, -18, 8),
+                            position.y + nextBetweenInclusive(random, -5, 8),
+                            position.z + nextBetweenInclusive(random, -18, 8),
+                            "city_wind"
+                    );
+                    addEmitter(position, "city_petal_atlas");
                 }
             }
-            if (gameTime % 20 == 0) {
-                if (inTheSeaOfFallingStars) {
+        }
+        if (gameTime % 20 == 0) {
+            if (inTheSeaOfFallingStars) {
+                RandomSource random = player.getRandom();
+                if (RAFClientConfigs.biomeParticles) {
                     if (position.y <= 80) {
                         for (int i = 0; i < 5; i++) {
                             addEmitter(
                                     position.x + nextScale(random, 20),
                                     position.y + nextScale(random, 7),
                                     position.z + nextScale(random, 20),
-                                    "the_sea_of_falling_stars_fallen_leaves"
+                                    "fallen_leaves_lukewarm_ocean"
                             );
                         }
                     }
@@ -62,72 +64,44 @@ public final class RelicsAndFoesClient {
                                 "meteor"
                         );
                     }
-                } else if (inTheThornyDreadlands) {
+                }
+                if (RAFClientConfigs.mistParticles) {
+                    for (int i = 0; i < 2; i++) {
+                        double[] pos = getCirclePos(random, random.nextIntBetweenInclusive(128, 148));
+                        addEmitter(pos[0], 80, pos[1], "aurora");
+                    }
+                }
+            } else if (inTheSunkenExpanse) {
+                RandomSource random = player.getRandom();
+                if (RAFClientConfigs.biomeParticles && (!inCrossRealmAncientRuins || isPrototypeDefeated)) {
+                    for (int i = 0; i < 5; i++) {
+                        addEmitter(
+                                position.x + nextScale(random, 20),
+                                position.y + nextScale(random, 7),
+                                position.z + nextScale(random, 20),
+                                "light_circle_plains"
+                        );
+                    }
+                    if (position.y <= 75) {
+                        for (int i = 0; i < 5; i++) {
+                            addEmitter(
+                                    position.x + nextScale(random, 20),
+                                    position.y + nextScale(random, 7),
+                                    position.z + nextScale(random, 20),
+                                    "fallen_leaves_plains"
+                            );
+                        }
+                    }
+                }
+            } else if (inThePeachOfBlossomVale) {
+                if (RAFClientConfigs.biomeParticles) {
                     RandomSource random = player.getRandom();
                     for (int i = 0; i < 3; i++) {
                         addEmitter(
                                 position.x + nextScale(random, 20),
                                 position.y + nextScale(random, 7),
                                 position.z + nextScale(random, 20),
-                                "thorny_dreadlands_light_circle"
-                        );
-                    }
-                    for (int i = 0; i < 10; i++) {
-                        addEmitter(
-                                position.x + nextScale(random, 6),
-                                position.y + nextScale(random, 4),
-                                position.z + nextScale(random, 6),
-                                "thorny_dreadlands_birch_light_circle"
-                        );
-                    }
-                    for (int i = 0; i < 8; i++) {
-                        addEmitter(
-                                position.x + nextScale(random, 20),
-                                position.y + nextBetweenInclusive(random, -4, 2),
-                                position.z + nextScale(random, 20),
-                                "thorny_dreadlands_birch_light_circle2"
-                        );
-                    }
-                    if (position.y <= 110) {
-                        for (int i = 0; i < 5; i++) {
-                            addEmitter(
-                                    position.x + nextScale(random, 20),
-                                    position.y + nextScale(random, 7),
-                                    position.z + nextScale(random, 20),
-                                    "thorny_dreadlands_fallen_leaves"
-                            );
-                        }
-                    }
-                } else if (inTheSunkenExpanse) {
-                    RandomSource random = player.getRandom();
-                    if (!inCrossRealmAncientRuins || isPrototypeDefeated) {
-                        for (int i = 0; i < 5; i++) {
-                            addEmitter(
-                                    position.x + nextScale(random, 20),
-                                    position.y + nextScale(random, 7),
-                                    position.z + nextScale(random, 20),
-                                    "the_sunken_expanse_light_circle"
-                            );
-                        }
-                        if (position.y <= 75) {
-                            for (int i = 0; i < 5; i++) {
-                                addEmitter(
-                                        position.x + nextScale(random, 20),
-                                        position.y + nextScale(random, 7),
-                                        position.z + nextScale(random, 20),
-                                        "the_sunken_expanse_fallen_leaves"
-                                );
-                            }
-                        }
-                    }
-                } else if (inThePeachOfBlossomVale) {
-                    RandomSource random = player.getRandom();
-                    for (int i = 0; i < 3; i++) {
-                        addEmitter(
-                                position.x + nextScale(random, 20),
-                                position.y + nextScale(random, 7),
-                                position.z + nextScale(random, 20),
-                                "peach_blossom_vale_light_circle"
+                                "light_circle_forest_hills"
                         );
                     }
                     if (position.y <= 75) {
@@ -136,9 +110,45 @@ public final class RelicsAndFoesClient {
                                     position.x + nextScale(random, 20),
                                     position.y + nextScale(random, 7),
                                     position.z + nextScale(random, 20),
-                                    "peach_blossom_vale_fallen_leaves"
+                                    "fallen_leaves_forest_hills"
                             );
                         }
+                    }
+                }
+            } else if (inTheThornyDreadlands) {
+                RandomSource random = player.getRandom();
+                for (int i = 0; i < 3; i++) {
+                    addEmitter(
+                            position.x + nextScale(random, 20),
+                            position.y + nextScale(random, 7),
+                            position.z + nextScale(random, 20),
+                            "light_circle_forest_hills"
+                    );
+                }
+                for (int i = 0; i < 10; i++) {
+                    addEmitter(
+                            position.x + nextScale(random, 6),
+                            position.y + nextScale(random, 4),
+                            position.z + nextScale(random, 6),
+                            "light_circle_birch_forest_hills"
+                    );
+                }
+                for (int i = 0; i < 8; i++) {
+                    addEmitter(
+                            position.x + nextScale(random, 20),
+                            position.y + nextBetweenInclusive(random, -4, 2),
+                            position.z + nextScale(random, 20),
+                            "light_circle_birch_forest_hills2"
+                    );
+                }
+                if (position.y <= 110) {
+                    for (int i = 0; i < 5; i++) {
+                        addEmitter(
+                                position.x + nextScale(random, 20),
+                                position.y + nextScale(random, 7),
+                                position.z + nextScale(random, 20),
+                                "fallen_leaves_plains"
+                        );
                     }
                 }
             }
@@ -306,6 +316,14 @@ public final class RelicsAndFoesClient {
             }
         }
         return level.getMinBuildHeight();
+    }
+
+    public static double[] getCirclePos(RandomSource random, double r) {
+        double rot = random.nextDouble() * Math.TAU;
+        return new double[]{
+                Math.fma(Math.sin(rot), r, position.x),
+                Math.fma(Math.cos(rot), r, position.z)
+        };
     }
 
     public static boolean chance(RandomSource random, int denominator) {

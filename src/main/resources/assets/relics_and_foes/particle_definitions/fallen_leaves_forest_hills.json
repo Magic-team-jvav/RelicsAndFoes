@@ -37,7 +37,7 @@
 				"facing_camera_mode": "lookat_direction",
 				"direction": {
 					"mode": "custom",
-					"custom_direction": ["math.sin(v.particle_age*100)*300", "math.sin(v.particle_age*100+6845)*300", "math.cos(v.particle_age*100)*300"]
+					"custom_direction": ["math.sin(v.particle_age*100)", "math.sin(v.particle_age*100+6845)", "math.cos(v.particle_age*100)"]
 				},
 				"uv": {
 					"texture_width": 16,

@@ -1,0 +1,92 @@
+{
+	"format_version": "1.10.0",
+	"particle_effect": {
+		"description": {
+			"identifier": "relics_and_foes:big_star_skill",
+			"basic_render_parameters": {
+				"material": "particles_blend",
+				"texture": "relics_and_foes:big_star1"
+			}
+		},
+		"events": {
+			"event": {
+				"particle_effect": {
+					"effect": "relics_and_foes:star_skill8",
+					"type": "emitter"
+				}
+			}
+		},
+		"components": {
+			"minecraft:emitter_initialization": {
+				"creation_expression": "v.x=0;v.y=0;v.z=16;"
+			},
+			"minecraft:emitter_rate_instant": {
+				"num_particles": 1
+			},
+			"minecraft:emitter_lifetime_once": {
+				"active_time": 1
+			},
+			"minecraft:emitter_shape_point": {},
+			"minecraft:particle_lifetime_expression": {
+				"max_lifetime": "math.pow(math.pow(v.x,2)+math.pow(v.y,2)+math.pow(v.z,2),0.5)/24"
+			},
+			"minecraft:particle_lifetime_events": {
+				"timeline": {
+					"0.05": "event",
+					"0.1": "event",
+					"0.15": "event",
+					"0.2": "event",
+					"0.25": "event",
+					"0.3": "event",
+					"0.35": "event",
+					"0.4": "event",
+					"0.45": "event",
+					"0.5": "event",
+					"0.55": "event",
+					"0.6": "event",
+					"0.65": "event",
+					"0.7": "event",
+					"0.75": "event",
+					"0.8": "event",
+					"0.85": "event",
+					"0.9": "event",
+					"0.95": "event",
+					"1.0": "event",
+					"1.05": "event",
+					"1.1": "event",
+					"1.15": "event",
+					"1.2": "event",
+					"1.25": "event",
+					"1.3": "event",
+					"1.35": "event",
+					"1.4": "event",
+					"1.45": "event",
+					"1.5": "event",
+					"1.55": "event",
+					"1.6": "event",
+					"1.65": "event",
+					"1.7": "event",
+					"1.75": "event",
+					"1.8": "event",
+					"1.85": "event",
+					"1.9": "event",
+					"1.95": "event",
+					"2.0": "event"
+				}
+			},
+			"minecraft:particle_motion_parametric": {
+				"relative_position": ["(v.particle_age / v.particle_lifetime)*v.x", "(v.particle_age / v.particle_lifetime)*v.y", "(v.particle_age / v.particle_lifetime)*v.z"]
+			},
+			"minecraft:particle_appearance_billboard": {
+				"size": [1.5, 1.5],
+				"facing_camera_mode": "rotate_xyz",
+				"uv": {
+					"texture_width": 16,
+					"texture_height": 16,
+					"uv": [0, 0],
+					"uv_size": [16, 16]
+				}
+			}
+		}
+	}
+}

@@ -5,7 +5,7 @@
 			"identifier": "relics_and_foes:priest_smoke2",
 			"basic_render_parameters": {
 				"material": "particles_blend",
-				"texture": "textures/particle/campfire_smoke"
+				"texture": "relics_and_foes:campfire_smoke_vanilla"
 			}
 		},
 		"components": {

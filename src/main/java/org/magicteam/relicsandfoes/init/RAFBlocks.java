@@ -77,6 +77,8 @@ public final class RAFBlocks {
     public static final DeferredBlock<Block> COBBLESTONE_TILES = registerHolder("cobblestone_tiles");
     public static final DeferredBlock<Block> STONE_TILES = registerHolder("stone_tiles");
     public static final DeferredBlock<Block> FOREST_VINE = registerHolder("forest_vine");
+    public static final DeferredBlock<Block> SPAWN_ATTACK_ROBOT_POWER = registerHolder("spawn_attack_robot_power");
+    public static final DeferredBlock<Block> SPAWN_PRIEST_POWER = registerHolder("spawn_priest_power");
 
     // endregion
 
