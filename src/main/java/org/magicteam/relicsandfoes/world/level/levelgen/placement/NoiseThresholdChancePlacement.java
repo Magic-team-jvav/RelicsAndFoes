@@ -4,21 +4,17 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.levelgen.placement.PlacementContext;
-import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
+import net.minecraft.world.level.levelgen.placement.RepeatingPlacement;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import org.magicteam.relicsandfoes.init.RAFDimensions;
 
-import java.util.stream.Stream;
-
-public class NoiseThresholdChancePlacement extends PlacementModifier {
+public class NoiseThresholdChancePlacement extends RepeatingPlacement {
     public static final MapCodec<NoiseThresholdChancePlacement> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.DOUBLE.fieldOf("noise_level").forGetter(p -> p.noiseLevel),
-            ExtraCodecs.POSITIVE_FLOAT.fieldOf("below_noise").forGetter(p -> p.belowNoise),
-            ExtraCodecs.POSITIVE_FLOAT.fieldOf("above_noise").forGetter(p -> p.aboveNoise)
+            Codec.FLOAT.fieldOf("below_noise").forGetter(p -> p.belowNoise),
+            Codec.FLOAT.fieldOf("above_noise").forGetter(p -> p.aboveNoise)
     ).apply(instance, NoiseThresholdChancePlacement::new));
     private static final NormalNoise NOISE = NormalNoise.create(RandomSource.create(260521), -9, 1, 0, 1);
 
@@ -33,12 +29,14 @@ public class NoiseThresholdChancePlacement extends PlacementModifier {
     }
 
     @Override
-    public Stream<BlockPos> getPositions(PlacementContext context, RandomSource random, BlockPos pos) {
+    protected int count(RandomSource random, BlockPos pos) {
         double value = NOISE.getValue(pos.getX(), pos.getY(), pos.getZ());
-        if (random.nextFloat() < (value < noiseLevel ? belowNoise : aboveNoise)) {
-            return Stream.of(pos);
+        float chance = value < noiseLevel ? belowNoise : aboveNoise;
+        int extra = (int) chance;
+        if (random.nextFloat() < chance - extra) {
+            return extra + 1;
         }
-        return Stream.empty();
+        return extra;
     }
 
     @Override

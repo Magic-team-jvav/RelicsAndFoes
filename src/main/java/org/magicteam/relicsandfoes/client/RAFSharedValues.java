@@ -31,6 +31,31 @@ public class RAFSharedValues {
 
     private static final Object2BooleanMap<Long> prototype = new Object2BooleanOpenHashMap<>();
 
+    public record BiomeFog(float nearPlaneNone, float nearPlaneWater, float farPlaneWater) {
+        public static final BiomeFog SUNKEN_EXPANSE = new BiomeFog(0, 6, 15);
+
+        public static BiomeFog targetFog;
+        public static float prevNearPlaneNone;
+        public static float prevNearPlaneWater;
+        public static float prevFarPlaneWater;
+        public static float fogBlend;
+        public static float paramBlend;
+
+        public static @Nullable BiomeFog get() {
+            if (inTheSunkenExpanse) return SUNKEN_EXPANSE;
+            return null;
+        }
+
+        public static void resetBlend() {
+            targetFog = null;
+            prevNearPlaneNone = 0;
+            prevNearPlaneWater = 0;
+            prevFarPlaneWater = 0;
+            fogBlend = 0;
+            paramBlend = 0;
+        }
+    }
+
     public static boolean isPrototypeDefeated(int middleX, int middleZ) {
         return prototype.getBoolean(ChunkPos.asLong(middleX, middleZ));
     }
@@ -50,6 +75,7 @@ public class RAFSharedValues {
         inTheThornyDreadlands = false;
         inCrossRealmAncientRuins = false;
         isPrototypeDefeated = false;
+        BiomeFog.resetBlend();
 
         prototype.clear();
     }

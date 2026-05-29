@@ -89,6 +89,26 @@ public final class RAFClientEvents {
         if (available) {
             if (!minecraft.isPaused()) {
                 RelicsAndFoesClient.biomeParticles();
+                BiomeFog biomeFog = BiomeFog.get();
+                if (biomeFog != null) {
+                    if (BiomeFog.targetFog == null) {
+                        BiomeFog.prevNearPlaneNone = biomeFog.nearPlaneNone();
+                        BiomeFog.prevNearPlaneWater = biomeFog.nearPlaneWater();
+                        BiomeFog.prevFarPlaneWater = biomeFog.farPlaneWater();
+                        BiomeFog.targetFog = biomeFog;
+                        BiomeFog.paramBlend = 1;
+                    } else if (!biomeFog.equals(BiomeFog.targetFog)) {
+                        BiomeFog.prevNearPlaneNone = Mth.lerp(BiomeFog.paramBlend, BiomeFog.prevNearPlaneNone, BiomeFog.targetFog.nearPlaneNone());
+                        BiomeFog.prevNearPlaneWater = Mth.lerp(BiomeFog.paramBlend, BiomeFog.prevNearPlaneWater, BiomeFog.targetFog.nearPlaneWater());
+                        BiomeFog.prevFarPlaneWater = Mth.lerp(BiomeFog.paramBlend, BiomeFog.prevFarPlaneWater, BiomeFog.targetFog.farPlaneWater());
+                        BiomeFog.targetFog = biomeFog;
+                        BiomeFog.paramBlend = 0;
+                    }
+                    BiomeFog.fogBlend = Math.min(1, BiomeFog.fogBlend + 0.05F);
+                    BiomeFog.paramBlend = Math.min(1, BiomeFog.paramBlend + 0.05F);
+                } else {
+                    BiomeFog.fogBlend = Math.max(0, BiomeFog.fogBlend - 0.05F);
+                }
             }
             SelectMusicGuiLayer.selecting = player.isUsingItem() && player.getUseItem().getItem() instanceof LostSoloMelodyItem;
         }
@@ -128,17 +148,20 @@ public final class RAFClientEvents {
 
     @SubscribeEvent
     public static void viewport$RenderFog(ViewportEvent.RenderFog event) {
-        if (inTheSunkenExpanse) {
+        if (BiomeFog.fogBlend > 0 && BiomeFog.targetFog != null) {
             FogType type = event.getType();
+            float currentNear = event.getNearPlaneDistance();
+            float currentFar = event.getFarPlaneDistance();
+            event.setCanceled(true);
+            event.setFogShape(FogShape.SPHERE);
             if (type == FogType.NONE) {
-                event.setFogShape(FogShape.SPHERE);
-                event.setNearPlaneDistance(0);
-                event.setCanceled(true);
+                float nearTarget = BiomeFog.paramBlend >= 1 ? BiomeFog.targetFog.nearPlaneNone() : Mth.lerp(BiomeFog.paramBlend, BiomeFog.prevNearPlaneNone, BiomeFog.targetFog.nearPlaneNone());
+                event.setNearPlaneDistance(Mth.lerp(BiomeFog.fogBlend, currentNear, nearTarget));
             } else if (type == FogType.WATER) {
-                event.setFogShape(FogShape.SPHERE);
-                event.setNearPlaneDistance(6);
-                event.setFarPlaneDistance(15);
-                event.setCanceled(true);
+                float nearTarget = BiomeFog.paramBlend >= 1 ? BiomeFog.targetFog.nearPlaneWater() : Mth.lerp(BiomeFog.paramBlend, BiomeFog.prevNearPlaneWater, BiomeFog.targetFog.nearPlaneWater());
+                float farTarget = BiomeFog.paramBlend >= 1 ? BiomeFog.targetFog.farPlaneWater() : Mth.lerp(BiomeFog.paramBlend, BiomeFog.prevFarPlaneWater, BiomeFog.targetFog.farPlaneWater());
+                event.setNearPlaneDistance(Mth.lerp(BiomeFog.fogBlend, currentNear, nearTarget));
+                event.setFarPlaneDistance(Mth.lerp(BiomeFog.fogBlend, currentFar, farTarget));
             }
         }
     }

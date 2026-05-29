@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
 import org.magicteam.relicsandfoes.network.PlayerActionPacket;
-import org.mesdag.particlestorm.PSGameClient;
+import org.mesdag.particlestorm.particle.MolangParticleEngine;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
 
 public class PortableAncientRelicTeleporterItem extends RAFTooltipItem {
@@ -23,7 +23,7 @@ public class PortableAncientRelicTeleporterItem extends RAFTooltipItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         if (level.isClientSide) {
-            PSGameClient.LOADER.addEmitter(new ParticleEmitter(level, player.blockPosition().getCenter(), RelicsAndFoes.asResource("portal_mist_start")));
+            MolangParticleEngine.INSTANCE.addEmitter(new ParticleEmitter(level, player.blockPosition().getCenter(), RelicsAndFoes.asResource("portal_mist_start")));
         } else {
             PacketDistributor.sendToPlayer((ServerPlayer) player, new PlayerActionPacket(PlayerActionPacket.TELEPORT_START));
         }

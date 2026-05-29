@@ -10,7 +10,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
-import org.mesdag.particlestorm.PSGameClient;
+import org.mesdag.particlestorm.particle.MolangParticleEngine;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
 
 import static org.magicteam.relicsandfoes.client.RAFSharedValues.*;
@@ -166,7 +166,7 @@ public final class RelicsAndFoesClient {
                     for (int z = -56; z < 64; z += 8) {
                         int bx = px + x;
                         int bz = pz + z;
-                        random.setSeed(((long) position.x + bx) * 10000L + ((long) position.z + bz));
+                        random.setSeed((long) bx * 10000L + (long) bz);
                         if (RAFClientConfigs.animalParticles && position.y < 75 && chance(random, 10)) {
                             int height = getHeight(mutable, bx, bz);
                             if (Mth.lengthSquared(x, height - position.y, z) < 40 * 40) {
@@ -203,7 +203,7 @@ public final class RelicsAndFoesClient {
                     for (int z = -40; z < 48; z += 8) {
                         int bx = px + x;
                         int bz = pz + z;
-                        random.setSeed(((long) position.x + bx) * 10000L + ((long) position.z + bz));
+                        random.setSeed((long) bx * 10000L + (long) bz);
                         if (withinExclusive(18 * 18, Mth.lengthSquared(x, z), 54 * 54) && chance(random, 3)) {
                             if (position.y < 75) {
                                 int height = getHeight(mutable, bx, bz);
@@ -224,7 +224,7 @@ public final class RelicsAndFoesClient {
                         for (int z = -40; z < 48; z += 8) {
                             int bx = px + x;
                             int bz = pz + z;
-                            random.setSeed(((long) position.x + bx) * 10000L + ((long) position.z + bz));
+                            random.setSeed((long) bx * 10000L + (long) bz);
                             if (withinExclusive(24 * 24, Mth.lengthSquared(x, z), 54 * 54) && chance(random, 4)) {
                                 if (position.y < 90) {
                                     int height = getHeight(mutable, bx, bz);
@@ -240,9 +240,9 @@ public final class RelicsAndFoesClient {
                 if (RAFClientConfigs.biomeParticles) {
                     for (int i = 0; i < 3; i++) {
                         addEmitter(
-                                position.x + nextScale(random, 80),
+                                position.x + nextScale(random, 80.0),
                                 16,
-                                position.z + nextScale(random, 80),
+                                position.z + nextScale(random, 80.0),
                                 "water_star"
                         );
                     }
@@ -257,7 +257,7 @@ public final class RelicsAndFoesClient {
                         int bz = pz + z;
                         if (RAFClientConfigs.mistParticles) {
                             if (withinExclusive(26 * 26, Mth.lengthSquared(x, z), 40 * 40)) {
-                                random.setSeed(((long) position.x + bx) * 10000L + ((long) position.z + bz));
+                                random.setSeed((long) bx * 10000L + (long) bz);
                                 if (chance(random, 3) && position.y < 80) {
                                     int height = getHeight(mutable, bx, bz);
                                     if (height <= 72 && withinExclusive(26 * 26, Mth.lengthSquared(x, height - position.y, z), 54 * 54)) {
@@ -266,7 +266,7 @@ public final class RelicsAndFoesClient {
                                 }
                             }
                             if (withinExclusive(44 * 44, Mth.lengthSquared(x, z), 60 * 60)) {
-                                random.setSeed(((long) position.x + bx) * 10000L + ((long) position.z + bz));
+                                random.setSeed((long) bx * 10000L + (long) bz);
                                 if (random.nextInt(10) >= 7) {
                                     int height = getHeight(mutable, bx, bz);
                                     if (height <= 80) {
@@ -276,7 +276,7 @@ public final class RelicsAndFoesClient {
                             }
                         }
                         if (RAFClientConfigs.animalParticles && Mth.lengthSquared(x, z) < 40 * 40) {
-                            random.setSeed(((long) position.x + bx) * 10000L + ((long) position.z + bz));
+                            random.setSeed((long) bx * 10000L + (long) bz);
                             if (chance(random, 10) && position.y < 80) {
                                 int height = getHeight(mutable, bx, bz);
                                 if (height <= 68 && Mth.lengthSquared(x, height - position.y, z) < 40 * 40) {
@@ -305,7 +305,7 @@ public final class RelicsAndFoesClient {
     public static void addEmitter(Vec3 pos, String path) {
         ParticleEmitter emitter = new ParticleEmitter(level, pos, RelicsAndFoes.asResource(path));
         emitter.hideOutline = true;
-        PSGameClient.LOADER.addEmitter(emitter);
+        MolangParticleEngine.INSTANCE.addEmitter(emitter);
     }
 
     public static int getHeight(BlockPos.MutableBlockPos mutable, int bx, int bz) {
