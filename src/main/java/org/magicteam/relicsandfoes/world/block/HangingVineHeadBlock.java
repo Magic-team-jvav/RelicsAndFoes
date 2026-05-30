@@ -1,19 +1,27 @@
 package org.magicteam.relicsandfoes.world.block;
 
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.GrowingPlantHeadBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
-import org.magicteam.relicsandfoes.init.RAFBlocks;
+
+import java.util.function.Supplier;
 
 public class HangingVineHeadBlock extends GrowingPlantHeadBlock {
-    public static final MapCodec<HangingVineHeadBlock> CODEC = simpleCodec(HangingVineHeadBlock::new);
+    public static final MapCodec<HangingVineHeadBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            propertiesCodec(),
+            Block.CODEC.fieldOf("body").forGetter(HangingVineHeadBlock::getBodyBlock)
+    ).apply(instance, (p, b) -> new HangingVineHeadBlock(p, () -> (HangingVineBodyBlock) b)));
 
-    public HangingVineHeadBlock(Properties properties) {
+    private final Supplier<? extends HangingVineBodyBlock> body;
+
+    public HangingVineHeadBlock(Properties properties, Supplier<? extends HangingVineBodyBlock> body) {
         super(properties, Direction.DOWN, Shapes.block(), false, 0.1);
+        this.body = body;
     }
 
     @Override
@@ -23,7 +31,7 @@ public class HangingVineHeadBlock extends GrowingPlantHeadBlock {
 
     @Override
     protected Block getBodyBlock() {
-        return RAFBlocks.HANGING_VINE_BODY.get();
+        return body.get();
     }
 
     @Override

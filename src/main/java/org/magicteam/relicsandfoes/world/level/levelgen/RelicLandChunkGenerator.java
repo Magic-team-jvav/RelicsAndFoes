@@ -95,29 +95,29 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
                 ? biomeSource.selectBiome(biomeCX, biomeCZ) : biomeSource.getDefaultBiome();
 
         int biomeType; // 0-7
-        if      (biome.is(RAFDimensions.Biomez.THE_PEACH_BLOSSOM_VALE))    biomeType = 0;
-        else if (biome.is(RAFDimensions.Biomez.THE_SEA_OF_FALLING_STARS))   biomeType = 1;
-        else if (biome.is(RAFDimensions.Biomez.THE_THORNY_DREADLANDS))      biomeType = 2;
-        else if (biome.is(RAFDimensions.Biomez.THE_AZURE_SEA))              biomeType = 3;
-        else if (biome.is(RAFDimensions.Biomez.THE_MISTY_SNOWY_PEAKS))      biomeType = 4;
-        else if (biome.is(RAFDimensions.Biomez.THE_RUST_SILENT_CITY))       biomeType = 5;
-        else if (biome.is(RAFDimensions.Biomez.THE_FOREST_OF_DUSK))         biomeType = 6;
-        else                                                                biomeType = 7;
+        if (biome.is(RAFDimensions.Biomez.THE_PEACH_BLOSSOM_VALE)) biomeType = 0;
+        else if (biome.is(RAFDimensions.Biomez.THE_SEA_OF_FALLING_STARS)) biomeType = 1;
+        else if (biome.is(RAFDimensions.Biomez.THE_THORNY_DREADLANDS)) biomeType = 2;
+        else if (biome.is(RAFDimensions.Biomez.THE_AZURE_SEA)) biomeType = 3;
+        else if (biome.is(RAFDimensions.Biomez.THE_MISTY_SNOWY_PEAKS)) biomeType = 4;
+        else if (biome.is(RAFDimensions.Biomez.THE_RUST_SILENT_CITY)) biomeType = 5;
+        else if (biome.is(RAFDimensions.Biomez.THE_FOREST_OF_DUSK)) biomeType = 6;
+        else biomeType = 7;
 
         for (int dx = 0; dx < 16; dx++) {
             for (int dz = 0; dz < 16; dz++) {
                 int wx = baseX + dx;
                 int wz = baseZ + dz;
-                double jvli = Math.sqrt(Mth.lengthSquared(biomeCX - wx, biomeCZ - wz));
+                double dist = Mth.length(biomeCX - wx, biomeCZ - wz);
 
                 columns[(dx << 4) | dz] = switch (biomeType) {
-                    case 0 -> computePeachValeColumn(jvli, wx, wz);
-                    case 1 -> computeSeaOfFallingStarsColumn(jvli, wx, wz);
-                    case 2 -> computeThornyDreadlandsColumn(jvli, wx, wz);
-                    case 3 -> computeAzureSeaColumn(jvli, wx, wz);
-                    case 4 -> computeMistySnowyPeaksColumn(jvli, wx, wz);
-                    case 5 -> computeRustSilentCityColumn(jvli, wx, wz);
-                    case 6 -> computeForestOfDuskColumn(jvli, wx, wz);
+                    case 0 -> computePeachValeColumn(dist, wx, wz);
+                    case 1 -> computeSeaOfFallingStarsColumn(dist, wx, wz);
+                    case 2 -> computeThornyDreadlandsColumn(dist, wx, wz);
+                    case 3 -> computeAzureSeaColumn(dist, wx, wz);
+                    case 4 -> computeMistySnowyPeaksColumn(dist, wx, wz);
+                    case 5 -> computeRustSilentCityColumn(dist, wx, wz);
+                    case 6 -> computeForestOfDuskColumn(dist, wx, wz);
                     default -> computeSunkenExpanseColumn(wx, wz);
                 };
             }
@@ -151,47 +151,66 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
         };
     }
 
-    private int computePeachValeColumn(double jvli, int worldX, int worldZ) {
+    private int computePeachValeColumn(double dist, int worldX, int worldZ) {
         double r = 500 + (0.5 + noise(worldX / 180.0 + 3548, worldZ / 360.0 - 9575) * 0.5) * 100;
         double r2 = 600 + (0.5 + noise(worldX / 320.0, worldZ / 320.0) * 0.5) * 200;
         double r3 = 145;
 
-        double height_bili = Mth.clamp((r - jvli) / 400, 0, 1);
-        double height_bili2 = Mth.clamp((r2 - jvli) / 400, 0, 1);
-        double height_bili3 = Mth.clamp((r3 - jvli) / 50, 0, 1);
+        double heightRatio = Mth.clamp((r - dist) / 400, 0, 1);
+        double heightRatio2 = Mth.clamp((r2 - dist) / 400, 0, 1);
+        double heightRatio3 = Mth.clamp((r3 - dist) / 50, 0, 1);
 
-        double height_plain = 40 + ((0.5 + noise(worldX / 300.0, worldZ / 300.0) * 0.5) * 10
-                + (0.5 + noise(worldX / 80.0, worldZ / 80.0) * 0.5) * 2) * (1 - height_bili);
+        double heightBase = 40 + ((0.5 + noise(worldX / 300.0, worldZ / 300.0) * 0.5) * 10
+                + (0.5 + noise(worldX / 80.0, worldZ / 80.0) * 0.5) * 2) * (1 - heightRatio);
 
-        double mn_a = noise(worldX / 100.0 + 200, worldZ / 100.0 + 200);
-        double mn_b = noise(worldX / 70.0 + 400, worldZ / 70.0 + 400);
-        double mn_c = noise(worldX / 55.0 + 600, worldZ / 55.0 + 600);
-        double mn_detail = noise(worldX / 50.0 + 75, worldZ / 50.0 - 155);
-        double pa = Math.max(0, Math.pow(Math.abs(mn_a * 2.0), 2.5) + mn_detail * 0.2 - 0.12) * 55;
-        double pb = Math.max(0, Math.pow(Math.abs(mn_b * 1.8), 2.5) + mn_detail * 0.2 - 0.12) * 45;
-        double pc = Math.max(0, Math.pow(Math.abs(mn_c * 1.5), 2.5) + mn_detail * 0.2 - 0.12) * 40;
+        double mnA = noise(worldX / 100.0 + 200, worldZ / 100.0 + 200);
+        double mnB = noise(worldX / 70.0 + 400, worldZ / 70.0 + 400);
+        double mnC = noise(worldX / 55.0 + 600, worldZ / 55.0 + 600);
+        double mnDetail = noise(worldX / 50.0 + 75, worldZ / 50.0 - 155);
+        double pa = Math.max(0, Math.pow(Math.abs(mnA * 2.0), 2.5) + mnDetail * 0.2 - 0.12) * 55;
+        double pb = Math.max(0, Math.pow(Math.abs(mnB * 1.8), 2.5) + mnDetail * 0.2 - 0.12) * 45;
+        double pc = Math.max(0, Math.pow(Math.abs(mnC * 1.5), 2.5) + mnDetail * 0.2 - 0.12) * 40;
 
-        double river_noise = noise(worldX / 150.0, worldZ / 150.0);
-        double mountainFade = Mth.clamp((Math.abs(river_noise) - 0.03) / 0.07, 0, 1);
-        double height_mountain = Math.max(Math.max(pa, pb), pc) * mountainFade;
+        double riverNoise = noise(worldX / 150.0, worldZ / 150.0);
+        double mountainFade = Mth.clamp((Math.abs(riverNoise) - 0.03) / 0.07, 0, 1);
+        double heightMountain = Math.max(Math.max(pa, pb), pc) * mountainFade;
 
-        int h = (int) (28 * height_bili + height_plain + height_mountain * (height_bili2 - height_bili3));
-        int surf = (river_noise < 0.03 && river_noise > -0.03) ? SURF_WATER : SURF_GRASS;
+        int h = (int) (28 * heightRatio + heightBase + heightMountain * (heightRatio2 - heightRatio3));
+        int surf = (riverNoise < 0.03 && riverNoise > -0.03) ? SURF_WATER : SURF_GRASS;
         return h | (surf << SURF_SHIFT);
     }
 
-    /** Rugged terrain: warped noise mountains on plain base, coarse dirt patches. */
-    private int computeThornyDreadlandsColumn(double jvli, int worldX, int worldZ) {
+    /** Returns true when mountain contribution < 5 — flat ground suitable for structures. */
+    public boolean isPeachValeValleyFloor(int worldX, int worldZ, int biomeX, int biomeZ) {
+        double dist = Math.sqrt(Mth.lengthSquared(biomeX - worldX, biomeZ - worldZ));
+
+        double r2 = 600 + (0.5 + noise(worldX / 320.0, worldZ / 320.0) * 0.5) * 200;
+        double ratio2 = Mth.clamp((r2 - dist) / 400, 0, 1);
+        double ratio3 = Mth.clamp((145 - dist) / 50, 0, 1);
+
+        double mnDetail = noise(worldX / 50.0 + 75, worldZ / 50.0 - 155);
+        double pa = Math.max(0, Math.pow(Math.abs(noise(worldX / 100.0 + 200, worldZ / 100.0 + 200) * 2.0), 2.5) + mnDetail * 0.2 - 0.12) * 55;
+        double pb = Math.max(0, Math.pow(Math.abs(noise(worldX / 70.0 + 400, worldZ / 70.0 + 400) * 1.8), 2.5) + mnDetail * 0.2 - 0.12) * 45;
+        double pc = Math.max(0, Math.pow(Math.abs(noise(worldX / 55.0 + 600, worldZ / 55.0 + 600) * 1.5), 2.5) + mnDetail * 0.2 - 0.12) * 40;
+
+        double riverNoise = noise(worldX / 150.0, worldZ / 150.0);
+        double fade = Mth.clamp((Math.abs(riverNoise) - 0.03) / 0.07, 0, 1);
+
+        return Math.max(Math.max(pa, pb), pc) * fade * (ratio2 - ratio3) < 5;
+    }
+
+    /// Rugged terrain: warped noise mountains on plain base, coarse dirt patches.
+    private int computeThornyDreadlandsColumn(double dist, int worldX, int worldZ) {
         double r = 650 + (0.5 + noise(worldX / 180.0 + 3548, worldZ / 360.0 - 9575) * 0.5) * 100;
         double r2 = 600 + (0.5 + noise(worldX / 320.0, worldZ / 320.0) * 0.5) * 200;
         double r3 = 145;
 
-        double height_bili = Mth.clamp((r - jvli) / 200, 0, 1);
-        double height_bili2 = Mth.clamp((r2 - jvli) / 400, 0, 1);
-        double height_bili3 = Mth.clamp((r3 - jvli) / 50, 0, 1);
+        double heightRatio = Mth.clamp((r - dist) / 200, 0, 1);
+        double heightRatio2 = Mth.clamp((r2 - dist) / 400, 0, 1);
+        double heightRatio3 = Mth.clamp((r3 - dist) / 50, 0, 1);
 
-        double height_plain = 40 + ((0.5 + noise(worldX / 300.0, worldZ / 300.0) * 0.5) * 10
-                                  + (0.5 + noise(worldX / 80.0, worldZ / 80.0) * 0.5) * 2) * (1 - height_bili);
+        double heightBase = 40 + ((0.5 + noise(worldX / 300.0, worldZ / 300.0) * 0.5) * 10
+                + (0.5 + noise(worldX / 80.0, worldZ / 80.0) * 0.5) * 2) * (1 - heightRatio);
 
         double n1 = noise(worldX / 80.0 + 25, worldZ / 80.0 - 205);
         double partA = Math.pow(n1 + 1, 1.5) * 2;
@@ -201,26 +220,26 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
 
         double height_mountain = (partA + partB) * 8;
 
-        int h = (int) (height_plain + height_mountain * (height_bili2 - height_bili3));
+        int h = (int) (heightBase + height_mountain * (heightRatio2 - heightRatio3));
         int surf = noise(worldX / 50.0 + 158, worldZ / 50.0 - 756) > 0 ? SURF_COARSE : SURF_GRASS;
         return h | (surf << SURF_SHIFT);
     }
 
-    /** Deep basin: y=6 inside, eroded rim, water to y=15. */
-    private int computeSeaOfFallingStarsColumn(double jvli, int worldX, int worldZ) {
-        double height_plain = 40 + (0.5 + noise(worldX / 300.0, worldZ / 300.0) * 0.5) * 10
-                                + (0.5 + noise(worldX / 80.0, worldZ / 80.0) * 0.5) * 2;
+    /// Deep basin: y=6 inside, eroded rim, water to y=15.
+    private int computeSeaOfFallingStarsColumn(double dist, int worldX, int worldZ) {
+        double heightBase = 40 + (0.5 + noise(worldX / 300.0, worldZ / 300.0) * 0.5) * 10
+                + (0.5 + noise(worldX / 80.0, worldZ / 80.0) * 0.5) * 2;
 
         double r = 670 + (0.5 + 0.5 * noise(worldX / 360.0 + 3548, worldZ / 360.0 - 9575)) * 80
-                       + (0.5 + 0.5 * noise(worldX / 80.0 + 1124, worldZ / 80.0 - 7521)) * 40;
+                + (0.5 + 0.5 * noise(worldX / 80.0 + 1124, worldZ / 80.0 - 7521)) * 40;
 
-        double height_bili = Math.min((r - jvli) / 800, 0) * 0.5;
+        double heightRatio = Math.min((r - dist) / 800, 0) * 0.5;
 
         int h;
-        if (height_bili < 0) {
-            double erosion = Math.max(0.005 + height_bili, 0);
+        if (heightRatio < 0) {
+            double erosion = Math.max(0.005 + heightRatio, 0);
             double noiseTerm = Math.pow(0.5 + noise(worldX / 15.0, worldZ / 15.0) * 0.5, 1.8) * 35 + 8;
-            h = (int) (height_plain * (1 - erosion * noiseTerm));
+            h = (int) (heightBase * (1 - erosion * noiseTerm));
         } else {
             h = 6;
         }
@@ -230,31 +249,31 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
         return h | (surf << SURF_SHIFT) | (waterType << WATER_SHIFT);
     }
 
-    /** Shallow basin lake: height lerps from plain to 10, water to y=37, sandy shore. */
-    private int computeAzureSeaColumn(double jvli, int worldX, int worldZ) {
-        double r  = 600 + (0.5 + 0.5 * noise(worldX / 180.0 + 3548, worldZ / 360.0 - 9575)) * 150;
+    /// Shallow basin lake: height lerps from plain to 10, water to y=37, sandy shore.
+    private int computeAzureSeaColumn(double dist, int worldX, int worldZ) {
+        double r = 600 + (0.5 + 0.5 * noise(worldX / 180.0 + 3548, worldZ / 360.0 - 9575)) * 150;
         double r2 = 650 + (0.5 + noise(worldX / 320.0, worldZ / 320.0) * 0.5) * 120
-                        + (0.5 + noise(worldX / 50.0, worldZ / 50.0) * 0.5) * 30;
+                + (0.5 + noise(worldX / 50.0, worldZ / 50.0) * 0.5) * 30;
 
-        double height_bili  = Mth.clamp((r - jvli) / 800, 0, 1) * 0.5;
-        double height_bili2 = Mth.clamp((r2 - jvli) / 650, 0, 1) * 0.5;
-        double biliSum = height_bili + height_bili2;
+        double heightRatio = Mth.clamp((r - dist) / 800, 0, 1) * 0.5;
+        double heightRatio2 = Mth.clamp((r2 - dist) / 650, 0, 1) * 0.5;
+        double biliSum = heightRatio + heightRatio2;
 
-        double height_plain = 40 + (0.5 + noise(worldX / 300.0, worldZ / 300.0) * 0.5) * 10
-                                + (0.5 + noise(worldX / 80.0, worldZ / 80.0) * 0.5) * 2;
+        double heightBase = 40 + (0.5 + noise(worldX / 300.0, worldZ / 300.0) * 0.5) * 10
+                + (0.5 + noise(worldX / 80.0, worldZ / 80.0) * 0.5) * 2;
 
-        double height_mountain = 10;
-        int h = (int) (height_plain * (1 - biliSum) + height_mountain * biliSum);
+        double heightMountain = 10;
+        int h = (int) (heightBase * (1 - biliSum) + heightMountain * biliSum);
 
         int waterType = h < 38 ? WATER_TO_37 : WATER_NONE;
         int surf = biliSum >= 0.1 ? SURF_SAND : SURF_GRASS;
         return h | (surf << SURF_SHIFT) | (waterType << WATER_SHIFT);
     }
 
-    /** Tall peaks (up to y=240): grass/stone/snow zones with domain-warped radius. */
-    private int computeMistySnowyPeaksColumn(double jvli, int worldX, int worldZ) {
-        double height_plain = 40 + (0.5 + noise(worldX / 300.0, worldZ / 300.0) * 0.5) * 10
-                                + (0.5 + noise(worldX / 80.0, worldZ / 80.0) * 0.5) * 2;
+    /// Tall peaks (up to y=240): grass/stone/snow zones with domain-warped radius.
+    private int computeMistySnowyPeaksColumn(double dist, int worldX, int worldZ) {
+        double heightBase = 40 + (0.5 + noise(worldX / 300.0, worldZ / 300.0) * 0.5) * 10
+                + (0.5 + noise(worldX / 80.0, worldZ / 80.0) * 0.5) * 2;
 
         // v.r: domain-warped noise radius
         double warpX = Math.pow(1 + noise(worldX / 40.0 + 156, worldZ / 40.0 - 752), 1.4) * 0.03;
@@ -264,50 +283,50 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
 
         // v.r2
         double r2 = 650 + (0.5 + noise(worldX / 320.0, worldZ / 320.0) * 0.5) * 120
-                        + (0.5 + noise(worldX / 50.0, worldZ / 50.0) * 0.5) * 30;
+                + (0.5 + noise(worldX / 50.0, worldZ / 50.0) * 0.5) * 30;
 
-        double height_bili  = Mth.clamp((r - jvli) / 800, 0, 1);
-        double height_bili2 = Mth.clamp((r2 - jvli) / 800, 0, 1) * 0.666;
-        double biliMax = Math.max(height_bili, height_bili2);
+        double heightRatio = Mth.clamp((r - dist) / 800, 0, 1);
+        double heightRatio2 = Mth.clamp((r2 - dist) / 800, 0, 1) * 0.666;
+        double biliMax = Math.max(heightRatio, heightRatio2);
 
-        int h = (int) (height_plain * (1 - biliMax) + 240 * biliMax);
+        int h = (int) (heightBase * (1 - biliMax) + 240 * biliMax);
 
         // Stone exposure line and snow line
         double stoneH = 112 + noise(worldX / 45.0 + 124, worldZ / 45.0 - 789) * 30
-                             + noise(worldX / 18.0 + 721, worldZ / 18.0 - 319) * 10;
-        double snowH  = 160 + noise(worldX / 18.0 + 721, worldZ / 18.0 - 319) * 6;
+                + noise(worldX / 18.0 + 721, worldZ / 18.0 - 319) * 10;
+        double snowH = 160 + noise(worldX / 18.0 + 721, worldZ / 18.0 - 319) * 6;
 
         int surf;
-        if (h > snowH)       surf = SURF_SNOW;
+        if (h > snowH) surf = SURF_SNOW;
         else if (h > stoneH) surf = SURF_STONE;
-        else                 surf = SURF_GRASS;
+        else surf = SURF_GRASS;
 
         return h | (surf << SURF_SHIFT);
     }
 
-    /** Bumpy plateau with gentle hills (0-9 blocks), ring-based placement. */
-    private int computeRustSilentCityColumn(double jvli, int worldX, int worldZ) {
-        double r  = 650 + (0.5 + noise(worldX / 180.0 + 3548, worldZ / 360.0 - 9575) * 0.5) * 100;
+    /// Bumpy plateau with gentle hills (0-9 blocks), ring-based placement.
+    private int computeRustSilentCityColumn(double dist, int worldX, int worldZ) {
+        double r = 650 + (0.5 + noise(worldX / 180.0 + 3548, worldZ / 360.0 - 9575) * 0.5) * 100;
         double r2 = 700 + (0.5 + noise(worldX / 320.0, worldZ / 320.0) * 0.5) * 100;
         double r3 = 145;
 
-        double height_bili  = Mth.clamp((r - jvli) / 200, 0, 1);
-        double height_bili2 = Mth.clamp((r2 - jvli) / 100, 0, 1);
-        double height_bili3 = Mth.clamp((r3 - jvli) / 50, 0, 1);
+        double heightRatio = Mth.clamp((r - dist) / 200, 0, 1);
+        double heightRatio2 = Mth.clamp((r2 - dist) / 100, 0, 1);
+        double heightRatio3 = Mth.clamp((r3 - dist) / 50, 0, 1);
 
-        double height_plain = 40 + ((0.5 + noise(worldX / 300.0, worldZ / 300.0) * 0.5) * 10
-                                  + (0.5 + noise(worldX / 80.0, worldZ / 80.0) * 0.5) * 2) * (1 - height_bili);
+        double heightBase = 40 + ((0.5 + noise(worldX / 300.0, worldZ / 300.0) * 0.5) * 10
+                + (0.5 + noise(worldX / 80.0, worldZ / 80.0) * 0.5) * 2) * (1 - heightRatio);
 
-        double height_mountain = (0.5 + noise(worldX / 140.0, worldZ / 140.0) * 0.5) * 7
-                               + (0.5 + noise(worldX / 55.0, worldZ / 55.0) * 0.5) * 2;
+        double heightMountain = (0.5 + noise(worldX / 140.0, worldZ / 140.0) * 0.5) * 7
+                + (0.5 + noise(worldX / 55.0, worldZ / 55.0) * 0.5) * 2;
 
-        return (int) (height_plain + height_mountain * (height_bili2 - height_bili3));
+        return (int) (heightBase + heightMountain * (heightRatio2 - heightRatio3));
     }
 
-    /** Steep forested peaks: domain-warped radius, lerp from plain to y=160. */
-    private int computeForestOfDuskColumn(double jvli, int worldX, int worldZ) {
-        double height_plain = 40 + (0.5 + noise(worldX / 300.0, worldZ / 300.0) * 0.5) * 10
-                                + (0.5 + noise(worldX / 80.0, worldZ / 80.0) * 0.5) * 2;
+    /// Steep forested peaks: domain-warped radius, lerp from plain to y=160.
+    private int computeForestOfDuskColumn(double dist, int worldX, int worldZ) {
+        double heightBase = 40 + (0.5 + noise(worldX / 300.0, worldZ / 300.0) * 0.5) * 10
+                + (0.5 + noise(worldX / 80.0, worldZ / 80.0) * 0.5) * 2;
 
         // v.r: domain-warped radius
         double warpX = Math.pow(1 + noise(worldX / 70.0 + 245, worldZ / 35.0 - 356), 1.4) * 0.05;
@@ -317,13 +336,13 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
 
         // v.r2
         double r2 = 650 + (0.5 + noise(worldX / 320.0, worldZ / 320.0) * 0.5) * 120
-                        + (0.5 + noise(worldX / 50.0, worldZ / 50.0) * 0.5) * 30;
+                + (0.5 + noise(worldX / 50.0, worldZ / 50.0) * 0.5) * 30;
 
-        double height_bili  = Mth.clamp((r - jvli) / 350, 0, 1);
-        double height_bili2 = Mth.clamp((r2 - jvli) / 620, 0, 1) * 0.35;
-        double biliSum = height_bili + height_bili2;
+        double heightRatio = Mth.clamp((r - dist) / 350, 0, 1);
+        double heightRatio2 = Mth.clamp((r2 - dist) / 620, 0, 1) * 0.35;
+        double biliSum = heightRatio + heightRatio2;
 
-        return (int) (height_plain * (1 - biliSum) + 160 * biliSum);
+        return (int) (heightBase * (1 - biliSum) + 160 * biliSum);
     }
 
     private int computeSunkenExpanseColumn(int worldX, int worldZ) {

@@ -5,23 +5,30 @@
       "feature": {
         "type": "relics_and_foes:template_structure",
         "config": {
-          "rotation_pivot": [
-            9,
-            0,
-            9
-          ],
           "templates": [
             {
-              "data": "relics_and_foes:jungle_tree_0",
-              "weight": 1
+              "path": "relics_and_foes:jungle_tree_0",
+              "rotation_pivot": [
+                9,
+                0,
+                9
+              ]
             },
             {
-              "data": "relics_and_foes:jungle_tree_1",
-              "weight": 1
+              "path": "relics_and_foes:jungle_tree_1",
+              "rotation_pivot": [
+                9,
+                0,
+                9
+              ]
             },
             {
-              "data": "relics_and_foes:jungle_tree_2",
-              "weight": 1
+              "path": "relics_and_foes:jungle_tree_2",
+              "rotation_pivot": [
+                9,
+                0,
+                9
+              ]
             }
           ]
         }

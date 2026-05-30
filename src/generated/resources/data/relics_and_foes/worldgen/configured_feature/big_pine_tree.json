@@ -10,23 +10,30 @@
               "feature": {
                 "type": "relics_and_foes:template_structure",
                 "config": {
-                  "rotation_pivot": [
-                    4,
-                    0,
-                    4
-                  ],
                   "templates": [
                     {
-                      "data": "relics_and_foes:9x_pine_tree_0",
-                      "weight": 1
+                      "path": "relics_and_foes:9x_pine_tree_0",
+                      "rotation_pivot": [
+                        4,
+                        0,
+                        4
+                      ]
                     },
                     {
-                      "data": "relics_and_foes:9x_pine_tree_1",
-                      "weight": 1
+                      "path": "relics_and_foes:9x_pine_tree_1",
+                      "rotation_pivot": [
+                        4,
+                        0,
+                        4
+                      ]
                     },
                     {
-                      "data": "relics_and_foes:9x_pine_tree_2",
-                      "weight": 1
+                      "path": "relics_and_foes:9x_pine_tree_2",
+                      "rotation_pivot": [
+                        4,
+                        0,
+                        4
+                      ]
                     }
                   ]
                 }
@@ -37,23 +44,30 @@
               "feature": {
                 "type": "relics_and_foes:template_structure",
                 "config": {
-                  "rotation_pivot": [
-                    5,
-                    0,
-                    5
-                  ],
                   "templates": [
                     {
-                      "data": "relics_and_foes:11x_pine_tree_0",
-                      "weight": 1
+                      "path": "relics_and_foes:11x_pine_tree_0",
+                      "rotation_pivot": [
+                        5,
+                        0,
+                        5
+                      ]
                     },
                     {
-                      "data": "relics_and_foes:11x_pine_tree_1",
-                      "weight": 1
+                      "path": "relics_and_foes:11x_pine_tree_1",
+                      "rotation_pivot": [
+                        5,
+                        0,
+                        5
+                      ]
                     },
                     {
-                      "data": "relics_and_foes:11x_pine_tree_2",
-                      "weight": 1
+                      "path": "relics_and_foes:11x_pine_tree_2",
+                      "rotation_pivot": [
+                        5,
+                        0,
+                        5
+                      ]
                     }
                   ]
                 }

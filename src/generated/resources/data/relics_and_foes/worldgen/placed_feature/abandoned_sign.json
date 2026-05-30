@@ -5,7 +5,7 @@
       "type": "minecraft:in_square"
     },
     {
-      "type": "relics_and_foes:exclude_regions"
+      "type": "relics_and_foes:not_in_cross_realm_ancient_ruins"
     },
     {
       "type": "minecraft:biome"

@@ -1,0 +1,75 @@
+{
+  "type": "minecraft:simple_random_selector",
+  "config": {
+    "features": [
+      {
+        "feature": {
+          "type": "relics_and_foes:template_structure",
+          "config": {
+            "templates": [
+              {
+                "path": "relics_and_foes:boss1_tree_0",
+                "rotation_pivot": [
+                  6,
+                  0,
+                  6
+                ]
+              },
+              {
+                "path": "relics_and_foes:boss1_tree_1",
+                "rotation_pivot": [
+                  6,
+                  0,
+                  6
+                ]
+              },
+              {
+                "path": "relics_and_foes:boss1_tree_2",
+                "rotation_pivot": [
+                  6,
+                  0,
+                  6
+                ]
+              }
+            ]
+          }
+        },
+        "placement": []
+      },
+      {
+        "feature": {
+          "type": "relics_and_foes:template_structure",
+          "config": {
+            "templates": [
+              {
+                "path": "relics_and_foes:boss1_pink_tree_0",
+                "rotation_pivot": [
+                  6,
+                  0,
+                  6
+                ]
+              },
+              {
+                "path": "relics_and_foes:boss1_pink_tree_1",
+                "rotation_pivot": [
+                  6,
+                  0,
+                  6
+                ]
+              },
+              {
+                "path": "relics_and_foes:boss1_pink_tree_2",
+                "rotation_pivot": [
+                  6,
+                  0,
+                  6
+                ]
+              }
+            ]
+          }
+        },
+        "placement": []
+      }
+    ]
+  }
+}

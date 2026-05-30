@@ -43,7 +43,7 @@ public final class RAFTags {
     public static final class Blocks {
         public static final TagKey<Block> HILLSIDE_XIE_BEAST = raf("hillside_xie_beast"); // 蓬山獬兽
         public static final TagKey<Block> RUINED_HALL_EERIE_STATUE = raf("ruined_hall_eerie_statue"); // 残殿诡像
-        public static final TagKey<Block> DEMON_CASTLE_PUPPET = raf("demon_castle_puppet"); // 魔堡戏偶
+        public static final TagKey<Block> MAGIC_CASTLE_PUPPET = raf("magic_castle_puppet"); // 魔堡戏偶
         public static final TagKey<Block> FALLEN_CITY_REMNANT_GEAR = raf("fallen_city_remnant_gear"); // 沦城遗械
         public static final TagKey<Block> FLOATING_FORT_IRONWING = raf("floating_fort_ironwing"); // 浮垒铁翼
 
@@ -57,7 +57,7 @@ public final class RAFTags {
     public static final class Items {
         public static final TagKey<Item> HILLSIDE_XIE_BEAST = raf("hillside_xie_beast"); // 蓬山獬兽
         public static final TagKey<Item> RUINED_HALL_EERIE_STATUE = raf("ruined_hall_eerie_statue"); // 残殿诡像
-        public static final TagKey<Item> DEMON_CASTLE_PUPPET = raf("demon_castle_puppet"); // 魔堡戏偶
+        public static final TagKey<Item> MAGIC_CASTLE_PUPPET = raf("magic_castle_puppet"); // 魔堡戏偶
         public static final TagKey<Item> FALLEN_CITY_REMNANT_GEAR = raf("fallen_city_remnant_gear"); // 沦城遗械
         public static final TagKey<Item> FLOATING_FORT_IRONWING = raf("floating_fort_ironwing"); // 浮垒铁翼
 

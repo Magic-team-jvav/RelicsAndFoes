@@ -1,5 +1,15 @@
 {
   "values": [
-    "relics_and_foes:lost_solo_melody_kylin_movement"
+    "relics_and_foes:lost_solo_melody_kylin_movement",
+    "relics_and_foes:kylin_bamboo_top",
+    "relics_and_foes:kylin_bamboo_stem",
+    "relics_and_foes:kylin_bamboo_green_top",
+    "relics_and_foes:kylin_bamboo_green_stem",
+    "relics_and_foes:kylin_lotus",
+    "relics_and_foes:kylin_lotus_stem",
+    "relics_and_foes:floating_kylin_lotus",
+    "relics_and_foes:kylin_lotus_small",
+    "relics_and_foes:kylin_stalactite",
+    "relics_and_foes:kilin_box"
   ]
 }

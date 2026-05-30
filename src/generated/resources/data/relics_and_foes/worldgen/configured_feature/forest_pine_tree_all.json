@@ -1,0 +1,31 @@
+{
+  "type": "relics_and_foes:template_structure",
+  "config": {
+    "templates": [
+      {
+        "path": "relics_and_foes:7x_pine_tree_0",
+        "rotation_pivot": [
+          3,
+          0,
+          3
+        ]
+      },
+      {
+        "path": "relics_and_foes:7x_pine_tree_1",
+        "rotation_pivot": [
+          3,
+          0,
+          3
+        ]
+      },
+      {
+        "path": "relics_and_foes:7x_pine_tree_2",
+        "rotation_pivot": [
+          3,
+          0,
+          3
+        ]
+      }
+    ]
+  }
+}

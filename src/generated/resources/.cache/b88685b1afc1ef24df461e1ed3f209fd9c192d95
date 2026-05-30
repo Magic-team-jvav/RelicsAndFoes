@@ -1,2 +1,4 @@
-// 1.21.1	2026-05-17T17:44:47.8817255	Tags for minecraft:block mod id relics_and_foes
-703402b461b5d57d082697bc5977c9637b19e423 data/relics_and_foes/tags/block/fallen_city_remnant_gear.json
+// 1.21.1	2026-05-30T18:45:58.9062643	Tags for minecraft:block mod id relics_and_foes
+7ab335867d72e7692d7cd556dfeaa3415ec33cd3 data/minecraft/tags/block/climbable.json
+6d7db01d2fcc1ec2024934ab5d6a792ef578d84d data/relics_and_foes/tags/block/fallen_city_remnant_gear.json
+e390316d2dc563c65c7f31f4c6db7c2f8bc4887f data/relics_and_foes/tags/block/hillside_xie_beast.json

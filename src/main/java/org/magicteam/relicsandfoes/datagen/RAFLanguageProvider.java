@@ -130,8 +130,8 @@ public class RAFLanguageProvider extends LanguageProvider {
                 RAFCreativeModeTab.SideTab.RUINED_HALL_EERIE_STATUE.getDescriptionId()
         );
         addAll("魔堡戏偶",
-                Tags.getTagTranslationKey(RAFTags.Blocks.DEMON_CASTLE_PUPPET),
-                Tags.getTagTranslationKey(RAFTags.Items.DEMON_CASTLE_PUPPET),
+                Tags.getTagTranslationKey(RAFTags.Blocks.MAGIC_CASTLE_PUPPET),
+                Tags.getTagTranslationKey(RAFTags.Items.MAGIC_CASTLE_PUPPET),
                 RAFCreativeModeTab.SideTab.DEMON_CASTLE_PUPPET.getDescriptionId()
         );
         addAll("沦城遗械",

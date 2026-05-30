@@ -20,7 +20,7 @@ public class RAFItemTagsProvider extends ItemTagsProvider {
         tag(RAFTags.Items.HILLSIDE_XIE_BEAST).add(
                 RAFItems.LOST_SOLO_MELODY_KYLIN_MOVEMENT.get()
         );
-        tag(RAFTags.Items.DEMON_CASTLE_PUPPET).add(
+        tag(RAFTags.Items.MAGIC_CASTLE_PUPPET).add(
                 RAFItems.LOST_SOLO_MELODY_CONDUCTOR_MOVEMENT.get()
         );
         tag(RAFTags.Items.FLOATING_FORT_IRONWING).add(
@@ -35,5 +35,6 @@ public class RAFItemTagsProvider extends ItemTagsProvider {
         );
 
         copy(RAFTags.Blocks.FALLEN_CITY_REMNANT_GEAR, RAFTags.Items.FALLEN_CITY_REMNANT_GEAR);
+        copy(RAFTags.Blocks.HILLSIDE_XIE_BEAST, RAFTags.Items.HILLSIDE_XIE_BEAST);
     }
 }

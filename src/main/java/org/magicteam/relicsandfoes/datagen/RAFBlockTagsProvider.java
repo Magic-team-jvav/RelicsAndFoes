@@ -2,6 +2,7 @@ package org.magicteam.relicsandfoes.datagen;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.tags.BlockTags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
 import org.magicteam.relicsandfoes.init.RAFBlocks;
@@ -25,6 +26,26 @@ public class RAFBlockTagsProvider extends BlockTagsProvider {
                 RAFBlocks.FALLEN_LAVENDER.get(),
                 RAFBlocks.FALLEN_COFFER.get(),
                 RAFBlocks.TEQUILA.get(),
+                RAFBlocks.HANGING_VINE_HEAD.get(),
+                RAFBlocks.HANGING_VINE_BODY.get(),
+                RAFBlocks.PROTOTYPE_BOX.get()
+        );
+        tag(RAFTags.Blocks.HILLSIDE_XIE_BEAST).add(
+                RAFBlocks.KYLIN_BAMBOO_TOP.get(),
+                RAFBlocks.KYLIN_BAMBOO_STEM.get(),
+                RAFBlocks.KYLIN_BAMBOO_GREEN_TOP.get(),
+                RAFBlocks.KYLIN_BAMBOO_GREEN_STEM.get(),
+                RAFBlocks.KYLIN_LOTUS.get(),
+                RAFBlocks.KYLIN_LOTUS_STEM.get(),
+                RAFBlocks.FLOATING_KYLIN_LOTUS.get(),
+                RAFBlocks.KYLIN_LOTUS_SMALL.get(),
+                RAFBlocks.KYLIN_STALACTITE.get(),
+                RAFBlocks.KILIN_BOX.get()
+        );
+
+
+        tag(BlockTags.CLIMBABLE).add(
+                RAFBlocks.FOREST_VINE.get(),
                 RAFBlocks.HANGING_VINE_HEAD.get(),
                 RAFBlocks.HANGING_VINE_BODY.get()
         );

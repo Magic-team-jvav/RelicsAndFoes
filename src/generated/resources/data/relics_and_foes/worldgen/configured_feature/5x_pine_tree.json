@@ -5,43 +5,70 @@
       "feature": {
         "type": "relics_and_foes:template_structure",
         "config": {
-          "rotation_pivot": [
-            2,
-            0,
-            2
-          ],
           "templates": [
             {
-              "data": "relics_and_foes:5x_pine_tree_0",
-              "weight": 1
+              "path": "relics_and_foes:5x_pine_tree_0",
+              "rotation_pivot": [
+                2,
+                0,
+                2
+              ]
             },
             {
-              "data": "relics_and_foes:5x_pine_tree_1",
-              "weight": 1
+              "path": "relics_and_foes:5x_pine_tree_1",
+              "rotation_pivot": [
+                2,
+                0,
+                2
+              ]
             },
             {
-              "data": "relics_and_foes:5x_pine_tree_2",
-              "weight": 1
+              "path": "relics_and_foes:5x_pine_tree_2",
+              "rotation_pivot": [
+                2,
+                0,
+                2
+              ]
             },
             {
-              "data": "relics_and_foes:5x_pine_tree_3",
-              "weight": 1
+              "path": "relics_and_foes:5x_pine_tree_3",
+              "rotation_pivot": [
+                2,
+                0,
+                2
+              ]
             },
             {
-              "data": "relics_and_foes:5x_pine_tree_4",
-              "weight": 1
+              "path": "relics_and_foes:5x_pine_tree_4",
+              "rotation_pivot": [
+                2,
+                0,
+                2
+              ]
             },
             {
-              "data": "relics_and_foes:5x_pine_tree_5",
-              "weight": 1
+              "path": "relics_and_foes:5x_pine_tree_5",
+              "rotation_pivot": [
+                2,
+                0,
+                2
+              ]
             },
             {
-              "data": "relics_and_foes:5x_pine_tree_6",
-              "weight": 1
+              "path": "relics_and_foes:5x_pine_tree_6",
+              "rotation_pivot": [
+                2,
+                0,
+                2
+              ]
             },
             {
-              "data": "relics_and_foes:5x_pine_tree_7",
-              "weight": 1
+              "path": "relics_and_foes:5x_pine_tree_7",
+              "rotation_pivot": [
+                2,
+                0,
+                2
+              ]
             }
           ]
         }

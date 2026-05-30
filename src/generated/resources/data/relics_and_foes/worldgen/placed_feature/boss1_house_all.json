@@ -1,0 +1,36 @@
+{
+  "feature": "relics_and_foes:boss1_house_all",
+  "placement": [
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "relics_and_foes:in_the_peach_blossom_vale",
+      "on_center": false,
+      "on_floor": true
+    },
+    {
+      "type": "minecraft:biome"
+    },
+    {
+      "type": "relics_and_foes:world_surface_with_y_offset",
+      "y_offset": -3
+    },
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:matching_fluids",
+        "fluids": "minecraft:empty",
+        "offset": [
+          3,
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "type": "relics_and_foes:check_chance",
+      "chance": 0.075
+    }
+  ]
+}

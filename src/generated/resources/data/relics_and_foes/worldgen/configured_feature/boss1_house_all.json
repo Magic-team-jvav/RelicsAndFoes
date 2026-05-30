@@ -1,0 +1,23 @@
+{
+  "type": "relics_and_foes:template_structure",
+  "config": {
+    "templates": [
+      {
+        "path": "relics_and_foes:boss1_house_0",
+        "rotation_pivot": [
+          4,
+          0,
+          4
+        ]
+      },
+      {
+        "path": "relics_and_foes:boss1_house_1",
+        "rotation_pivot": [
+          3,
+          0,
+          3
+        ]
+      }
+    ]
+  }
+}

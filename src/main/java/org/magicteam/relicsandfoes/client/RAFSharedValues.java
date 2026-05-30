@@ -31,28 +31,57 @@ public class RAFSharedValues {
 
     private static final Object2BooleanMap<Long> prototype = new Object2BooleanOpenHashMap<>();
 
-    public record BiomeFog(float nearPlaneNone, float nearPlaneWater, float farPlaneWater) {
-        public static final BiomeFog SUNKEN_EXPANSE = new BiomeFog(0, 6, 15);
+    public record BiomeFog(float nearPlaneNone, float farPlaneNone, float nearPlaneWater, float farPlaneWater) {
+        public static final BiomeFog SUNKEN_EXPANSE = new BiomeFog(0, 1, 8, 15);
+        public static final BiomeFog PEACH_OF_BLOSSOM_VALE = new BiomeFog(0.05F, 0.75F, 8, 15);
 
         public static BiomeFog targetFog;
-        public static float prevNearPlaneNone;
-        public static float prevNearPlaneWater;
-        public static float prevFarPlaneWater;
-        public static float fogBlend;
-        public static float paramBlend;
+        public static float prevNearPlaneNone; // scale
+        public static float prevFarPlaneNone; // scale
+        public static float prevNearPlaneWater; // exactly
+        public static float prevFarPlaneWater; // exactly
+        public static float fogBlend; // 0 -> 1
+        public static float paramBlend; // 0 -> 1
 
         public static @Nullable BiomeFog get() {
             if (inTheSunkenExpanse) return SUNKEN_EXPANSE;
+            if (inThePeachOfBlossomVale) return PEACH_OF_BLOSSOM_VALE;
             return null;
         }
 
         public static void resetBlend() {
             targetFog = null;
             prevNearPlaneNone = 0;
+            prevFarPlaneNone = 0;
             prevNearPlaneWater = 0;
             prevFarPlaneWater = 0;
             fogBlend = 0;
             paramBlend = 0;
+        }
+
+        public static void blend() {
+            BiomeFog biomeFog = get();
+            if (biomeFog == null) {
+                fogBlend = Math.max(0, fogBlend - 0.05F);
+            } else {
+                if (targetFog == null) {
+                    prevNearPlaneNone = biomeFog.nearPlaneNone;
+                    prevFarPlaneNone = biomeFog.farPlaneNone;
+                    prevNearPlaneWater = biomeFog.nearPlaneWater;
+                    prevFarPlaneWater = biomeFog.farPlaneWater;
+                    targetFog = biomeFog;
+                    paramBlend = 1;
+                } else if (biomeFog != targetFog) {
+                    prevNearPlaneNone = Mth.lerp(paramBlend, prevNearPlaneNone, targetFog.nearPlaneNone);
+                    prevFarPlaneNone = Mth.lerp(paramBlend, prevFarPlaneNone, targetFog.farPlaneNone);
+                    prevNearPlaneWater = Mth.lerp(paramBlend, prevNearPlaneWater, targetFog.nearPlaneWater);
+                    prevFarPlaneWater = Mth.lerp(paramBlend, prevFarPlaneWater, targetFog.farPlaneWater);
+                    targetFog = biomeFog;
+                    paramBlend = 0;
+                }
+                fogBlend = Math.min(1, fogBlend + 0.05F);
+                paramBlend = Math.min(1, paramBlend + 0.05F);
+            }
         }
     }
 
