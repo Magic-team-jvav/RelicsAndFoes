@@ -26,4 +26,5 @@ run-data
 repo
 logs
 /level
+/net
 /src/main/resources/assets/relics_and_foes/sounds/
