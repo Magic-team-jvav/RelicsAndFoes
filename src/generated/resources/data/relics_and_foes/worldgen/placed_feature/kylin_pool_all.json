@@ -1,9 +1,6 @@
 {
-  "feature": "relics_and_foes:boss1_house_all",
+  "feature": "relics_and_foes:kylin_pool_all",
   "placement": [
-    {
-      "type": "minecraft:in_square"
-    },
     {
       "type": "relics_and_foes:in_the_peach_blossom_vale",
       "non_river": true,
@@ -15,7 +12,7 @@
     },
     {
       "type": "relics_and_foes:world_surface_with_y_offset",
-      "y_offset": -3
+      "y_offset": -5
     },
     {
       "type": "minecraft:block_predicate_filter",
@@ -23,15 +20,15 @@
         "type": "minecraft:matching_fluids",
         "fluids": "minecraft:empty",
         "offset": [
-          3,
-          2,
-          3
+          14,
+          4,
+          14
         ]
       }
     },
     {
       "type": "relics_and_foes:check_chance",
-      "chance": 0.075
+      "chance": 0.006
     }
   ]
 }

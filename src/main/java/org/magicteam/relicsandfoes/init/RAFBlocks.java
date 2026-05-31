@@ -88,6 +88,7 @@ public final class RAFBlocks {
     public static final DeferredBlock<FloatingKylinLotus> KYLIN_LOTUS_SMALL = registerWithItem("kylin_lotus_small", KylinLotusSmallBlock::new); // 水玉幽兰花
     public static final DeferredBlock<KylinStalactiteBlock> KYLIN_STALACTITE = registerWithItem("kylin_stalactite", KylinStalactiteBlock::new); // 麒麟钟乳石
     public static final DeferredBlock<Block> KILIN_BOX = registerHolder("kilin_box"); // 麟兽宝匣
+    public static final DeferredBlock<Block> GANODERMA_LUCIDUM = registerHolder("ganoderma_lucidum"); // 灵芝
 
     private static BlockBehaviour.Properties noRandomTickBambooProperties(MapColor color) {
         return BlockBehaviour.Properties.of()

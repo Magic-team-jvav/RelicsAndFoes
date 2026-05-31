@@ -1,0 +1,20 @@
+{
+  "feature": "relics_and_foes:kylin_bamboo",
+  "placement": [
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "relics_and_foes:in_the_peach_blossom_vale",
+      "non_river": true,
+      "on_floor": true
+    },
+    {
+      "type": "minecraft:biome"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "WORLD_SURFACE_WG"
+    }
+  ]
+}

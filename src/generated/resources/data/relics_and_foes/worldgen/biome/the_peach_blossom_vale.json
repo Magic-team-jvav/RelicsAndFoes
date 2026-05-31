@@ -15,7 +15,10 @@
     [],
     [],
     [
-      "relics_and_foes:boss1_house_all"
+      "relics_and_foes:kylin_pool_all",
+      "relics_and_foes:boss1_house_all",
+      "relics_and_foes:boss1_tree_all",
+      "relics_and_foes:forest_pine_tree_all"
     ],
     [],
     [],
@@ -23,7 +26,10 @@
     [],
     [
       "relics_and_foes:ancient_wildgrass",
-      "relics_and_foes:ancient_tall_wildgrass"
+      "relics_and_foes:ancient_tall_wildgrass",
+      "relics_and_foes:kylin_stalactite",
+      "relics_and_foes:kylin_bamboo",
+      "relics_and_foes:kylin_bamboo_green"
     ],
     [
       "relics_and_foes:abandoned_tablet",

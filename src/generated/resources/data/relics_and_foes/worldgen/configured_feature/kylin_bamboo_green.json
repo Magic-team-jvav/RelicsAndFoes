@@ -1,0 +1,9 @@
+{
+  "type": "relics_and_foes:stalk_block",
+  "config": {
+    "head": "relics_and_foes:kylin_bamboo_green_top",
+    "max_height": 14,
+    "min_height": 7,
+    "stem": "relics_and_foes:kylin_bamboo_green_stem"
+  }
+}

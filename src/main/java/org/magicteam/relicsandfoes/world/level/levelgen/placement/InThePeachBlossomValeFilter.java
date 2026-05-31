@@ -18,8 +18,11 @@ import java.util.Optional;
 public class InThePeachBlossomValeFilter extends PlacementFilter {
     public static final MapCodec<InThePeachBlossomValeFilter> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.BOOL.optionalFieldOf("on_center").forGetter(f -> getter(f.onCenter)),
-            Codec.BOOL.optionalFieldOf("on_floor").forGetter(f -> getter(f.onFloor))
-    ).apply(instance, (onCenter, onFloor) -> new InThePeachBlossomValeFilter(setter(onCenter), setter(onFloor))));
+            Codec.BOOL.optionalFieldOf("on_floor").forGetter(f -> getter(f.onFloor)),
+            Codec.BOOL.optionalFieldOf("non_river").forGetter(f -> getter(f.nonRiver))
+    ).apply(instance, (onCenter, onFloor, riverFilter) -> new InThePeachBlossomValeFilter(
+            setter(onCenter), setter(onFloor), setter(riverFilter)
+    )));
 
     private static Optional<Boolean> getter(TriState state) {
         return state.isDefault() ? Optional.empty() : (state.isTrue() ? Optional.of(Boolean.TRUE) : Optional.of(Boolean.FALSE));
@@ -32,14 +35,20 @@ public class InThePeachBlossomValeFilter extends PlacementFilter {
 
     private final TriState onCenter;
     private final TriState onFloor;
+    private final TriState nonRiver;
 
-    private InThePeachBlossomValeFilter(TriState onCenter, TriState onFloor) {
+    private InThePeachBlossomValeFilter(TriState onCenter, TriState onFloor, TriState nonRiver) {
         this.onCenter = onCenter;
         this.onFloor = onFloor;
+        this.nonRiver = nonRiver;
     }
 
     public static InThePeachBlossomValeFilter of(TriState onCenter, TriState onFloor) {
-        return new InThePeachBlossomValeFilter(onCenter, onFloor);
+        return new InThePeachBlossomValeFilter(onCenter, onFloor, TriState.DEFAULT);
+    }
+
+    public static InThePeachBlossomValeFilter of(TriState onCenter, TriState onFloor, TriState nonRiver) {
+        return new InThePeachBlossomValeFilter(onCenter, onFloor, nonRiver);
     }
 
     @Override
@@ -54,7 +63,12 @@ public class InThePeachBlossomValeFilter extends PlacementFilter {
             }
         }
         if (!onFloor.isDefault()) {
-            if (onFloor.isTrue() != ((RelicLandChunkGenerator) context.generator()).isPeachValeValleyFloor(worldX, worldZ, biomeX, biomeZ)) {
+            RelicLandChunkGenerator generator = (RelicLandChunkGenerator) context.generator();
+            if (onFloor.isTrue()) {
+                if (!generator.isPeachValeValleyFloor(worldX, worldZ, biomeX, biomeZ, nonRiver)) {
+                    return false;
+                }
+            } else if (generator.isPeachValeValleyFloor(worldX, worldZ, biomeX, biomeZ, TriState.DEFAULT)) {
                 return false;
             }
         }

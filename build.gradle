@@ -141,7 +141,7 @@ dependencies {
     } else {
         implementation files("libs/particlestorm-${particle_storm_version}.jar")
     }
-    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
+//    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
 
     compileOnly "curse.maven:jade-324717:6011258"
     runtimeOnly "curse.maven:jade-324717:6011258"

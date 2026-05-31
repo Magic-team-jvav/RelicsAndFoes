@@ -1,7 +1,9 @@
 {
-  "type": "relics_and_foes:wildfield_corn",
+  "type": "relics_and_foes:stalk_block",
   "config": {
+    "head": "relics_and_foes:wildfield_corn",
     "max_height": 5,
-    "min_height": 2
+    "min_height": 2,
+    "stem": "relics_and_foes:wildfield_corn_stalk"
   }
 }

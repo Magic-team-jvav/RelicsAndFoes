@@ -19,6 +19,7 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
+import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.magicteam.relicsandfoes.init.RAFDimensions;
 import org.magicteam.relicsandfoes.world.level.biome.RelicLandBiomeSource;
@@ -180,8 +181,10 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
         return h | (surf << SURF_SHIFT);
     }
 
-    /** Returns true when mountain contribution < 5 — flat ground suitable for structures. */
-    public boolean isPeachValeValleyFloor(int worldX, int worldZ, int biomeX, int biomeZ) {
+    /// Returns true when mountain contribution < 5 — flat valley floor.
+    ///
+    /// @param nonRiver TriState.TRUE=non-river only, FALSE=river only, DEFAULT=both.
+    public boolean isPeachValeValleyFloor(int worldX, int worldZ, int biomeX, int biomeZ, TriState nonRiver) {
         double dist = Math.sqrt(Mth.lengthSquared(biomeX - worldX, biomeZ - worldZ));
 
         double r2 = 600 + (0.5 + noise(worldX / 320.0, worldZ / 320.0) * 0.5) * 200;
@@ -196,7 +199,14 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
         double riverNoise = noise(worldX / 150.0, worldZ / 150.0);
         double fade = Mth.clamp((Math.abs(riverNoise) - 0.03) / 0.07, 0, 1);
 
-        return Math.max(Math.max(pa, pb), pc) * fade * (ratio2 - ratio3) < 5;
+        boolean isValley = Math.max(Math.max(pa, pb), pc) * fade * (ratio2 - ratio3) < 5;
+        boolean isRiver = riverNoise < 0.03 && riverNoise > -0.03;
+
+        return switch (nonRiver) {
+            case TRUE -> isValley && !isRiver;
+            case FALSE -> isValley && isRiver;
+            default -> isValley;
+        };
     }
 
     /// Rugged terrain: warped noise mountains on plain base, coarse dirt patches.
@@ -366,13 +376,11 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
 
         // 朝圣之路
         ChunkPos pos = chunk.getPos();
-        int mx = pos.x % 128;
-        int regionX = mx < 0 ? mx + 128 : mx;
-        int mz = pos.z % 128;
-        int regionZ = mz < 0 ? mz + 128 : mz;
+        int regionX = Math.floorMod(pos.x, 128);
+        int regionZ = Math.floorMod(pos.z, 128);
         int sectionX = 0, sizeX;
         int sectionZ = 0, sizeZ;
-        if ((regionX >= 7 && regionX <= 120) && (mz == 0 || mz == -1)) {
+        if ((regionX >= 7 && regionX <= 120) && (regionZ == 0 || regionZ == 127)) {
             if (regionX == 7) {
                 sizeX = 8;
             } else if (regionX == 120) {
@@ -380,11 +388,11 @@ public class RelicLandChunkGenerator extends NoiseBasedChunkGenerator {
             } else {
                 sizeX = 16;
             }
-            sectionZ = mz == 0 ? 0 : 13;
-            sizeZ = mz == 0 ? 4 : 3;
-        } else if ((regionZ >= 6 && regionZ <= 119) && (mx == 0 || mx == -1)) {
-            sectionX = mx == 0 ? 0 : 13;
-            sizeX = mx == 0 ? 4 : 3;
+            sectionZ = regionZ == 0 ? 0 : 13;
+            sizeZ = regionZ == 0 ? 4 : 3;
+        } else if ((regionZ >= 6 && regionZ <= 119) && (regionX == 0 || regionX == 127)) {
+            sectionX = regionX == 0 ? 0 : 13;
+            sizeX = regionX == 0 ? 4 : 3;
             sizeZ = regionZ == 119 ? 1 : 16;
         } else {
             return;

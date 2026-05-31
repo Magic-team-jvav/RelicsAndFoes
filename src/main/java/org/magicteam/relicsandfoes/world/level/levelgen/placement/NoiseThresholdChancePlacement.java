@@ -16,21 +16,29 @@ public class NoiseThresholdChancePlacement extends RepeatingPlacement {
             Codec.FLOAT.fieldOf("below_noise").forGetter(p -> p.belowNoise),
             Codec.FLOAT.fieldOf("above_noise").forGetter(p -> p.aboveNoise)
     ).apply(instance, NoiseThresholdChancePlacement::new));
-    private static final NormalNoise NOISE = NormalNoise.create(RandomSource.create(260521), -9, 1, 0, 1);
 
     private final double noiseLevel;
     private final float belowNoise;
     private final float aboveNoise;
 
-    public NoiseThresholdChancePlacement(double noiseLevel, float belowNoise, float aboveNoise) {
+    private NormalNoise noise;
+
+    private NoiseThresholdChancePlacement(double noiseLevel, float belowNoise, float aboveNoise) {
         this.noiseLevel = noiseLevel;
         this.belowNoise = belowNoise;
         this.aboveNoise = aboveNoise;
     }
 
+    public static NoiseThresholdChancePlacement of(double noiseLevel, float belowNoise, float aboveNoise) {
+        return new NoiseThresholdChancePlacement(noiseLevel, belowNoise, aboveNoise);
+    }
+
     @Override
     protected int count(RandomSource random, BlockPos pos) {
-        double value = NOISE.getValue(pos.getX(), pos.getY(), pos.getZ());
+        if (noise == null) {
+            this.noise = NormalNoise.create(RandomSource.create(random.nextLong()), -9, 1, 0, 1);
+        }
+        double value = noise.getValue(pos.getX(), pos.getY(), pos.getZ());
         float chance = value < noiseLevel ? belowNoise : aboveNoise;
         int extra = (int) chance;
         if (random.nextFloat() < chance - extra) {

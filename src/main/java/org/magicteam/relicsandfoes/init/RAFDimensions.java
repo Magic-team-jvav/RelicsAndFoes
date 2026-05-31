@@ -11,7 +11,9 @@ import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.random.WeightedRandomList;
+import net.minecraft.util.valueproviders.IntProviderType;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.*;
@@ -42,10 +44,12 @@ import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
+import org.magicteam.relicsandfoes.util.valueproviders.FloatChanceIntProvider;
 import org.magicteam.relicsandfoes.world.level.biome.RelicLandBiomeSource;
 import org.magicteam.relicsandfoes.world.level.levelgen.RelicLandChunkGenerator;
+import org.magicteam.relicsandfoes.world.level.levelgen.feature.KylinStalactiteFeature;
+import org.magicteam.relicsandfoes.world.level.levelgen.feature.StalkBlockFeature;
 import org.magicteam.relicsandfoes.world.level.levelgen.feature.TemplateStructureFeature;
-import org.magicteam.relicsandfoes.world.level.levelgen.feature.WildfieldCornFeature;
 import org.magicteam.relicsandfoes.world.level.levelgen.feature.stateproviders.HorizontalDirectionalStateProvider;
 import org.magicteam.relicsandfoes.world.level.levelgen.placement.*;
 import org.magicteam.relicsandfoes.world.level.levelgen.structure.*;
@@ -77,18 +81,22 @@ public final class RAFDimensions {
     public static final DeferredHolder<StructurePieceType, StructurePieceType.StructureTemplateType> SIMPLE_TEMPLATE_STRUCTURE_PIECE = STRUCTURE_PIECES.register("simple", () -> SimpleTemplateStructurePiece::new);
 
     private static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(Registries.FEATURE, RelicsAndFoes.MODID);
-    public static final DeferredHolder<Feature<?>, WildfieldCornFeature> WILDFIELD_CORN_FEATURE = FEATURES.register("wildfield_corn", () -> new WildfieldCornFeature(WildfieldCornFeature.Config.CODEC));
+    public static final DeferredHolder<Feature<?>, StalkBlockFeature> STALK_BLOCK_FEATURE = FEATURES.register("stalk_block", () -> new StalkBlockFeature(StalkBlockFeature.Config.CODEC));
     public static final DeferredHolder<Feature<?>, TemplateStructureFeature> TEMPLATE_STRUCTURE_FEATURE = FEATURES.register("template_structure", () -> new TemplateStructureFeature(TemplateStructureFeature.Config.CODEC));
+    public static final DeferredHolder<Feature<?>, KylinStalactiteFeature> KYLIN_STALACTITE_FEATURE = FEATURES.register("kylin_stalactite", () -> new KylinStalactiteFeature(KylinStalactiteFeature.Config.CODEC));
 
     private static final DeferredRegister<PlacementModifierType<?>> PLACEMENT_MODIFIER_TYPES = DeferredRegister.create(Registries.PLACEMENT_MODIFIER_TYPE, RelicsAndFoes.MODID);
     public static final DeferredHolder<PlacementModifierType<?>, PlacementModifierType<NotInCrossRealmAncientRuinsFilter>> NOT_IN_CROSS_REALM_ANCIENT_RUINS_FILTER = PLACEMENT_MODIFIER_TYPES.register("not_in_cross_realm_ancient_ruins", () -> () -> NotInCrossRealmAncientRuinsFilter.CODEC);
     public static final DeferredHolder<PlacementModifierType<?>, PlacementModifierType<NoiseThresholdChancePlacement>> NOISE_THRESHOLD_CHANCE_PLACEMENT = PLACEMENT_MODIFIER_TYPES.register("noise_threshold_chance", () -> () -> NoiseThresholdChancePlacement.CODEC);
     public static final DeferredHolder<PlacementModifierType<?>, PlacementModifierType<InThePeachBlossomValeFilter>> IN_THE_PEACH_BLOSSOM_VALE_FILTER = PLACEMENT_MODIFIER_TYPES.register("in_the_peach_blossom_vale", () -> () -> InThePeachBlossomValeFilter.CODEC);
     public static final DeferredHolder<PlacementModifierType<?>, PlacementModifierType<CheckChanceFilter>> CHECK_CHANCE_FILTER = PLACEMENT_MODIFIER_TYPES.register("check_chance", () -> () -> CheckChanceFilter.CODEC);
-    public static final DeferredHolder<PlacementModifierType<?>, PlacementModifierType<WorldSurfaceWithYOffsetPlacement>> WORLD_SURFACE_WITH_Y_OFFSET_PLACEMENT = PLACEMENT_MODIFIER_TYPES.register("world_surface_with_y_offset", () -> () -> WorldSurfaceWithYOffsetPlacement.CODEC);
+    public static final DeferredHolder<PlacementModifierType<?>, PlacementModifierType<WorldSurfaceOffsetPlacement>> WORLD_SURFACE_WITH_Y_OFFSET_PLACEMENT = PLACEMENT_MODIFIER_TYPES.register("world_surface_with_y_offset", () -> () -> WorldSurfaceOffsetPlacement.CODEC);
 
     private static final DeferredRegister<BlockStateProviderType<?>> BLOCK_STATE_PROVIDER_TYPES = DeferredRegister.create(Registries.BLOCK_STATE_PROVIDER_TYPE, RelicsAndFoes.MODID);
     public static final DeferredHolder<BlockStateProviderType<?>, BlockStateProviderType<HorizontalDirectionalStateProvider>> HORIZONTAL_DIRECTIONAL_STATE_PROVIDER = BLOCK_STATE_PROVIDER_TYPES.register("horizontal_directional", () -> new BlockStateProviderType<>(HorizontalDirectionalStateProvider.CODEC));
+
+    private static final DeferredRegister<IntProviderType<?>> INT_PROVIDER_TYPES = DeferredRegister.create(Registries.INT_PROVIDER_TYPE, RelicsAndFoes.MODID);
+    public static final DeferredHolder<IntProviderType<?>, IntProviderType<FloatChanceIntProvider>> FLOAT_CHANCE_INT_PROVIDER = INT_PROVIDER_TYPES.register("float_chance", () -> () -> FloatChanceIntProvider.CODEC);
 
     public static void register(IEventBus eventBus) {
         BIOME_SOURCES.register(eventBus);
@@ -99,6 +107,7 @@ public final class RAFDimensions {
         FEATURES.register(eventBus);
         PLACEMENT_MODIFIER_TYPES.register(eventBus);
         BLOCK_STATE_PROVIDER_TYPES.register(eventBus);
+        INT_PROVIDER_TYPES.register(eventBus);
     }
 
     public static class LevelStemz {
@@ -246,8 +255,14 @@ public final class RAFDimensions {
                             .foliageColorOverride(0xB6D861)))
                     .mobSpawnSettings(mobSpawn(builder -> {}))
                     .generationSettings(generation(placedFeatures, worldCarvers, builder -> {
-                        builder.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, PlacedFeaturez.BOSS1_HOUSE_ALL);
+                        builder.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, PlacedFeaturez.KYLIN_POOL_ALL)
+                                .addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, PlacedFeaturez.BOSS1_HOUSE_ALL)
+                                .addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, PlacedFeaturez.BOSS1_TREE_ALL)
+                                .addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, PlacedFeaturez.FOREST_PINE_TREE_ALL);
                         addAncientWildgrass(builder);
+                        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeaturez.KYLIN_STALACTITE)
+                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeaturez.KYLIN_BAMBOO)
+                                .addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, PlacedFeaturez.KYLIN_BAMBOO_GREEN);
                         addAbandonedStaff(builder);
                     }))
                     .build());
@@ -282,6 +297,169 @@ public final class RAFDimensions {
             MobSpawnSettings.Builder builder = new MobSpawnSettings.Builder();
             consumer.accept(builder);
             return builder.build();
+        }
+    }
+
+    public static class ConfiguredFeaturez {
+        public static final ResourceKey<ConfiguredFeature<?, ?>> WILDFIELD_CORN = key("wildfield_corn");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> ANCIENT_WILDGRASS = key("ancient_wildgrass");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> FALLEN_LAVENDER = key("fallen_lavender");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> TEQUILA = key("tequila");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> WILDFIELD_WEEDS = key("wildfield_weeds");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> ANCIENT_TALL_WILDGRASS = key("ancient_tall_wildgrass");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> ABANDONED_TABLET = key("abandoned_tablet");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> ABANDONED_PLANKS = key("abandoned_planks");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> ABANDONED_SIGN = key("abandoned_sign");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> X5_PINE_TREE = key("5x_pine_tree");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> X7_PINE_TREE = key("7x_pine_tree");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> JUNGLE_TREE = key("jungle_tree");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> BIG_PINE_TREE = key("big_pine_tree");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> KYLIN_POOL_ALL = key("kylin_pool_all");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> BOSS1_HOUSE_ALL = key("boss1_house_all");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> BOSS1_TREE_ALL = key("boss1_tree_all");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> FOREST_PINE_TREE_ALL = key("forest_pine_tree_all");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> KYLIN_STALACTITE = key("kylin_stalactite");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> KYLIN_BAMBOO = key("kylin_bamboo");
+        public static final ResourceKey<ConfiguredFeature<?, ?>> KYLIN_BAMBOO_GREEN = key("kylin_bamboo_green");
+
+        private static ResourceKey<ConfiguredFeature<?, ?>> key(String path) {
+            return ResourceKey.create(Registries.CONFIGURED_FEATURE, RelicsAndFoes.asResource(path));
+        }
+
+        public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
+            register(context, WILDFIELD_CORN, STALK_BLOCK_FEATURE.get(), new StalkBlockFeature.Config(2, 5, RAFBlocks.WILDFIELD_CORN.get(), RAFBlocks.WILDFIELD_CORN_STALK.get()));
+            register(context, ANCIENT_WILDGRASS, Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.ANCIENT_WILDGRASS.get()), 24));
+            register(context, FALLEN_LAVENDER, Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.FALLEN_LAVENDER.get()), 18));
+            register(context, TEQUILA, Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.TEQUILA.get()), 12));
+            register(context, WILDFIELD_WEEDS, Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.WILDFIELD_WEEDS.get()), 6));
+            register(context, ANCIENT_TALL_WILDGRASS, Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.ANCIENT_TALL_WILDGRASS.get()), 6));
+            register(context, ABANDONED_TABLET, Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(new HorizontalDirectionalStateProvider(RAFBlocks.ABANDONED_TABLET.get())));
+            register(context, ABANDONED_PLANKS, Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(new HorizontalDirectionalStateProvider(RAFBlocks.ABANDONED_PLANKS.get())));
+            register(context, ABANDONED_SIGN, Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(new HorizontalDirectionalStateProvider(RAFBlocks.ABANDONED_SIGN.get())));
+            register(context, X5_PINE_TREE, Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 0, 4, PlacementUtils.filtered(
+                    TEMPLATE_STRUCTURE_FEATURE.get(),
+                    TemplateStructureFeature.Config.of("5x_pine_tree_", 8, 2, 2),
+                    isAirAndBelowIsDirt()
+            )));
+            register(context, X7_PINE_TREE, Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 0, 4, PlacementUtils.filtered(
+                    TEMPLATE_STRUCTURE_FEATURE.get(),
+                    TemplateStructureFeature.Config.of("7x_pine_tree_", 3, 3, 3),
+                    isAirAndBelowIsDirt()
+            )));
+            register(context, JUNGLE_TREE, Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 0, 4, PlacementUtils.filtered(
+                    TEMPLATE_STRUCTURE_FEATURE.get(),
+                    TemplateStructureFeature.Config.of("jungle_tree_", 3, 9, 9),
+                    isAirAndBelowIsDirt()
+            )));
+            register(context, BIG_PINE_TREE, Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 0, 4, PlacementUtils.filtered(
+                    Feature.SIMPLE_RANDOM_SELECTOR,
+                    new SimpleRandomFeatureConfiguration(HolderSet.direct(
+                            directPlacedFeature(TEMPLATE_STRUCTURE_FEATURE.get(), TemplateStructureFeature.Config.of("9x_pine_tree_", 3, 4, 4)),
+                            directPlacedFeature(TEMPLATE_STRUCTURE_FEATURE.get(), TemplateStructureFeature.Config.of("11x_pine_tree_", 3, 5, 5))
+                    )),
+                    isAirAndBelowIsDirt()
+            )));
+            register(context, BOSS1_HOUSE_ALL, TEMPLATE_STRUCTURE_FEATURE.get(), new TemplateStructureFeature.Config(WeightedRandomList.create(
+                    TemplateStructureFeature.Template.of("boss1_house_0", 4, 4),
+                    TemplateStructureFeature.Template.of("boss1_house_1", 3, 3)
+            ), false, true, true));
+            register(context, KYLIN_POOL_ALL, Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 7, 0, directPlacedFeature(TEMPLATE_STRUCTURE_FEATURE.get(), TemplateStructureFeature.Config.of("kylin_pool_", 1, 14, 14))));
+            register(context, BOSS1_TREE_ALL, Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfiguration(HolderSet.direct(
+                    directPlacedFeature(TEMPLATE_STRUCTURE_FEATURE.get(), TemplateStructureFeature.Config.of("boss1_tree_", 3, 6, 6)),
+                    directPlacedFeature(TEMPLATE_STRUCTURE_FEATURE.get(), TemplateStructureFeature.Config.of("boss1_pink_tree_", 3, 6, 6))
+            )));
+            register(context, FOREST_PINE_TREE_ALL, TEMPLATE_STRUCTURE_FEATURE.get(), TemplateStructureFeature.Config.of("7x_pine_tree_", 3, 3, 3));
+            register(context, KYLIN_STALACTITE, KYLIN_STALACTITE_FEATURE.get(), KylinStalactiteFeature.Config.INSTANCE);
+            register(context, KYLIN_BAMBOO, STALK_BLOCK_FEATURE.get(), new StalkBlockFeature.Config(7,14, RAFBlocks.KYLIN_BAMBOO_TOP.get(), RAFBlocks.KYLIN_BAMBOO_STEM.get()));
+            register(context, KYLIN_BAMBOO_GREEN, STALK_BLOCK_FEATURE.get(), new StalkBlockFeature.Config(7,14, RAFBlocks.KYLIN_BAMBOO_GREEN_TOP.get(), RAFBlocks.KYLIN_BAMBOO_GREEN_STEM.get()));
+        }
+
+        private static <FC extends FeatureConfiguration, F extends Feature<FC>> void register(
+                BootstrapContext<ConfiguredFeature<?, ?>> context,
+                ResourceKey<ConfiguredFeature<?, ?>> key,
+                F feature,
+                FC config
+        ) {
+            context.register(key, new ConfiguredFeature<>(feature, config));
+        }
+
+        private static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<PlacedFeature> directPlacedFeature(F feature, FC config) {
+            return Holder.direct(new PlacedFeature(Holder.direct(new ConfiguredFeature<>(feature, config)), List.of()));
+        }
+
+        private static BlockPredicate isAirAndBelowHasSturdyUpFace() {
+            return BlockPredicate.allOf(
+                    BlockPredicate.ONLY_IN_AIR_PREDICATE,
+                    BlockPredicate.hasSturdyFace(Direction.DOWN.getNormal(), Direction.UP)
+            );
+        }
+
+        private static BlockPredicate isAirAndBelowIsDirt() {
+            return BlockPredicate.allOf(
+                    BlockPredicate.ONLY_IN_AIR_PREDICATE,
+                    BlockPredicate.matchesTag(Direction.DOWN.getNormal(), BlockTags.DIRT)
+            );
+        }
+    }
+
+    public static class PlacedFeaturez {
+        public static final ResourceKey<PlacedFeature> WILDFIELD_CORN = key("wildfield_corn");
+        public static final ResourceKey<PlacedFeature> ANCIENT_WILDGRASS = key("ancient_wildgrass");
+        public static final ResourceKey<PlacedFeature> FALLEN_LAVENDER = key("fallen_lavender");
+        public static final ResourceKey<PlacedFeature> TEQUILA = key("tequila");
+        public static final ResourceKey<PlacedFeature> WILDFIELD_WEEDS = key("wildfield_weeds");
+        public static final ResourceKey<PlacedFeature> ANCIENT_TALL_WILDGRASS = key("ancient_tall_wildgrass");
+        public static final ResourceKey<PlacedFeature> ABANDONED_TABLET = key("abandoned_tablet");
+        public static final ResourceKey<PlacedFeature> ABANDONED_PLANKS = key("abandoned_planks");
+        public static final ResourceKey<PlacedFeature> ABANDONED_SIGN = key("abandoned_sign");
+        public static final ResourceKey<PlacedFeature> X5_PINE_TREE = key("5x_pine_tree");
+        public static final ResourceKey<PlacedFeature> X7_PINE_TREE = key("7x_pine_tree");
+        public static final ResourceKey<PlacedFeature> JUNGLE_TREE = key("jungle_tree");
+        public static final ResourceKey<PlacedFeature> BIG_PINE_TREE = key("big_pine_tree");
+        public static final ResourceKey<PlacedFeature> KYLIN_POOL_ALL = key("kylin_pool_all");
+        public static final ResourceKey<PlacedFeature> BOSS1_HOUSE_ALL = key("boss1_house_all");
+        public static final ResourceKey<PlacedFeature> BOSS1_TREE_ALL = key("boss1_tree_all");
+        public static final ResourceKey<PlacedFeature> FOREST_PINE_TREE_ALL = key("forest_pine_tree_all");
+        public static final ResourceKey<PlacedFeature> KYLIN_STALACTITE = key("kylin_stalactite");
+        public static final ResourceKey<PlacedFeature> KYLIN_BAMBOO = key("kylin_bamboo");
+        public static final ResourceKey<PlacedFeature> KYLIN_BAMBOO_GREEN = key("kylin_bamboo_green");
+
+        private static ResourceKey<PlacedFeature> key(String path) {
+            return ResourceKey.create(Registries.PLACED_FEATURE, RelicsAndFoes.asResource(path));
+        }
+
+        public static void bootstrap(BootstrapContext<PlacedFeature> context) {
+            Tuple<BootstrapContext<PlacedFeature>, HolderGetter<ConfiguredFeature<?, ?>>> data = new Tuple<>(context, context.lookup(Registries.CONFIGURED_FEATURE));
+
+            register(data, WILDFIELD_CORN, ConfiguredFeaturez.WILDFIELD_CORN, CountPlacement.of(UniformInt.of(1, 2)), InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(data, ANCIENT_WILDGRASS, ConfiguredFeaturez.ANCIENT_WILDGRASS, NoiseThresholdCountPlacement.of(-0.8, 6, 12), InSquarePlacement.spread(), BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(data, FALLEN_LAVENDER, ConfiguredFeaturez.FALLEN_LAVENDER, NoiseThresholdCountPlacement.of(-0.75, 5, 10), InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(data, TEQUILA, ConfiguredFeaturez.TEQUILA, NoiseThresholdCountPlacement.of(-0.7, 4, 8), InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(data, WILDFIELD_WEEDS, ConfiguredFeaturez.WILDFIELD_WEEDS, NoiseThresholdCountPlacement.of(-0.65, 3, 6), InSquarePlacement.spread(), BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(data, ANCIENT_TALL_WILDGRASS, ConfiguredFeaturez.ANCIENT_TALL_WILDGRASS, NoiseThresholdCountPlacement.of(-0.6, 3, 6), InSquarePlacement.spread(), BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(data, ABANDONED_TABLET, ConfiguredFeaturez.ABANDONED_TABLET, CountPlacement.of(UniformInt.of(1, 2)), InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BlockPredicateFilter.forPredicate(ConfiguredFeaturez.isAirAndBelowHasSturdyUpFace()));
+            register(data, ABANDONED_PLANKS, ConfiguredFeaturez.ABANDONED_PLANKS, InSquarePlacement.spread(), BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BlockPredicateFilter.forPredicate(ConfiguredFeaturez.isAirAndBelowHasSturdyUpFace()));
+            register(data, ABANDONED_SIGN, ConfiguredFeaturez.ABANDONED_SIGN, InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BlockPredicateFilter.forPredicate(ConfiguredFeaturez.isAirAndBelowHasSturdyUpFace()));
+            register(data, X5_PINE_TREE, ConfiguredFeaturez.X5_PINE_TREE, CountPlacement.of(9), InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(data, X7_PINE_TREE, ConfiguredFeaturez.X7_PINE_TREE, CountPlacement.of(2), InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(data, JUNGLE_TREE, ConfiguredFeaturez.JUNGLE_TREE, InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, NoiseThresholdChancePlacement.of(0, 0.5F, 0.25F));
+            register(data, BIG_PINE_TREE, ConfiguredFeaturez.BIG_PINE_TREE, NoiseThresholdCountPlacement.of(-0.25, 10, 0), InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(data, KYLIN_POOL_ALL, ConfiguredFeaturez.KYLIN_POOL_ALL, InThePeachBlossomValeFilter.of(TriState.FALSE, TriState.TRUE, TriState.TRUE), BiomeFilter.biome(), WorldSurfaceOffsetPlacement.of(-5), BlockPredicateFilter.forPredicate(BlockPredicate.noFluid(new Vec3i(14, 4, 14))), CheckChanceFilter.of(0.006F));
+            register(data, BOSS1_HOUSE_ALL, ConfiguredFeaturez.BOSS1_HOUSE_ALL, InSquarePlacement.spread(), InThePeachBlossomValeFilter.of(TriState.FALSE, TriState.TRUE, TriState.TRUE), BiomeFilter.biome(), WorldSurfaceOffsetPlacement.of(-3), BlockPredicateFilter.forPredicate(BlockPredicate.noFluid(new Vec3i(3, 2, 3))), CheckChanceFilter.of(0.075F));
+            register(data, BOSS1_TREE_ALL, ConfiguredFeaturez.BOSS1_TREE_ALL, CountPlacement.of(FloatChanceIntProvider.of(1.33F)), InSquarePlacement.spread(), InThePeachBlossomValeFilter.of(TriState.DEFAULT, TriState.TRUE, TriState.TRUE), BiomeFilter.biome(), WorldSurfaceOffsetPlacement.of(6, 0, 6), BlockPredicateFilter.forPredicate(BlockPredicate.not(BlockPredicate.matchesBlocks(new Vec3i(6, -1, 6), Blocks.AIR, Blocks.WATER))));
+            register(data, FOREST_PINE_TREE_ALL, ConfiguredFeaturez.FOREST_PINE_TREE_ALL, CountPlacement.of(FloatChanceIntProvider.of(3.33F)), InSquarePlacement.spread(), InThePeachBlossomValeFilter.of(TriState.DEFAULT, TriState.FALSE), BiomeFilter.biome(), WorldSurfaceOffsetPlacement.of(3, 0, 3), BlockPredicateFilter.forPredicate(BlockPredicate.not(BlockPredicate.matchesBlocks(new Vec3i(3, -1, 3), Blocks.AIR, Blocks.WATER))));
+            register(data, KYLIN_STALACTITE, ConfiguredFeaturez.KYLIN_STALACTITE, InSquarePlacement.spread(), InThePeachBlossomValeFilter.of(TriState.DEFAULT, TriState.TRUE, TriState.TRUE), BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(data, KYLIN_BAMBOO, ConfiguredFeaturez.KYLIN_BAMBOO, InSquarePlacement.spread(), InThePeachBlossomValeFilter.of(TriState.DEFAULT, TriState.TRUE, TriState.TRUE), BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+            register(data, KYLIN_BAMBOO_GREEN, ConfiguredFeaturez.KYLIN_BAMBOO_GREEN, CountPlacement.of(7), InSquarePlacement.spread(), InThePeachBlossomValeFilter.of(TriState.DEFAULT, TriState.FALSE), BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
+        }
+
+        private static void register(
+                Tuple<BootstrapContext<PlacedFeature>, HolderGetter<ConfiguredFeature<?, ?>>> data,
+                ResourceKey<PlacedFeature> placed,
+                ResourceKey<ConfiguredFeature<?, ?>> configured,
+                PlacementModifier... modifiers
+        ) {
+            data.getA().register(placed, new PlacedFeature(data.getB().getOrThrow(configured), Arrays.asList(modifiers)));
         }
     }
 
@@ -348,155 +526,6 @@ public final class RAFDimensions {
             context.register(PLAINS_HILL_BIG, new StructureSet(structures.getOrThrow(Structurez.PLAINS_HILL_BIG), placement));
             context.register(PLAINS_HILL_SMALL, new StructureSet(structures.getOrThrow(Structurez.PLAINS_HILL_SMALL), placement));
             context.register(PLAINS_PERISTELE, new StructureSet(structures.getOrThrow(Structurez.PLAINS_PERISTELE), placement));
-        }
-    }
-
-    public static class ConfiguredFeaturez {
-        public static final ResourceKey<ConfiguredFeature<?, ?>> WILDFIELD_CORN = key("wildfield_corn");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> ANCIENT_WILDGRASS = key("ancient_wildgrass");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> FALLEN_LAVENDER = key("fallen_lavender");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> TEQUILA = key("tequila");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> WILDFIELD_WEEDS = key("wildfield_weeds");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> ANCIENT_TALL_WILDGRASS = key("ancient_tall_wildgrass");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> ABANDONED_TABLET = key("abandoned_tablet");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> ABANDONED_PLANKS = key("abandoned_planks");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> ABANDONED_SIGN = key("abandoned_sign");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> X5_PINE_TREE = key("5x_pine_tree");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> X7_PINE_TREE = key("7x_pine_tree");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> JUNGLE_TREE = key("jungle_tree");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> BIG_PINE_TREE = key("big_pine_tree");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> BOSS1_HOUSE_ALL = key("boss1_house_all");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> KYLIN_POOL_ALL = key("kylin_pool_all");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> BOSS1_TREE_ALL = key("boss1_tree_all");
-        public static final ResourceKey<ConfiguredFeature<?, ?>> FOREST_PINE_TREE_ALL = key("forest_pine_tree_all");
-
-        private static ResourceKey<ConfiguredFeature<?, ?>> key(String path) {
-            return ResourceKey.create(Registries.CONFIGURED_FEATURE, RelicsAndFoes.asResource(path));
-        }
-
-        public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
-            register(context, WILDFIELD_CORN, WILDFIELD_CORN_FEATURE.get(), new WildfieldCornFeature.Config(2, 5));
-            register(context, ANCIENT_WILDGRASS, Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.ANCIENT_WILDGRASS.get()), 24));
-            register(context, FALLEN_LAVENDER, Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.FALLEN_LAVENDER.get()), 18));
-            register(context, TEQUILA, Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.TEQUILA.get()), 12));
-            register(context, WILDFIELD_WEEDS, Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.WILDFIELD_WEEDS.get()), 6));
-            register(context, ANCIENT_TALL_WILDGRASS, Feature.RANDOM_PATCH, VegetationFeatures.grassPatch(BlockStateProvider.simple(RAFBlocks.ANCIENT_TALL_WILDGRASS.get()), 6));
-            register(context, ABANDONED_TABLET, Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(new HorizontalDirectionalStateProvider(RAFBlocks.ABANDONED_TABLET.get())));
-            register(context, ABANDONED_PLANKS, Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(new HorizontalDirectionalStateProvider(RAFBlocks.ABANDONED_PLANKS.get())));
-            register(context, ABANDONED_SIGN, Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(new HorizontalDirectionalStateProvider(RAFBlocks.ABANDONED_SIGN.get())));
-            register(context, X5_PINE_TREE, Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 0, 4, PlacementUtils.filtered(
-                    TEMPLATE_STRUCTURE_FEATURE.get(),
-                    TemplateStructureFeature.Config.of("5x_pine_tree_", 8, 2, 2),
-                    isAirAndBelowIsDirt()
-            )));
-            register(context, X7_PINE_TREE, Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 0, 4, PlacementUtils.filtered(
-                    TEMPLATE_STRUCTURE_FEATURE.get(),
-                    TemplateStructureFeature.Config.of("7x_pine_tree_", 3, 3, 3),
-                    isAirAndBelowIsDirt()
-            )));
-            register(context, JUNGLE_TREE, Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 0, 4, PlacementUtils.filtered(
-                    TEMPLATE_STRUCTURE_FEATURE.get(),
-                    TemplateStructureFeature.Config.of("jungle_tree_", 3, 9, 9),
-                    isAirAndBelowIsDirt()
-            )));
-            register(context, BIG_PINE_TREE, Feature.RANDOM_PATCH, new RandomPatchConfiguration(1, 0, 4, PlacementUtils.filtered(
-                    Feature.SIMPLE_RANDOM_SELECTOR,
-                    new SimpleRandomFeatureConfiguration(HolderSet.direct(
-                            directPlacedFeature(TEMPLATE_STRUCTURE_FEATURE.get(), TemplateStructureFeature.Config.of("9x_pine_tree_", 3, 4, 4)),
-                            directPlacedFeature(TEMPLATE_STRUCTURE_FEATURE.get(), TemplateStructureFeature.Config.of("11x_pine_tree_", 3, 5, 5))
-                    )),
-                    isAirAndBelowIsDirt()
-            )));
-            register(context, BOSS1_HOUSE_ALL, TEMPLATE_STRUCTURE_FEATURE.get(), new TemplateStructureFeature.Config(WeightedRandomList.create(
-                    TemplateStructureFeature.Template.of("boss1_house_0", 4, 4),
-                    TemplateStructureFeature.Template.of("boss1_house_1", 3, 3)
-            ), false, true, true));
-            register(context, KYLIN_POOL_ALL, TEMPLATE_STRUCTURE_FEATURE.get(), TemplateStructureFeature.Config.of("kylin_pool_", 1, 14, 14));
-            register(context, BOSS1_TREE_ALL, Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfiguration(HolderSet.direct(
-                    directPlacedFeature(TEMPLATE_STRUCTURE_FEATURE.get(), TemplateStructureFeature.Config.of("boss1_tree_", 3, 6, 6)),
-                    directPlacedFeature(TEMPLATE_STRUCTURE_FEATURE.get(), TemplateStructureFeature.Config.of("boss1_pink_tree_", 3, 6, 6))
-            )));
-            register(context, FOREST_PINE_TREE_ALL, TEMPLATE_STRUCTURE_FEATURE.get(), TemplateStructureFeature.Config.of("7x_pine_tree_", 3, 3, 3));
-        }
-
-        private static <FC extends FeatureConfiguration, F extends Feature<FC>> void register(
-                BootstrapContext<ConfiguredFeature<?, ?>> context,
-                ResourceKey<ConfiguredFeature<?, ?>> key,
-                F feature,
-                FC config
-        ) {
-            context.register(key, new ConfiguredFeature<>(feature, config));
-        }
-
-        private static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<PlacedFeature> directPlacedFeature(F feature, FC config) {
-            return Holder.direct(new PlacedFeature(Holder.direct(new ConfiguredFeature<>(feature, config)), List.of()));
-        }
-
-        private static BlockPredicate isAirAndBelowHasSturdyUpFace() {
-            return BlockPredicate.allOf(
-                    BlockPredicate.ONLY_IN_AIR_PREDICATE,
-                    BlockPredicate.hasSturdyFace(Direction.DOWN.getNormal(), Direction.UP)
-            );
-        }
-
-        private static BlockPredicate isAirAndBelowIsDirt() {
-            return BlockPredicate.allOf(
-                    BlockPredicate.ONLY_IN_AIR_PREDICATE,
-                    BlockPredicate.matchesTag(Direction.DOWN.getNormal(), BlockTags.DIRT)
-            );
-        }
-    }
-
-    public static class PlacedFeaturez {
-        public static final ResourceKey<PlacedFeature> WILDFIELD_CORN = key("wildfield_corn");
-        public static final ResourceKey<PlacedFeature> ANCIENT_WILDGRASS = key("ancient_wildgrass");
-        public static final ResourceKey<PlacedFeature> FALLEN_LAVENDER = key("fallen_lavender");
-        public static final ResourceKey<PlacedFeature> TEQUILA = key("tequila");
-        public static final ResourceKey<PlacedFeature> WILDFIELD_WEEDS = key("wildfield_weeds");
-        public static final ResourceKey<PlacedFeature> ANCIENT_TALL_WILDGRASS = key("ancient_tall_wildgrass");
-        public static final ResourceKey<PlacedFeature> ABANDONED_TABLET = key("abandoned_tablet");
-        public static final ResourceKey<PlacedFeature> ABANDONED_PLANKS = key("abandoned_planks");
-        public static final ResourceKey<PlacedFeature> ABANDONED_SIGN = key("abandoned_sign");
-        public static final ResourceKey<PlacedFeature> X5_PINE_TREE = key("5x_pine_tree");
-        public static final ResourceKey<PlacedFeature> X7_PINE_TREE = key("7x_pine_tree");
-        public static final ResourceKey<PlacedFeature> JUNGLE_TREE = key("jungle_tree");
-        public static final ResourceKey<PlacedFeature> BIG_PINE_TREE = key("big_pine_tree");
-        public static final ResourceKey<PlacedFeature> BOSS1_HOUSE_ALL = key("boss1_house_all");
-        public static final ResourceKey<PlacedFeature> KYLIN_POOL_ALL = key("kylin_pool_all");
-        public static final ResourceKey<PlacedFeature> BOSS1_TREE_ALL = key("boss1_tree_all");
-        public static final ResourceKey<PlacedFeature> FOREST_PINE_TREE_ALL = key("forest_pine_tree_all");
-
-        private static ResourceKey<PlacedFeature> key(String path) {
-            return ResourceKey.create(Registries.PLACED_FEATURE, RelicsAndFoes.asResource(path));
-        }
-
-        public static void bootstrap(BootstrapContext<PlacedFeature> context) {
-            HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
-
-            register(context, configuredFeatures, WILDFIELD_CORN, ConfiguredFeaturez.WILDFIELD_CORN, CountPlacement.of(UniformInt.of(1, 2)), InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
-            register(context, configuredFeatures, ANCIENT_WILDGRASS, ConfiguredFeaturez.ANCIENT_WILDGRASS, NoiseThresholdCountPlacement.of(-0.8, 6, 12), InSquarePlacement.spread(), BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
-            register(context, configuredFeatures, FALLEN_LAVENDER, ConfiguredFeaturez.FALLEN_LAVENDER, NoiseThresholdCountPlacement.of(-0.75, 5, 10), InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
-            register(context, configuredFeatures, TEQUILA, ConfiguredFeaturez.TEQUILA, NoiseThresholdCountPlacement.of(-0.7, 4, 8), InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
-            register(context, configuredFeatures, WILDFIELD_WEEDS, ConfiguredFeaturez.WILDFIELD_WEEDS, NoiseThresholdCountPlacement.of(-0.65, 3, 6), InSquarePlacement.spread(), BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
-            register(context, configuredFeatures, ANCIENT_TALL_WILDGRASS, ConfiguredFeaturez.ANCIENT_TALL_WILDGRASS, NoiseThresholdCountPlacement.of(-0.6, 3, 6), InSquarePlacement.spread(), BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
-            register(context, configuredFeatures, ABANDONED_TABLET, ConfiguredFeaturez.ABANDONED_TABLET, CountPlacement.of(UniformInt.of(1, 2)), InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BlockPredicateFilter.forPredicate(ConfiguredFeaturez.isAirAndBelowHasSturdyUpFace()));
-            register(context, configuredFeatures, ABANDONED_PLANKS, ConfiguredFeaturez.ABANDONED_PLANKS, InSquarePlacement.spread(), BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BlockPredicateFilter.forPredicate(ConfiguredFeaturez.isAirAndBelowHasSturdyUpFace()));
-            register(context, configuredFeatures, ABANDONED_SIGN, ConfiguredFeaturez.ABANDONED_SIGN, InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BlockPredicateFilter.forPredicate(ConfiguredFeaturez.isAirAndBelowHasSturdyUpFace()));
-            register(context, configuredFeatures, X5_PINE_TREE, ConfiguredFeaturez.X5_PINE_TREE, CountPlacement.of(9), InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
-            register(context, configuredFeatures, X7_PINE_TREE, ConfiguredFeaturez.X7_PINE_TREE, CountPlacement.of(2), InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
-            register(context, configuredFeatures, JUNGLE_TREE, ConfiguredFeaturez.JUNGLE_TREE, InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, new NoiseThresholdChancePlacement(0, 0.5F, 0.25F));
-            register(context, configuredFeatures, BIG_PINE_TREE, ConfiguredFeaturez.BIG_PINE_TREE, NoiseThresholdCountPlacement.of(-0.25, 10, 0), InSquarePlacement.spread(), NotInCrossRealmAncientRuinsFilter.INSTANCE, BiomeFilter.biome(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE);
-            register(context, configuredFeatures, BOSS1_HOUSE_ALL, ConfiguredFeaturez.BOSS1_HOUSE_ALL, InSquarePlacement.spread(), InThePeachBlossomValeFilter.of(TriState.FALSE, TriState.TRUE), BiomeFilter.biome(), WorldSurfaceWithYOffsetPlacement.of(-3), BlockPredicateFilter.forPredicate(BlockPredicate.noFluid(new Vec3i(3, 2, 3))), CheckChanceFilter.of(0.075F));
-        }
-
-        private static void register(
-                BootstrapContext<PlacedFeature> context,
-                HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures,
-                ResourceKey<PlacedFeature> placed,
-                ResourceKey<ConfiguredFeature<?, ?>> configured,
-                PlacementModifier... modifiers
-        ) {
-            context.register(placed, new PlacedFeature(configuredFeatures.getOrThrow(configured), Arrays.asList(modifiers)));
         }
     }
 }

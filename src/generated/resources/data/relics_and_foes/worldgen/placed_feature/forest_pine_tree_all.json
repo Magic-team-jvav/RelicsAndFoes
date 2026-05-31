@@ -1,0 +1,46 @@
+{
+  "feature": "relics_and_foes:forest_pine_tree_all",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "relics_and_foes:float_chance",
+        "chance": 3.33
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "relics_and_foes:in_the_peach_blossom_vale",
+      "on_floor": false
+    },
+    {
+      "type": "minecraft:biome"
+    },
+    {
+      "type": "relics_and_foes:world_surface_with_y_offset",
+      "x_offset": 3,
+      "y_offset": 0,
+      "z_offset": 3
+    },
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:not",
+        "predicate": {
+          "type": "minecraft:matching_blocks",
+          "blocks": [
+            "minecraft:air",
+            "minecraft:water"
+          ],
+          "offset": [
+            3,
+            -1,
+            3
+          ]
+        }
+      }
+    }
+  ]
+}
