@@ -1,5 +1,0 @@
-{
-    "net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen": [
-        "org.magicteam.relicsandfoes.mixed.RAFCreativeModeInventoryScreen"
-    ]
-}
