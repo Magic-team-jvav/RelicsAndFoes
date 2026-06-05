@@ -15,11 +15,9 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 import org.magicteam.relicsandfoes.RelicsAndFoes;
 import org.magicteam.relicsandfoes.world.block.*;
 
@@ -63,7 +61,7 @@ public final class RAFBlocks {
     public static final DeferredBlock<HangingVineBodyBlock> HANGING_VINE_BODY = registerWithItem("hanging_vine_body", () -> new HangingVineBodyBlock(noRandomTickVineProperties())); // 垂挂树藤体
     public static final DeferredBlock<Block> PROTOTYPE_BOX = registerHolder("prototype_box"); // 沉沦宝匣
 
-    private static BlockBehaviour.@NotNull Properties noRandomTickVineProperties() {
+    private static BlockBehaviour.Properties noRandomTickVineProperties() {
         return BlockBehaviour.Properties.of()
                 .mapColor(MapColor.PLANT)
                 .randomTicks()
@@ -89,6 +87,7 @@ public final class RAFBlocks {
     public static final DeferredBlock<KylinStalactiteBlock> KYLIN_STALACTITE = registerWithItem("kylin_stalactite", KylinStalactiteBlock::new); // 麒麟钟乳石
     public static final DeferredBlock<Block> KILIN_BOX = registerHolder("kilin_box"); // 麟兽宝匣
     public static final DeferredBlock<Block> GANODERMA_LUCIDUM = registerHolder("ganoderma_lucidum"); // 灵芝
+    public static final DeferredBlock<Block> KYLIN_POOL_OLD = registerHolder("kylin_pool_old");
 
     private static BlockBehaviour.Properties noRandomTickBambooProperties(MapColor color) {
         return BlockBehaviour.Properties.of()
@@ -129,7 +128,6 @@ public final class RAFBlocks {
     public static final DeferredBlock<Block> SPAWN_ATTACK_ROBOT_POWER = registerHolder("spawn_attack_robot_power");
     public static final DeferredBlock<Block> SPAWN_PRIEST_POWER = registerHolder("spawn_priest_power");
     public static final DeferredBlock<Block> SPAWN_AIRCRAFT_OLD = registerHolder("spawn_aircraft_old");
-    public static final DeferredBlock<Block> KYLIN_POOL_OLD = registerHolder("kylin_pool_old");
     public static final DeferredBlock<Block> GIFT_BOX = registerHolder("gift_box");
     public static final DeferredBlock<Block> SPAWN_DESERT_SOLDIER = registerHolder("spawn_desert_soldier");
     public static final DeferredBlock<Block> SPAWN_TEDDY = registerHolder("spawn_teddy");
@@ -164,18 +162,18 @@ public final class RAFBlocks {
         BLOCKS.register(eventBus);
         BLOCK_ENTITIES.register(eventBus);
 
-        if (!FMLEnvironment.production) {
-            addBlockAlias("cataclysm:ancient_portal", ANCIENT_RELIC_TELEPORTER.getId());
-            addBlockAlias("relics_and_foes:ancient_portal", ANCIENT_RELIC_TELEPORTER.getId());
-            addBlockEntityAlias("relics_and_foes:ancient_portal", ANCIENT_RELIC_TELEPORTER_ENTITY.getId());
-            addBlockAlias("cataclysm:ancient_spawner", ANCIENT_RELIC_RESPAWN_PLATFORM.getId());
-            addBlockAlias("relics_and_foes:ancient_spawner", ANCIENT_RELIC_RESPAWN_PLATFORM.getId());
-            addBlockAlias("cataclysm:conductor_stone_grass", COVERED_GRASS_STONE.getId());
-            addBlockAlias("cataclysm:kylin_stone_grass", COVERED_GRASS_STONE.getId());
-            addBlockAlias("cataclysm:boss_thicket", ANCIENT_THICKET.getId());
-            addBlockAlias("cataclysm:kylin_lotus_flying", FLOATING_KYLIN_LOTUS.getId());
-            addBlockAlias("cataclysm:forest_vine", FOREST_VINE.getId());
-        }
+//        if (!FMLEnvironment.production) {
+        addBlockAlias("cataclysm:ancient_portal", ANCIENT_RELIC_TELEPORTER.getId());
+        addBlockAlias("relics_and_foes:ancient_portal", ANCIENT_RELIC_TELEPORTER.getId());
+        addBlockEntityAlias("relics_and_foes:ancient_portal", ANCIENT_RELIC_TELEPORTER_ENTITY.getId());
+        addBlockAlias("cataclysm:ancient_spawner", ANCIENT_RELIC_RESPAWN_PLATFORM.getId());
+        addBlockAlias("relics_and_foes:ancient_spawner", ANCIENT_RELIC_RESPAWN_PLATFORM.getId());
+        addBlockAlias("cataclysm:conductor_stone_grass", COVERED_GRASS_STONE.getId());
+        addBlockAlias("cataclysm:kylin_stone_grass", COVERED_GRASS_STONE.getId());
+        addBlockAlias("cataclysm:boss_thicket", ANCIENT_THICKET.getId());
+        addBlockAlias("cataclysm:kylin_lotus_flying", FLOATING_KYLIN_LOTUS.getId());
+        addBlockAlias("cataclysm:forest_vine", FOREST_VINE.getId());
+//        }
     }
 
     private static void addBlockAlias(String from, ResourceLocation to) {

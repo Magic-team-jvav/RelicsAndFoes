@@ -40,7 +40,9 @@ public class RAFBlockTagsProvider extends BlockTagsProvider {
                 RAFBlocks.FLOATING_KYLIN_LOTUS.get(),
                 RAFBlocks.KYLIN_LOTUS_SMALL.get(),
                 RAFBlocks.KYLIN_STALACTITE.get(),
-                RAFBlocks.KILIN_BOX.get()
+                RAFBlocks.KILIN_BOX.get(),
+                RAFBlocks.GANODERMA_LUCIDUM.get(),
+                RAFBlocks.KYLIN_POOL_OLD.get()
         );
 
 
